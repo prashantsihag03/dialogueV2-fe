@@ -20,8 +20,8 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
     },
     // Background colors must be reflected in index.html styles
     background: {
-      default: mode === 'light' ? '#f9f9f9' : '#151515',
-      paper: mode === 'light' ? '#f9f9f9' : '#151515',
+      default: mode === 'light' ? 'whitesmoke' : '#151515',
+      paper: mode === 'light' ? 'white' : '#0b0b0b',
     },
     action: {
       active: '#FFF',
