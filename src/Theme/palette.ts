@@ -18,9 +18,10 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       primary: mode === 'light' ? '#000000' : '#FFF',
       secondary: mode === 'light' ? '#1a1a1a' : '#b5b5b5',
     },
+    // Background colors must be reflected in index.html styles
     background: {
       default: mode === 'light' ? '#f9f9f9' : '#151515',
-      paper: mode === 'light' ? '#f9f9f9' : '#000000',
+      paper: mode === 'light' ? '#f9f9f9' : '#151515',
     },
     action: {
       active: '#FFF',
