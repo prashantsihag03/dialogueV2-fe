@@ -12,19 +12,20 @@ export const containerStyles: SxProps<Theme> = {
   backgroundColor: 'transparent',
 }
 
-export const sectionStyles: SxProps<Theme> = {
+export const sideBarSectionStyles: SxProps<Theme> = {
   height: '100%',
   backgroundColor: 'background.paper',
   borderRadius: '1vw',
-}
-
-export const sideBarSectionStyles: SxProps<Theme> = {
-  borderRadius: '1vw',
   flex: 1,
+  maxWidth: '450px',
+  transition: 'all 0.3s ease-in-out',
 }
 
 export const chatBoxSectionStyles: SxProps<Theme> = {
-  flex: 3,
-  marginRight: '10px',
+  height: '100%',
+  backgroundColor: 'background.paper',
   borderRadius: '1vw',
+  flex: 1,
+  marginRight: '10px',
+  transition: 'all 0.3s ease-in-out',
 }
