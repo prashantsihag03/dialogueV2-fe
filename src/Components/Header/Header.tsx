@@ -3,6 +3,7 @@ import Menu from '../Menu'
 import logo from '../../assets/Logo.svg'
 import { DisplayMode } from '../../Theme/types'
 import { containerStyles } from './styles'
+import { Zoom } from '@mui/material'
 
 interface IHeader {
   displayMode: DisplayMode
@@ -15,7 +16,9 @@ export const Header: React.FC<IHeader> = ({
 }: IHeader) => {
   return (
     <Box sx={containerStyles}>
-      <img src={logo} alt="YourChats Logo" style={{ cursor: 'pointer' }} />
+      <Zoom in>
+        <img src={logo} alt="YourChats Logo" style={{ cursor: 'pointer' }} />
+      </Zoom>
       <Menu displayMode={displayMode} toggleDisplayMode={toggleDisplayMode} />
     </Box>
   )

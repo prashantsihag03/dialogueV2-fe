@@ -20,7 +20,9 @@ export const Menu: React.FC<IMenu> = ({
   return (
     <Box sx={containerStyles}>
       <Box sx={iconContainerStyles}>
-        <Typography>Terms of Use</Typography>
+        <Zoom in mountOnEnter unmountOnExit>
+          <Typography>Terms of Use</Typography>
+        </Zoom>
       </Box>
       <Box sx={iconContainerStyles}>
         {displayMode === 'dark' ? (
@@ -45,16 +47,22 @@ export const Menu: React.FC<IMenu> = ({
         )}
       </Box>
       <Box sx={iconContainerStyles}>
-        <NotificationsOutlinedIcon
-          titleAccess="Notifications"
-          fontSize="large"
-        />
+        <Zoom in mountOnEnter unmountOnExit>
+          <NotificationsOutlinedIcon
+            titleAccess="Notifications"
+            fontSize="large"
+          />
+        </Zoom>
       </Box>
+      <Zoom in mountOnEnter unmountOnExit>
+        <Box sx={iconContainerStyles}>
+          <TuneOutlinedIcon titleAccess="Settings" fontSize="large" />
+        </Box>
+      </Zoom>
       <Box sx={iconContainerStyles}>
-        <TuneOutlinedIcon titleAccess="Settings" fontSize="large" />
-      </Box>
-      <Box sx={iconContainerStyles}>
-        <AccountCircleOutlinedIcon titleAccess="Profile" fontSize="large" />
+        <Zoom in mountOnEnter unmountOnExit>
+          <AccountCircleOutlinedIcon titleAccess="Profile" fontSize="large" />
+        </Zoom>
       </Box>
     </Box>
   )
