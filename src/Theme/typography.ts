@@ -20,22 +20,22 @@ export const getTypographyTheme = (palette: Palette): TypographyOptions => {
     },
     subtitle1: {
       color: palette.text.secondary,
-      fontSize: '1.2rem',
+      fontSize: '1rem',
       ['@media only screen and (max-width: 1000px)']: {
         fontSize: '1rem',
       },
     },
     subtitle2: {
-      color: palette.secondary.main,
-      fontSize: '1.2rem',
+      color: palette.text.secondary,
+      fontSize: '0.9rem',
       lineHeight: '1.5rem',
       ['@media only screen and (max-width: 1000px)']: {
         fontSize: '1rem',
       },
     },
     body1: {
-      color: palette.text.secondary,
-      fontSize: '1rem',
+      color: palette.text.primary,
+      fontSize: '1.25rem',
     },
     body2: {
       fontSize: 'clamp(50px, 5vw, 60px)',
