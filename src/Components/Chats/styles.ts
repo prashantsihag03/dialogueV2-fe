@@ -18,7 +18,7 @@ export const headingStyles: SxProps<Theme> = {
   alignItems: 'center',
 }
 
-export const listActionStyles: SxProps<Theme> = {
+export const actionStyles: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -29,4 +29,12 @@ export const chatsListStyles: SxProps<Theme> = {
   width: '100%',
   padding: '3% 0%',
   overflowX: 'auto',
+}
+
+export const actionIconStyles: SxProps<Theme> = {
+  marginLeft: '0.5rem',
+  '&:hover': {
+    color: 'secondary.main',
+    cursor: 'pointer',
+  },
 }

@@ -4,7 +4,12 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
-import { containerStyles, iconContainerStyles, pointerCursor } from './styles'
+import {
+  containerStyles,
+  iconContainerStyles,
+  iconStyles,
+  pointerCursor,
+} from './styles'
 import { Grow, Typography } from '@mui/material'
 import { DisplayMode } from '../../Theme/types'
 
@@ -21,7 +26,7 @@ export const Menu: React.FC<IMenu> = ({
     <Box sx={containerStyles}>
       <Box sx={iconContainerStyles}>
         <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
-          <Typography>Terms of Use</Typography>
+          <Typography sx={iconStyles}>Terms of Use</Typography>
         </Grow>
       </Box>
       <Box sx={iconContainerStyles}>
@@ -31,7 +36,11 @@ export const Menu: React.FC<IMenu> = ({
               titleAccess="Switch to light mode"
               onClick={toggleDisplayMode}
               fontSize="large"
-              sx={{ ...pointerCursor, backgroundColor: 'transparent' }}
+              sx={{
+                ...pointerCursor,
+                ...iconStyles,
+                backgroundColor: 'transparent',
+              }}
             />
           </Grow>
         ) : (
@@ -41,7 +50,11 @@ export const Menu: React.FC<IMenu> = ({
               titleAccess="Switch to dark mode"
               onClick={toggleDisplayMode}
               fontSize="large"
-              sx={{ ...pointerCursor, backgroundColor: 'transparent' }}
+              sx={{
+                ...pointerCursor,
+                ...iconStyles,
+                backgroundColor: 'transparent',
+              }}
             />
           </Grow>
         )}
@@ -49,6 +62,7 @@ export const Menu: React.FC<IMenu> = ({
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
         <Box sx={iconContainerStyles}>
           <NotificationsOutlinedIcon
+            sx={iconStyles}
             titleAccess="Notifications"
             fontSize="large"
           />
@@ -56,12 +70,20 @@ export const Menu: React.FC<IMenu> = ({
       </Grow>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
         <Box sx={iconContainerStyles}>
-          <TuneOutlinedIcon titleAccess="Settings" fontSize="large" />
+          <TuneOutlinedIcon
+            sx={iconStyles}
+            titleAccess="Settings"
+            fontSize="large"
+          />
         </Box>
       </Grow>
       <Box sx={iconContainerStyles}>
         <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
-          <AccountCircleOutlinedIcon titleAccess="Profile" fontSize="large" />
+          <AccountCircleOutlinedIcon
+            sx={iconStyles}
+            titleAccess="Profile"
+            fontSize="large"
+          />
         </Grow>
       </Box>
     </Box>

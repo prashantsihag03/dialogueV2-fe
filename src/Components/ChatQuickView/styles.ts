@@ -6,13 +6,15 @@ export const containerStyles: SxProps<Theme> = {
   justifyContent: 'space-around',
   alignItems: 'center',
   padding: '2%',
-  border: 'none',
+  borderRadius: '0.2vw',
   borderBottom: '1px solid transparent',
   marginBottom: '1rem',
   transition: 'all 0.35s linear',
   '&:hover': {
     cursor: 'pointer',
     borderColor: '#8dafff',
+    // backgroundColor: '#454b58', //dark BG
+    // backgroundColor: '#dce8ff', // white BG
   },
 }
 

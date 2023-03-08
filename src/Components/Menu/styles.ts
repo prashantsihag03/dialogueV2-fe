@@ -1,5 +1,4 @@
-import { SxProps } from '@mui/material'
-import { Theme } from '@mui/system'
+import { SxProps, Theme } from '@mui/system'
 
 export const pointerCursor: SxProps<Theme> = {
   cursor: 'pointer',
@@ -26,4 +25,11 @@ export const iconContainerStyles: SxProps<Theme> = {
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
+}
+
+export const iconStyles: SxProps<Theme> = {
+  '&:hover': {
+    color: 'secondary.main',
+    cursor: 'pointer',
+  },
 }

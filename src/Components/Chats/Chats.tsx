@@ -1,11 +1,13 @@
 import { Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import SearchIcon from '@mui/icons-material/Search'
+import SortIcon from '@mui/icons-material/Sort'
 import {
+  actionIconStyles,
+  actionStyles,
   chatsListStyles,
   containerStyles,
   headingStyles,
-  listActionStyles,
 } from './styles'
 import { ChatQuickView } from '../ChatQuickView/ChatQuickView'
 import { IChatQuickView } from '../ChatQuickView/types'
@@ -29,8 +31,9 @@ export const Chats: React.FC = () => {
         <Typography sx={{ padding: '0em', fontSize: '30px' }}>
           Messages
         </Typography>
-        <Box sx={listActionStyles}>
-          <SearchIcon fontSize="large" />
+        <Box sx={actionStyles}>
+          <SearchIcon fontSize="large" sx={actionIconStyles} />
+          <SortIcon fontSize="large" sx={actionIconStyles} />
         </Box>
       </Box>
       <Box sx={chatsListStyles}>
