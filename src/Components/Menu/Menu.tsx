@@ -4,13 +4,8 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
-import {
-  containerStyles,
-  iconContainerStyles,
-  iconStyles,
-  pointerCursor,
-} from './styles'
-import { Grow, Typography } from '@mui/material'
+import { containerStyles, iconContainerStyles, textItemStyles } from './styles'
+import { Grow, Slide, Typography } from '@mui/material'
 import { DisplayMode } from '../../Theme/types'
 
 interface IMenu {
@@ -24,23 +19,19 @@ export const Menu: React.FC<IMenu> = ({
 }: IMenu) => {
   return (
     <Box sx={containerStyles}>
-      <Box sx={iconContainerStyles}>
-        <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
-          <Typography sx={iconStyles}>Terms of Use</Typography>
-        </Grow>
-      </Box>
+      <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
+        <Box sx={iconContainerStyles}>
+          <Typography variant="subtitle1" sx={textItemStyles}>
+            Terms of Use
+          </Typography>
+        </Box>
+      </Slide>
       <Box sx={iconContainerStyles}>
         {displayMode === 'dark' ? (
           <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
             <LightModeIcon
               titleAccess="Switch to light mode"
               onClick={toggleDisplayMode}
-              fontSize="large"
-              sx={{
-                ...pointerCursor,
-                ...iconStyles,
-                backgroundColor: 'transparent',
-              }}
             />
           </Grow>
         ) : (
@@ -49,43 +40,25 @@ export const Menu: React.FC<IMenu> = ({
               color="primary"
               titleAccess="Switch to dark mode"
               onClick={toggleDisplayMode}
-              fontSize="large"
-              sx={{
-                ...pointerCursor,
-                ...iconStyles,
-                backgroundColor: 'transparent',
-              }}
             />
           </Grow>
         )}
       </Box>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
         <Box sx={iconContainerStyles}>
-          <NotificationsOutlinedIcon
-            sx={iconStyles}
-            titleAccess="Notifications"
-            fontSize="large"
-          />
+          <NotificationsOutlinedIcon titleAccess="Notifications" />
         </Box>
       </Grow>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
         <Box sx={iconContainerStyles}>
-          <TuneOutlinedIcon
-            sx={iconStyles}
-            titleAccess="Settings"
-            fontSize="large"
-          />
+          <TuneOutlinedIcon titleAccess="Settings" />
         </Box>
       </Grow>
-      <Box sx={iconContainerStyles}>
-        <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
-          <AccountCircleOutlinedIcon
-            sx={iconStyles}
-            titleAccess="Profile"
-            fontSize="large"
-          />
-        </Grow>
-      </Box>
+      <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
+        <Box sx={iconContainerStyles}>
+          <AccountCircleOutlinedIcon titleAccess="Profile" />
+        </Box>
+      </Grow>
     </Box>
   )
 }

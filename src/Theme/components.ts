@@ -1,5 +1,6 @@
 import { Components } from '@mui/material'
 import { Theme } from '@mui/system'
+import { icon, secondary } from './colors'
 import { DisplayMode } from './types'
 
 export const getComponentsTheme = (
@@ -8,10 +9,17 @@ export const getComponentsTheme = (
   return {
     MuiSvgIcon: {
       styleOverrides: {
-        colorPrimary: mode === 'dark' ? '#f7f7f7' : '#575757',
         root: {
-          color: mode === 'dark' ? '#e1e1e1' : '#575757',
+          color: mode === 'light' ? icon.light : icon.dark,
+          backgroundColor: 'transparent',
+          '&:hover': {
+            color: mode === 'light' ? secondary.light : secondary.dark,
+            cursor: 'pointer',
+          },
         },
+      },
+      defaultProps: {
+        fontSize: 'medium',
       },
     },
     MuiButton: {
@@ -33,18 +41,6 @@ export const getComponentsTheme = (
     MuiLink: {
       styleOverrides: {
         root: { textDecoration: 'none' },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          '&:hover': {
-            cursor:
-              mode === 'dark'
-                ? "url('./images/whiteReadMoreCursor.svg'), pointer"
-                : "url('./images/darkReadMoreCursor.svg'), pointer",
-          },
-        },
       },
     },
   }

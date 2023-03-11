@@ -4,16 +4,6 @@ export const pointerCursor: SxProps<Theme> = {
   cursor: 'pointer',
 }
 
-export const displayModeBoxStyle: SxProps<Theme> = {
-  height: '3em',
-  width: '3rem',
-  paddingRight: '20px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  border: 'none',
-}
-
 export const containerStyles: SxProps<Theme> = {
   display: 'flex',
   alignItems: 'center',
@@ -27,7 +17,21 @@ export const iconContainerStyles: SxProps<Theme> = {
   cursor: 'pointer',
 }
 
-export const iconStyles: SxProps<Theme> = {
+export const textItemStyles: SxProps<Theme> = {
+  '&:after': {
+    transition: 'all ease-in-out .2s',
+    background: 'none repeat scroll 0 0',
+    backgroundColor: 'secondary.main',
+    content: '""',
+    display: 'block',
+    height: '1px',
+    width: '0',
+  },
+
+  '&:hover:after': {
+    width: '100%',
+  },
+
   '&:hover': {
     color: 'secondary.main',
     cursor: 'pointer',

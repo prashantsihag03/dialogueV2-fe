@@ -1,31 +1,33 @@
 import { PaletteOptions } from '@mui/material'
+import { action, background, primary, secondary, text } from './colors'
 import { DisplayMode } from './types'
 
 export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
   return {
     mode: mode,
     primary: {
-      main: mode === 'light' ? '#f9f9f9' : '#101010',
-      light: '#f9f9f9',
-      dark: '#101010',
+      main: mode === 'light' ? primary.light : primary.dark,
+      light: primary.light,
+      dark: primary.dark,
     },
     secondary: {
-      main: mode === 'light' ? '#2b6bff' : '#8dafff',
-      light: '#2b6bff',
-      dark: '#8dafff',
+      main: mode === 'light' ? secondary.light : secondary.dark,
+      light: secondary.light,
+      dark: secondary.dark,
     },
     text: {
-      primary: mode === 'light' ? '#000000' : '#FFF',
-      secondary: mode === 'light' ? '#3D3D3D' : '#b5b5b5',
+      primary: mode === 'light' ? text.primary.light : text.primary.dark,
+      secondary: mode === 'light' ? text.secondary.light : text.secondary.dark,
     },
     // Background colors must be reflected in index.html styles
     background: {
-      default: mode === 'light' ? 'whitesmoke' : '#151515',
-      paper: mode === 'light' ? 'white' : '#0b0b0b',
+      default:
+        mode === 'light' ? background.default.light : background.default.dark,
+      paper: mode === 'light' ? background.paper.light : background.paper.dark,
     },
     action: {
-      active: '#FFF',
-      hover: 'rgba(128, 128, 128, 0.2)',
+      active: action.active,
+      hover: action.hover,
     },
   }
 }

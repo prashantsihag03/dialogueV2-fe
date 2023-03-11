@@ -28,12 +28,10 @@ export const Chats: React.FC = () => {
   return (
     <Box sx={containerStyles}>
       <Box sx={headingStyles}>
-        <Typography sx={{ padding: '0em', fontSize: '30px' }}>
-          Messages
-        </Typography>
+        <Typography variant="h2">Messages</Typography>
         <Box sx={actionStyles}>
-          <SearchIcon fontSize="large" sx={actionIconStyles} />
-          <SortIcon fontSize="large" sx={actionIconStyles} />
+          <SearchIcon sx={actionIconStyles} />
+          <SortIcon sx={actionIconStyles} />
         </Box>
       </Box>
       <Box sx={chatsListStyles}>
