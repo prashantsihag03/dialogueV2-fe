@@ -7,7 +7,7 @@ import {
   sideBarSectionStyles,
 } from './styles'
 
-export const Main: React.FC = () => {
+export const MainSection: React.FC = () => {
   return (
     <Box sx={containerStyles}>
       <Box sx={chatBoxSectionStyles}>

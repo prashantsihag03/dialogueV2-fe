@@ -17,7 +17,7 @@ export const sideBarSectionStyles: SxProps<Theme> = {
   backgroundColor: 'background.paper',
   borderRadius: '1vw',
   flex: 1,
-  maxWidth: '450px',
+  maxWidth: '350px',
   transition: 'all 0.3s ease-in-out',
 }
 

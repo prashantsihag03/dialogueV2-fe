@@ -1,7 +1,7 @@
 import { Box, CssBaseline, ThemeProvider } from '@mui/material'
 import useDisplayMode from '../../hooks/useDisplayMode'
 import Header from '../Header'
-import Main from '../Main'
+import MainSection from '../MainSection'
 import { containerStyles } from './styles'
 
 export const App = () => {
@@ -15,7 +15,7 @@ export const App = () => {
             displayMode={displayMode}
             toggleDisplayMode={toggleDisplayMode}
           />
-          <Main />
+          <MainSection />
         </Box>
       </ThemeProvider>
     </CssBaseline>

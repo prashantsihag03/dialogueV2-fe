@@ -8,10 +8,21 @@ This repository holds Frontend codebase for the overall project.
 
 More details about the project can be found on this <a href="https://github.com/prashantsihag03/yourchatsV2">link</a> along with Backend code base.
 
-## Development Setup
+## Start App Locally
 
-- Clone the repository.
-- Go inside the repository directory.
-- Execute following
-  > npm install; npm run start
+> npm install; npm run start;
+
 - Visit http://localhost:8080
+
+## Build production
+
+> npm run build;
+
+## Testing
+
+- NOTE: tests aren't included yet.
+  > npm install; npm run test;
+
+## Storybook
+
+> npm install; npm run storybook;
