@@ -4,9 +4,17 @@ import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { App } from './App'
 
 export default {
-  title: 'App',
+  title: 'Pages/App',
   component: App,
   decorators: [baseCustomDecorator],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'The home page for YourChatsV2-FE where users will be able to view and receive messages, manage their accounts, and receive notifications.',
+      },
+    },
+  },
 } as ComponentMeta<typeof App>
 
 export const Main = () => {

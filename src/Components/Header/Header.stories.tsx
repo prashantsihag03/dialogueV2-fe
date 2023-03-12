@@ -4,9 +4,17 @@ import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { Header } from './Header'
 
 export default {
-  title: 'Header',
+  title: 'Organisms/Header',
   component: Header,
   decorators: [baseCustomDecorator],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Header for YourChatsV2-FE providing logo, dark mode toggle, notifications, settings, and user profile',
+      },
+    },
+  },
 } as ComponentMeta<typeof Header>
 
 export const Main = () => {

@@ -4,9 +4,17 @@ import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { MainSection } from './MainSection'
 
 export default {
-  title: 'Main Section',
+  title: 'Organisms/MainSection',
   component: MainSection,
   decorators: [baseCustomDecorator],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Main section for YourChatsV2-FE providing one major partition and one minor side partition.',
+      },
+    },
+  },
 } as ComponentMeta<typeof MainSection>
 
 export const Main = () => {

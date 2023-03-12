@@ -5,9 +5,17 @@ import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { Menu } from './Menu'
 
 export default {
-  title: 'Menu',
+  title: 'Molecules/Menu',
   component: Menu,
   decorators: [baseCustomDecorator],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Menu including dark mode toggle, notification, setting and user profile.',
+      },
+    },
+  },
 } as ComponentMeta<typeof Menu>
 
 interface Args {

@@ -5,12 +5,25 @@ import { ChatQuickView } from './ChatQuickView'
 import { IChatQuickView } from './types'
 
 export default {
-  title: 'ChatQuickView',
+  title: 'Molecules/ChatQuickView',
   component: ChatQuickView,
   decorators: [baseCustomDecorator],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'A quick view of a particular chat. This provides a quick glance at important information about a particular chat.',
+      },
+    },
+  },
 } as ComponentMeta<typeof ChatQuickView>
 
 interface Args extends IChatQuickView {
+  /**
+   * Non component control. Only applicable to story.
+   * Sets the width of the component wrapper.
+   * Actual component takes width from parent and is set to 100%.
+   */
   width: number
 }
 
