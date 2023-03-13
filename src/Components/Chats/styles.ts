@@ -12,6 +12,7 @@ export const containerStyles: SxProps<Theme> = {
 
 export const headingStyles: SxProps<Theme> = {
   width: '100%',
+  margin: '0.5rem',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',

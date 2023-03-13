@@ -15,12 +15,12 @@ export const text = {
 
 export const background = {
   default: {
-    light: 'whitesmoke',
-    dark: '#151515',
+    light: '#E6E6E6',
+    dark: '#222222',
   },
   paper: {
     light: 'white',
-    dark: '#0b0b0b',
+    dark: '#181818',
   },
 }
 

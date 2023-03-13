@@ -17,6 +17,11 @@ export const getTypographyTheme = (palette: Palette): TypographyOptions => {
       fontSize: '1.2rem',
       fontWeight: 'bold',
     },
+    h3: {
+      letterSpacing: '0.7pt',
+      fontSize: '1rem',
+      fontWeight: 'bold',
+    },
     subtitle1: {
       color: palette.text.secondary,
       fontSize: '0.8rem',
