@@ -8,6 +8,10 @@ This repository holds Frontend codebase for the overall project.
 
 More details about the project can be found on this <a href="https://github.com/prashantsihag03/yourchatsV2">link</a> along with Backend code base.
 
+## StoryBook
+
+The storybook with all available atomic design levels can be seen https://prashantsihag03.github.io/yourchatsV2-fe/
+
 ## Start App Locally
 
 > npm install; npm run start;
