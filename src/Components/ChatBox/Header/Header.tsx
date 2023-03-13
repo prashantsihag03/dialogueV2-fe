@@ -79,9 +79,13 @@ export const Header: React.FC<IActiveChatHeader> = ({
         </Box>
       </Box>
       <Box sx={optionContainer}>
-        <PermMediaOutlinedIcon sx={iconStyles} />
-        <CallOutlinedIcon sx={iconStyles} />
-        <VideoCallOutlinedIcon sx={iconStyles} />
+        <PermMediaOutlinedIcon
+          sx={iconStyles}
+          fontSize="small"
+          titleAccess="Media files"
+        />
+        <CallOutlinedIcon sx={iconStyles} titleAccess="audio call" />
+        <VideoCallOutlinedIcon sx={iconStyles} titleAccess="video call" />
       </Box>
     </Box>
   )

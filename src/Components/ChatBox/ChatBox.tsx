@@ -24,7 +24,7 @@ export const ChatBox: React.FC<IChatBox> = ({ name, online }: IChatBox) => {
         <Box sx={messages}></Box>
         <Box sx={messageOptions}>
           <Box sx={messageBox}>
-            <InsertEmoticonOutlinedIcon />
+            <InsertEmoticonOutlinedIcon titleAccess="Emoticons" />
             <TextField
               id="standard-textarea"
               variant="standard"
@@ -35,10 +35,20 @@ export const ChatBox: React.FC<IChatBox> = ({ name, online }: IChatBox) => {
               InputProps={{ disableUnderline: true }}
               sx={{ marginLeft: '0.5rem' }}
             />
-            <MicNoneOutlinedIcon sx={iconStyles} />
-            <AttachFileRoundedIcon sx={iconStyles} />
+            <MicNoneOutlinedIcon
+              sx={iconStyles}
+              titleAccess="record audio message"
+            />
+            <AttachFileRoundedIcon
+              sx={iconStyles}
+              titleAccess="attach file/files"
+            />
           </Box>
-          <SendRoundedIcon fontSize="large" sx={iconStyles} />
+          <SendRoundedIcon
+            fontSize="large"
+            sx={iconStyles}
+            titleAccess="send message"
+          />
         </Box>
       </Box>
     </Box>
