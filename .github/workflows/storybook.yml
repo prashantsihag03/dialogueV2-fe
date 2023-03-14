@@ -1,0 +1,28 @@
+name: Build and Deploy Storybook to github pages
+
+on: 
+  push:
+    branches: 
+      - main
+
+jobs:
+  build-and-deploy-storybook:
+    name: Deploy storybook to Github pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.14.1
+
+      - name: NPM CI and build storybook
+        run: npm install
+        run: npm run build-storybook
+
+      - name: deploy storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: storybook-static
