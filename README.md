@@ -8,10 +8,6 @@ This repository holds Frontend codebase for the overall project.
 
 More details about the project can be found on this <a href="https://github.com/prashantsihag03/yourchatsV2">link</a> along with Backend code base.
 
-## StoryBook
-
-The storybook with all available atomic design levels can be seen https://yourchatsv2-fe-storybook.netlify.app/?path=/story/introduction--page
-
 ## Start App Locally
 
 > npm install; npm run start;
@@ -27,6 +23,11 @@ The storybook with all available atomic design levels can be seen https://yourch
 - NOTE: tests aren't included yet.
   > npm install; npm run test;
 
-## Storybook
+## Local Storybook
 
 > npm install; npm run storybook;
+
+## Build Storybook
+
+> npm install; npm run build-storybook;
+
