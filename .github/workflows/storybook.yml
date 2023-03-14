@@ -19,9 +19,9 @@ jobs:
           node-version: 18.14.1
 
       - name: NPM CI and build storybook
-        run:
-          - npm install
-          - npm run build-storybook
+        run: |
+          npm install
+          npm run build-storybook
 
       - name: deploy storybook
         uses: JamesIves/github-pages-deploy-action@v4
