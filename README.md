@@ -10,7 +10,7 @@ More details about the project can be found on this <a href="https://github.com/
 
 ## StoryBook
 
-The storybook with all available atomic design levels can be seen https://prashantsihag03.github.io/yourchatsV2-fe/
+The storybook with all available atomic design levels can be seen https://yourchatsv2-fe-storybook.netlify.app/?path=/story/introduction--page
 
 ## Start App Locally
 
