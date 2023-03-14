@@ -11,17 +11,15 @@ More details about the project can be found on this <a href="https://github.com/
 ## Start App Locally
 
 > npm install; npm run start;
-
-- Visit http://localhost:8080
+Visit http://localhost:8080
 
 ## Build production
 
 > npm run build;
 
 ## Testing
-
-- NOTE: tests aren't included yet.
-  > npm install; npm run test;
+NOTE: tests aren't included yet.
+> npm install; npm run test;
 
 ## Local Storybook
 
