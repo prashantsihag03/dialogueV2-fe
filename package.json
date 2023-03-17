@@ -27,6 +27,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.10",
+    "emoji-picker-react": "^4.4.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
