@@ -1,55 +1,145 @@
-import { Box, Divider, TextField } from '@mui/material'
-import InsertEmoticonOutlinedIcon from '@mui/icons-material/InsertEmoticonOutlined'
-import SendRoundedIcon from '@mui/icons-material/SendRounded'
-import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded'
-import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined'
+import { Box, Divider } from '@mui/material'
 import { Header, IActiveChatHeader } from './Header/Header'
-import {
-  chatContainer,
-  containerStyle,
-  iconStyles,
-  messageBox,
-  messageOptions,
-  messages,
-} from './styles'
+import { containerStyle, messages } from './styles'
+import MessageInputBox from './MessageInputBox'
+import Message from '../Message'
 
 export type IChatBox = IActiveChatHeader
 
-export const ChatBox: React.FC<IChatBox> = ({ name, online }: IChatBox) => {
+export const ChatBox: React.FC<IChatBox> = ({
+  name = 'Steve Rogers',
+  online,
+}: IChatBox) => {
   return (
     <Box sx={containerStyle}>
-      <Header name={name} online={online} />
-      <Divider color="primary" sx={{ width: '100%' }} />
-      <Box sx={chatContainer}>
-        <Box sx={messages}></Box>
-        <Box sx={messageOptions}>
-          <Box sx={messageBox}>
-            <InsertEmoticonOutlinedIcon titleAccess="Emoticons" />
-            <TextField
-              id="standard-textarea"
-              variant="standard"
-              placeholder="Type your message here"
-              multiline
-              fullWidth
-              maxRows={6}
-              InputProps={{ disableUnderline: true }}
-              sx={{ marginLeft: '0.5rem' }}
-            />
-            <MicNoneOutlinedIcon
-              sx={iconStyles}
-              titleAccess="record audio message"
-            />
-            <AttachFileRoundedIcon
-              sx={iconStyles}
-              titleAccess="attach file/files"
-            />
-          </Box>
-          <SendRoundedIcon
-            fontSize="large"
-            sx={iconStyles}
-            titleAccess="send message"
-          />
-        </Box>
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Header name={name} online={online} />
+        <Divider color="primary" sx={{ width: '100%' }} />
+      </Box>
+      <Box sx={messages}>
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="outgoing"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="outgoing"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="outgoing"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="outgoing"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="outgoing"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="outgoing"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+        <Message
+          name={name}
+          timeStamp={'9:13'}
+          source="incoming"
+          text={
+            'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.'
+          }
+        />
+      </Box>
+      <Box sx={{ width: '100%', paddingTop: '2rem' }}>
+        <MessageInputBox />
       </Box>
     </Box>
   )

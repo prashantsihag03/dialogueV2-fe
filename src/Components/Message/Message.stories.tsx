@@ -1,5 +1,5 @@
 import { Box } from '@mui/system'
-import { ComponentMeta } from '@storybook/react'
+import { ComponentMeta, ComponentStory } from '@storybook/react'
 import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { IMessage, Message } from './Message'
 
@@ -26,7 +26,7 @@ interface Args extends IMessage {
   width: number
 }
 
-export const Main = (args: Args) => {
+const Template: ComponentStory<React.FC<Args>> = (args: Args) => {
   return (
     <Box
       sx={{
@@ -51,9 +51,20 @@ export const Main = (args: Args) => {
   )
 }
 
-Main.args = {
+export const Incoming = Template.bind({})
+Incoming.args = {
   name: 'Steve Rogers',
   timeStamp: '9:13',
+  source: 'incoming',
+  text: 'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.',
+  width: 450,
+}
+
+export const Outgoing = Template.bind({})
+Outgoing.args = {
+  name: 'Steve Rogers',
+  timeStamp: '9:13',
+  source: 'outgoing',
   text: 'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.',
   width: 450,
 }

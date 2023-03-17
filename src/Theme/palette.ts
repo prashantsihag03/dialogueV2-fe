@@ -2,6 +2,23 @@ import { PaletteOptions } from '@mui/material'
 import { action, background, primary, secondary, text } from './colors'
 import { DisplayMode } from './types'
 
+declare module '@mui/material/styles' {
+  interface Palette {
+    focus: {
+      main: string
+      light: string
+      dark: string
+    }
+  }
+  interface PaletteOptions {
+    focus: {
+      main: string
+      light: string
+      dark: string
+    }
+  }
+}
+
 export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
   return {
     mode: mode,
@@ -28,6 +45,11 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
     action: {
       active: action.active,
       hover: action.hover,
+    },
+    focus: {
+      main: mode === 'light' ? primary.light : primary.dark,
+      light: primary.light,
+      dark: primary.dark,
     },
   }
 }
