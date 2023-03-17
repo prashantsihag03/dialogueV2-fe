@@ -6,55 +6,28 @@ export const containerStyle: SxProps<Theme> = {
   padding: '0.3rem',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'center',
 }
 
 export const chatContainer: SxProps<Theme> = {
   width: '100%',
-  height: '90%',
-  padding: '0.3rem',
+  padding: '1rem',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
+  overflowY: 'scroll',
 }
 
 export const messages: SxProps<Theme> = {
   width: '100%',
   height: '100%',
-  padding: '0.3rem',
-  paddingBottom: '1.5rem',
+  padding: '2rem 1rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
-}
-
-export const messageOptions: SxProps<Theme> = {
-  width: '100%',
-  position: 'absolute',
-  bottom: '0%',
-  padding: '1rem',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}
-
-export const messageBox: SxProps<Theme> = {
-  width: '100%',
-  padding: '0.5rem',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'background.default',
-  borderRadius: '5vw',
-  color: 'text.primary',
-}
-
-export const iconStyles: SxProps<Theme> = {
-  marginLeft: '1rem',
+  overflowY: 'scroll',
 }
