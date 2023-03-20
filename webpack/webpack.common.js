@@ -25,6 +25,9 @@ module.exports = {
       {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
         type: 'asset/resource',
+        generator: {
+          filename: 'images/[hash][ext]',
+        },
       },
       {
         test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
@@ -34,11 +37,12 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '..', './build'),
-    filename: 'bundle.js',
+    filename: './javascripts/bundle.js',
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '..', './public/index.html'),
+      filename: './index.html',
     }),
     // new CopyPlugin({
     //   patterns: [{ from: 'source', to: 'dest' }],

@@ -1,6 +1,6 @@
 import { Components } from '@mui/material'
 import { Theme } from '@mui/system'
-import { icon, secondary } from './colors'
+import { action, icon, secondary } from './colors'
 import { DisplayMode } from './types'
 
 export const getComponentsTheme = (
@@ -12,9 +12,14 @@ export const getComponentsTheme = (
         root: {
           color: mode === 'light' ? icon.light : icon.dark,
           backgroundColor: 'transparent',
+          fontSize: '2rem',
+          borderRadius: '50%',
+          padding: '0.3rem',
           '&:hover': {
             color: mode === 'light' ? secondary.light : secondary.dark,
             cursor: 'pointer',
+            backgroundColor:
+              mode === 'light' ? action.hover.light : action.hover.dark,
           },
         },
       },
