@@ -44,7 +44,7 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
     },
     action: {
       active: action.active,
-      hover: action.hover,
+      hover: mode === 'light' ? action.hover.light : action.hover.dark,
     },
     focus: {
       main: mode === 'light' ? primary.light : primary.dark,

@@ -15,7 +15,7 @@ export const text = {
 
 export const background = {
   default: {
-    light: '#E6E6E6',
+    light: '#F3F3F3',
     dark: '#222222',
   },
   paper: {
@@ -26,7 +26,10 @@ export const background = {
 
 export const action = {
   active: '#FFF',
-  hover: 'rgba(128, 128, 128, 0.2)',
+  hover: {
+    light: 'rgba(128, 128, 128, 0.2)',
+    dark: 'rgba(128, 128, 128, 0.5)',
+  },
 }
 
 export const icon = {
