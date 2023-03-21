@@ -12,10 +12,10 @@ export const MessageInputBox: React.FC = () => {
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
   const [emoticonEle, setEmoticonEle] = useState<SVGSVGElement | null>(null)
 
-  const [emojiPickerLeftpos, setEmojiPickerLeftpos] = useState<number | null>(
+  const [emojiPickerLeftPos, setEmojiPickerLeftPos] = useState<number | null>(
     null
   )
-  const [emojiPickerBottompos, setEmojiPickerBottompos] = useState<
+  const [emojiPickerBottomPos, setEmojiPickerBottomPos] = useState<
     number | null
   >(null)
 
@@ -26,12 +26,11 @@ export const MessageInputBox: React.FC = () => {
   }
 
   useEffect(() => {
-    if (emoticonEle) {
-      const rect = emoticonEle.getBoundingClientRect()
-      setEmojiPickerLeftpos(rect.x)
-      setEmojiPickerBottompos(window.innerHeight - rect.y + 20)
-    }
-  }, [emoticonEle])
+    if (!emoticonEle) return
+    const rect = emoticonEle.getBoundingClientRect()
+    setEmojiPickerLeftPos(rect.x)
+    setEmojiPickerBottomPos(window.innerHeight - (rect.y - 20))
+  }, [emoticonEle, setEmojiPickerLeftPos, setEmojiPickerBottomPos])
 
   return (
     <Box sx={messageOptions}>
@@ -71,8 +70,8 @@ export const MessageInputBox: React.FC = () => {
         sx={iconStyles}
         titleAccess="send message"
       />
-      {emojiPickerLeftpos != null &&
-      emojiPickerBottompos != null &&
+      {emojiPickerLeftPos != null &&
+      emojiPickerBottomPos != null &&
       showEmojis ? (
         <ClickAwayListener
           onClickAway={() => {
@@ -82,8 +81,8 @@ export const MessageInputBox: React.FC = () => {
           <Box
             sx={{
               position: 'absolute',
-              left: `${emojiPickerLeftpos}px`,
-              bottom: `${emojiPickerBottompos}px`,
+              left: `${emojiPickerLeftPos}px`,
+              bottom: `${emojiPickerBottomPos}px`,
             }}
           >
             <EmojiPicker theme={Theme.AUTO} onEmojiClick={addEmojiToInput} />
