@@ -1,7 +1,7 @@
 {
-  "name": "yourchats-fe",
+  "name": "dialogueV2-fe",
   "version": "0.0.1",
-  "description": "Frontend for YourChatsV2 project.",
+  "description": "Frontend for DialogueV2 project.",
   "main": "index.js",
   "engines": {
     "npm": "=9.3.1",

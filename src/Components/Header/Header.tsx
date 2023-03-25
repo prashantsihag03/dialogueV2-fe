@@ -17,7 +17,7 @@ export const Header: React.FC<IHeader> = ({
   return (
     <Box sx={containerStyles}>
       <Grow appear in mountOnEnter unmountOnExit timeout={500}>
-        <img src={logo} alt="YourChats Logo" style={{ cursor: 'pointer' }} />
+        <img src={logo} alt="Dialogue Logo" style={{ cursor: 'pointer' }} />
       </Grow>
       <Menu displayMode={displayMode} toggleDisplayMode={toggleDisplayMode} />
     </Box>
