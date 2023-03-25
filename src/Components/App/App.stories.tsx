@@ -11,7 +11,7 @@ export default {
     docs: {
       description: {
         component:
-          'The home page for YourChatsV2-FE where users will be able to view and receive messages, manage their accounts, and receive notifications.',
+          'The home page for DialogueV2-FE where users will be able to view and receive messages, manage their accounts, and receive notifications.',
       },
     },
   },

@@ -11,7 +11,7 @@ export default {
     docs: {
       description: {
         component:
-          'Header for YourChatsV2-FE providing logo, dark mode toggle, notifications, settings, and user profile',
+          'Header for DialogueV2-FE providing logo, dark mode toggle, notifications, settings, and user profile',
       },
     },
   },

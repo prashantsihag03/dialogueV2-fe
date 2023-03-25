@@ -11,7 +11,7 @@ export default {
     docs: {
       description: {
         component:
-          'Main section for YourChatsV2-FE providing one major partition and one minor side partition.',
+          'Main section for DialogueV2-FE providing one major partition and one minor side partition.',
       },
     },
   },
