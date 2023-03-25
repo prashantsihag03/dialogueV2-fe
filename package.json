@@ -16,7 +16,8 @@
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "deploy-storybook": "npm install && npm run build-storybook"
+    "deploy-storybook": "npm install && npm run build-storybook",
+    "devBuild": "npm run build && sh copyBuildFilesToBackend.sh"
   },
   "keywords": [],
   "author": "Prashant Sihag",
