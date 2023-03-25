@@ -39,3 +39,12 @@ export const actionIconStyles: SxProps<Theme> = {
     cursor: 'pointer',
   },
 }
+
+export const bottomMenuStyles: SxProps<Theme> = {
+  width: '100%',
+  paddingTop: '0.3rem',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+}

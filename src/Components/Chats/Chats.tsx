@@ -5,12 +5,16 @@ import SortIcon from '@mui/icons-material/Sort'
 import {
   actionIconStyles,
   actionStyles,
+  bottomMenuStyles,
   chatsListStyles,
   containerStyles,
   headingStyles,
 } from './styles'
 import { ChatQuickView } from '../ChatQuickView/ChatQuickView'
 import { IChatQuickView } from '../ChatQuickView/types'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { useCallback, useRef } from 'react'
 
 const ChatData: IChatQuickView = {
   name: 'Steve Rogers',
@@ -25,6 +29,20 @@ for (let index = 0; index < 20; index++) {
 }
 
 export const Chats: React.FC = () => {
+  const chatsListEleRef = useRef<HTMLDivElement>()
+
+  const scrollClickHandler = useCallback(
+    (toTop: boolean) => {
+      if (chatsListEleRef && chatsListEleRef.current) {
+        chatsListEleRef.current.scrollTo({
+          top: toTop ? 0 : chatsListEleRef.current.scrollHeight,
+          behavior: 'smooth',
+        })
+      }
+    },
+    [chatsListEleRef]
+  )
+
   return (
     <Box sx={containerStyles}>
       <Box sx={headingStyles}>
@@ -34,10 +52,22 @@ export const Chats: React.FC = () => {
           <SortIcon sx={actionIconStyles} />
         </Box>
       </Box>
-      <Box sx={chatsListStyles}>
+      <Box sx={chatsListStyles} component="div" ref={chatsListEleRef}>
         {chatsInfo.map((chatInfo) => (
           <ChatQuickView key={chatInfo.name} {...chatInfo} />
         ))}
+      </Box>
+      <Box sx={bottomMenuStyles}>
+        <KeyboardArrowDownIcon
+          onClick={() => {
+            scrollClickHandler(false)
+          }}
+        />
+        <KeyboardArrowUpIcon
+          onClick={() => {
+            scrollClickHandler(true)
+          }}
+        />
       </Box>
     </Box>
   )
