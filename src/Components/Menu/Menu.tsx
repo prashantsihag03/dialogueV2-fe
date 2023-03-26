@@ -4,9 +4,16 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
-import { containerStyles, iconContainerStyles, textItemStyles } from './styles'
+import {
+  connectivityStatusStyles,
+  containerStyles,
+  iconContainerStyles,
+  textItemStyles,
+} from './styles'
 import { Grow, Slide, Typography } from '@mui/material'
 import { DisplayMode } from '../../Theme/types'
+import { useAppSelector } from '../../store/hooks'
+import { isConnected } from '../../store/connection/selector'
 
 interface IMenu {
   displayMode: DisplayMode
@@ -17,6 +24,8 @@ export const Menu: React.FC<IMenu> = ({
   displayMode,
   toggleDisplayMode,
 }: IMenu) => {
+  const connected = useAppSelector(isConnected)
+
   return (
     <Box sx={containerStyles}>
       <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
@@ -55,7 +64,15 @@ export const Menu: React.FC<IMenu> = ({
         </Box>
       </Grow>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
-        <Box sx={iconContainerStyles}>
+        <Box sx={{ ...iconContainerStyles, position: 'relative' }}>
+          <Typography
+            title={connected ? 'Online' : 'Offline'}
+            component="span"
+            sx={{
+              ...connectivityStatusStyles,
+              backgroundColor: connected ? 'green' : 'red',
+            }}
+          ></Typography>
           <AccountCircleOutlinedIcon titleAccess="Profile" />
         </Box>
       </Grow>

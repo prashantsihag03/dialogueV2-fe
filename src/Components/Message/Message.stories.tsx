@@ -56,7 +56,7 @@ Incoming.args = {
   name: 'Steve Rogers',
   timeStamp: '9:13',
   source: 'incoming',
-  text: 'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.',
+  text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. ',
   width: 450,
 }
 
@@ -65,6 +65,6 @@ Outgoing.args = {
   name: 'Steve Rogers',
   timeStamp: '9:13',
   source: 'outgoing',
-  text: 'No. I told you. Did you even listen to what vision said. If we do this, then we are no better than the bad guys.',
+  text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. ',
   width: 450,
 }

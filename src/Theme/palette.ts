@@ -36,7 +36,7 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       primary: mode === 'light' ? text.primary.light : text.primary.dark,
       secondary: mode === 'light' ? text.secondary.light : text.secondary.dark,
     },
-    // Background colors must be reflected in index.html styles
+    // Background colors must be reflected in home.html styles
     background: {
       default:
         mode === 'light' ? background.default.light : background.default.dark,
