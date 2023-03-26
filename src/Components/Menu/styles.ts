@@ -10,7 +10,7 @@ export const containerStyles: SxProps<Theme> = {
 }
 
 export const iconContainerStyles: SxProps<Theme> = {
-  paddingRight: '20px',
+  marginRight: '20px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -36,4 +36,12 @@ export const textItemStyles: SxProps<Theme> = {
     color: 'secondary.main',
     cursor: 'pointer',
   },
+}
+
+export const connectivityStatusStyles: SxProps<Theme> = {
+  position: 'absolute',
+  width: '0.5rem',
+  height: '0.5rem',
+  borderRadius: '50vw',
+  right: '-25%',
 }

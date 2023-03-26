@@ -1,23 +1,24 @@
 import { Box, CssBaseline, ThemeProvider } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useDisplayMode from '../../hooks/useDisplayMode'
 import socket from '../../socket'
+import { connected, disconnected } from '../../store/connection/slice'
+import { useAppDispatch } from '../../store/hooks'
 import Header from '../Header'
 import MainSection from '../MainSection'
 import { containerStyles } from './styles'
 
 export const App = () => {
   const { theme, displayMode, toggleDisplayMode } = useDisplayMode()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isConnected, setIsConnected] = useState(socket.connected)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     function onConnect() {
-      setIsConnected(true)
+      dispatch(connected())
     }
 
     function onDisconnect() {
-      setIsConnected(false)
+      dispatch(disconnected())
     }
 
     socket.on('connect', onConnect)

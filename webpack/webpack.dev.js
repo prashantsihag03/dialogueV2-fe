@@ -5,7 +5,12 @@ module.exports = {
   mode: 'development',
   devServer: {
     hot: true,
-    open: true,
+    open: ['/home.html'],
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
   },
   devtool: 'cheap-module-source-map',
   plugins: [
