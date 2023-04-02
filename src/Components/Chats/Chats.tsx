@@ -11,25 +11,15 @@ import {
   headingStyles,
 } from './styles'
 import { ChatQuickView } from '../ChatQuickView/ChatQuickView'
-import { IChatQuickView } from '../ChatQuickView/types'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { useCallback, useRef } from 'react'
-
-const ChatData: IChatQuickView = {
-  name: 'Steve Rogers',
-  unseen: 0,
-  lastMessage: 'Yes. I told you. Did you even what visi...',
-  lastMessageTime: '9:13',
-}
-
-const chatsInfo: IChatQuickView[] = []
-for (let index = 0; index < 20; index++) {
-  chatsInfo.push({ ...ChatData, unseen: index % 2 > 0 ? index : 0 })
-}
+import { useAppSelector } from '../../store/hooks'
+import { getChatsList } from '../../store/chats/selector'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
+  const chatsData = useAppSelector(getChatsList)
 
   const scrollClickHandler = useCallback(
     (toTop: boolean) => {
@@ -53,7 +43,7 @@ export const Chats: React.FC = () => {
         </Box>
       </Box>
       <Box sx={chatsListStyles} component="div" ref={chatsListEleRef}>
-        {chatsInfo.map((chatInfo) => (
+        {chatsData.map((chatInfo) => (
           <ChatQuickView key={chatInfo.name} {...chatInfo} />
         ))}
       </Box>
