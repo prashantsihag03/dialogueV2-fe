@@ -1,27 +1,21 @@
 import { Box, Divider } from '@mui/material'
-import { Header, IActiveChatHeader } from './Header/Header'
-import { containerStyle, messages } from './styles'
+import { Header } from './Header/Header'
+import {
+  chatBoxHeadingContainerStyle,
+  containerStyle,
+  messages,
+} from './styles'
 import MessageInputBox from './MessageInputBox'
 import Message from '../Message'
+import { useAppSelector } from '../../store/hooks'
+import { getActiveChatName } from '../../store/chats/selector'
 
-export type IChatBox = IActiveChatHeader
-
-export const ChatBox: React.FC<IChatBox> = ({
-  name = 'Steve Rogers',
-  online,
-}: IChatBox) => {
+export const ChatBox: React.FC = () => {
+  const name = useAppSelector(getActiveChatName)
   return (
     <Box sx={containerStyle}>
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Header name={name} online={online} />
+      <Box sx={chatBoxHeadingContainerStyle}>
+        <Header name={name} online={true} />
         <Divider color="primary" sx={{ width: '100%' }} />
       </Box>
       <Box sx={messages}>
