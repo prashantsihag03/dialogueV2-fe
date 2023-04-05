@@ -16,10 +16,13 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { useCallback, useRef } from 'react'
 import { useAppSelector } from '../../store/hooks'
 import { getChatsList } from '../../store/chats/selector'
+import { useGetChatsQuery } from '../../store/api/slice'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
   const chatsData = useAppSelector(getChatsList)
+  const { data, isLoading, isSuccess, isError, error, isFetching } =
+    useGetChatsQuery()
 
   const scrollClickHandler = useCallback(
     (toTop: boolean) => {
