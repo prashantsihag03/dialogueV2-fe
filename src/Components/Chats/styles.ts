@@ -28,6 +28,7 @@ export const actionStyles: SxProps<Theme> = {
 
 export const chatsListStyles: SxProps<Theme> = {
   width: '100%',
+  height: '100%',
   padding: '3% 0%',
   overflowX: 'auto',
 }

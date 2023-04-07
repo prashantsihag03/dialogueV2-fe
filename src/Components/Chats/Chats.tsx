@@ -17,6 +17,7 @@ import { useCallback, useRef } from 'react'
 import { useAppSelector } from '../../store/hooks'
 import { getChatsList } from '../../store/chats/selector'
 import { useGetChatsQuery } from '../../store/api/slice'
+import { ChatsSkeleton } from './ChatsSkeleton'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
@@ -46,9 +47,13 @@ export const Chats: React.FC = () => {
         </Box>
       </Box>
       <Box sx={chatsListStyles} component="div" ref={chatsListEleRef}>
-        {chatsData.map((chatInfo) => (
-          <ChatQuickView key={chatInfo.name} {...chatInfo} />
-        ))}
+        {isLoading ? (
+          <ChatsSkeleton />
+        ) : (
+          chatsData.map((chatInfo) => (
+            <ChatQuickView key={chatInfo.name} {...chatInfo} />
+          ))
+        )}
       </Box>
       <Box sx={bottomMenuStyles}>
         <KeyboardArrowDownIcon
