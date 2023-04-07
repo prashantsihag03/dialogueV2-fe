@@ -31,10 +31,6 @@ export const subContainerStyles: SxProps<Theme> = {
   alignItems: 'center',
   padding: '2%',
   transition: 'all 0.35s linear',
-
-  '&:hover': {
-    cursor: 'pointer',
-  },
 }
 
 export const profileContainerStyle: SxProps<Theme> = {
