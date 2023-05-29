@@ -3,7 +3,7 @@ import { apiSlice } from './api/slice'
 import { chatsReducer } from './chats/slice'
 import { connectionReducer } from './connection/slice'
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   connection: connectionReducer,
   chats: chatsReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
