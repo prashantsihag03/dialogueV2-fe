@@ -22,8 +22,7 @@ import { ChatsSkeleton } from './ChatsSkeleton'
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
   const chatsData = useAppSelector(getChatsList)
-  const { data, isLoading, isSuccess, isError, error, isFetching } =
-    useGetChatsQuery()
+  const { isLoading } = useGetChatsQuery()
 
   const scrollClickHandler = useCallback(
     (toTop: boolean) => {
@@ -40,7 +39,7 @@ export const Chats: React.FC = () => {
   return (
     <Box sx={containerStyles}>
       <Box sx={headingStyles}>
-        <Typography variant="h2">Messages</Typography>
+        <Typography variant="h2">Conversations</Typography>
         <Box sx={actionStyles}>
           <SearchIcon sx={actionIconStyles} />
           <SortIcon sx={actionIconStyles} />
