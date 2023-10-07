@@ -10,10 +10,10 @@ import {
 export const MainSection: React.FC = () => {
   return (
     <Box sx={containerStyles}>
-      <Box sx={chatBoxSectionStyles}>
+      <Box sx={chatBoxSectionStyles} borderRadius={1}>
         <ChatBox />
       </Box>
-      <Box sx={sideBarSectionStyles}>
+      <Box sx={sideBarSectionStyles} borderRadius={1}>
         <Chats />
       </Box>
     </Box>

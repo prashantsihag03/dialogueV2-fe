@@ -5,22 +5,9 @@ export const containerStyles: SxProps<Theme> = {
   minWidth: '250px',
   marginBottom: '0.5rem',
 
-  '&:after': {
-    transition: 'all ease-in-out .2s',
-    background: 'none repeat scroll 0 0',
-    backgroundColor: 'secondary.main',
-    content: '""',
-    display: 'block',
-    height: '1px',
-    width: '0',
-  },
-
-  '&:hover:after': {
-    width: '100%',
-  },
-
   '&:hover': {
     cursor: 'pointer',
+    backgroundColor: 'action.hover',
   },
 }
 

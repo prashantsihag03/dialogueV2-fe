@@ -15,7 +15,6 @@ export const containerStyles: SxProps<Theme> = {
 export const sideBarSectionStyles: SxProps<Theme> = {
   height: '100%',
   backgroundColor: 'background.paper',
-  borderRadius: '1vw',
   margin: '0% 0.5%',
   flex: 1,
   maxWidth: '350px',
@@ -25,7 +24,6 @@ export const sideBarSectionStyles: SxProps<Theme> = {
 export const chatBoxSectionStyles: SxProps<Theme> = {
   height: '100%',
   backgroundColor: 'background.paper',
-  borderRadius: '1vw',
   margin: '0% 0.5%',
   flex: 1,
   marginRight: '10px',
