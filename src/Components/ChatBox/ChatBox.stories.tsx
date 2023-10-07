@@ -30,7 +30,7 @@ interface Args extends IActiveChatHeader {
 export const Main = (args: Args) => {
   return (
     <Box sx={{ width: `${args.width}px`, height: '99%' }}>
-      <ChatBox {...args} />
+      <ChatBox />
     </Box>
   )
 }

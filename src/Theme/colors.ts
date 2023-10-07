@@ -8,6 +8,11 @@ export const secondary = {
   dark: '#8dafff',
 }
 
+export const highlight = {
+  light: '#3d6599',
+  dark: '#3d6599',
+}
+
 export const text = {
   primary: { light: '#3D3D3D', dark: '#d9d9d9' },
   secondary: { light: '#3D3D3D', dark: '#b5b5b5' },

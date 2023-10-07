@@ -27,7 +27,7 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
   }
 
   return (
-    <Box sx={containerStyles} onClick={onClickHandler}>
+    <Box sx={containerStyles} onClick={onClickHandler} borderRadius={1}>
       <Box sx={subContainerStyles}>
         <Box sx={profileContainerStyle}>
           <img

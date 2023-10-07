@@ -45,9 +45,9 @@ export const Message: React.FC<IMessage> = ({
           variant="body2"
           sx={{
             ...message,
-            color: source === 'outgoing' ? 'palette.text.primary' : 'white',
+            color: source === 'outgoing' ? 'white' : 'palette.text.primary',
             backgroundColor:
-              source === 'outgoing' ? 'background.default' : secondary.light,
+              source === 'outgoing' ? secondary.light : 'background.default',
           }}
         >
           {text}
