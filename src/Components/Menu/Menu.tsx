@@ -12,8 +12,9 @@ import {
 } from './styles'
 import { Grow, Slide, Typography } from '@mui/material'
 import { DisplayMode } from '../../Theme/types'
-import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { isConnected } from '../../store/connection/selector'
+import { setActiveSideBar } from '../../store/sidebar/slice'
 
 interface IMenu {
   displayMode: DisplayMode
@@ -25,9 +26,22 @@ export const Menu: React.FC<IMenu> = ({
   toggleDisplayMode,
 }: IMenu) => {
   const connected = useAppSelector(isConnected)
+  const appDispatch = useAppDispatch()
 
   return (
     <Box sx={containerStyles}>
+      <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
+        <Box
+          sx={iconContainerStyles}
+          onClick={() => {
+            appDispatch(setActiveSideBar('chats'))
+          }}
+        >
+          <Typography variant="subtitle1" sx={textItemStyles}>
+            Conversations
+          </Typography>
+        </Box>
+      </Slide>
       <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
         <Box sx={iconContainerStyles}>
           <Typography variant="subtitle1" sx={textItemStyles}>
