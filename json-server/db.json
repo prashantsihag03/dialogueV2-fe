@@ -1,0 +1,132 @@
+{
+  "posts": [{ "id": 1, "title": "json-server", "author": "typicode" }],
+  "comments": [{ "id": 1, "body": "some comment", "postId": 1 }],
+  "profile": {
+    "userid": "steverogers",
+    "fullname": "Steve Rogers",
+    "lastOnlineUTCDateTime": "2023-10-08T05:01:23.408Z",
+    "profileImgSrc": "/images/steverRogers.jpg"
+  },
+  "conversations": [
+    {
+      "name": "Steve Rogers",
+      "unseen": 0,
+      "lastMessage": "Yes. I told you. Did you even listen to what visi...",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Bruce Banner",
+      "unseen": 0,
+      "lastMessage": "I like when you turn into a green monster.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Peter Parker",
+      "unseen": 0,
+      "lastMessage": "Mr.Stark. There are these people trying to steal your stuff from the plane.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Natasha Romanoff",
+      "unseen": 1,
+      "lastMessage": "I'm not the one who needs to watch their back.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    },
+    {
+      "name": "Clint Barton",
+      "unseen": 0,
+      "lastMessage": "I think I will just retire.",
+      "lastMessageTime": "9:13"
+    }
+  ]
+}

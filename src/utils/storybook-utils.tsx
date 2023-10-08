@@ -40,7 +40,7 @@ export const baseCustomDecorator: DecoratorFn = (Story, context) => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center',
+              // alignItems: 'center',
               width: '100vw',
               height: '100vh',
               margin: '0',

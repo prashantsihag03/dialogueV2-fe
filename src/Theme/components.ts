@@ -41,6 +41,22 @@ export const getComponentsTheme = (
             },
           },
         },
+        {
+          props: { variant: 'text' },
+          style: {
+            textTransform: 'none',
+            padding: '0.4rem 1rem',
+            background: 'none',
+            fontSize: '1.1rem',
+            '&:hover': {
+              background: 'none',
+            },
+            ['@media only screen and (max-width: 600px)']: {
+              fontSize: '1rem',
+              padding: '0.6rem 0.8rem',
+            },
+          },
+        },
       ],
     },
     MuiLink: {

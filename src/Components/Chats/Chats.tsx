@@ -14,15 +14,12 @@ import { ChatQuickView } from '../ChatQuickView/ChatQuickView'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { useCallback, useRef } from 'react'
-import { useAppSelector } from '../../store/hooks'
-import { getChatsList } from '../../store/chats/selector'
 import { useGetChatsQuery } from '../../store/api/slice'
 import { ChatsSkeleton } from './ChatsSkeleton'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
-  const chatsData = useAppSelector(getChatsList)
-  const { isLoading } = useGetChatsQuery()
+  const { isLoading, isFetching, isSuccess, isError, data } = useGetChatsQuery()
 
   const scrollClickHandler = useCallback(
     (toTop: boolean) => {
@@ -46,13 +43,40 @@ export const Chats: React.FC = () => {
         </Box>
       </Box>
       <Box sx={chatsListStyles} component="div" ref={chatsListEleRef}>
-        {isLoading ? (
-          <ChatsSkeleton />
-        ) : (
-          chatsData.map((chatInfo) => (
-            <ChatQuickView key={chatInfo.name} {...chatInfo} />
-          ))
-        )}
+        {isLoading || isFetching ? <ChatsSkeleton /> : null}
+        {isError && !isLoading ? (
+          <Typography
+            variant="body2"
+            component={'p'}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            No conversation to show
+          </Typography>
+        ) : null}
+        {isSuccess && data?.length > 0
+          ? data.map((chatInfo) => (
+              <ChatQuickView key={chatInfo.name} {...chatInfo} />
+            ))
+          : null}
+        {isSuccess && data?.length === 0 ? (
+          <Typography
+            variant="body2"
+            component={'p'}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            No conversation to show
+          </Typography>
+        ) : null}
       </Box>
       <Box sx={bottomMenuStyles}>
         <KeyboardArrowDownIcon

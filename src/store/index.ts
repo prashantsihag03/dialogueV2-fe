@@ -2,10 +2,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { apiSlice } from './api/slice'
 import { chatsReducer } from './chats/slice'
 import { connectionReducer } from './connection/slice'
+import { sideBarReducer } from './sidebar/slice'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
   chats: chatsReducer,
+  sideBar: sideBarReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 })
 

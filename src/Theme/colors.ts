@@ -1,11 +1,16 @@
 export const primary = {
-  light: '#f9f9f9',
-  dark: '#101010',
+  light: '#101010',
+  dark: '#f9f9f9',
 }
 
 export const secondary = {
   light: '#2b6bff',
   dark: '#8dafff',
+}
+
+export const error = {
+  light: '#ff0000',
+  dark: '#c72525',
 }
 
 export const highlight = {
