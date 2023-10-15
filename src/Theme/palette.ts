@@ -1,5 +1,13 @@
 import { PaletteOptions } from '@mui/material'
-import { action, background, error, primary, secondary, text } from './colors'
+import {
+  action,
+  background,
+  error,
+  primary,
+  secondary,
+  success,
+  text,
+} from './colors'
 import { DisplayMode } from './types'
 
 declare module '@mui/material/styles' {
@@ -36,6 +44,11 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       main: mode === 'light' ? error.light : error.dark,
       light: error.light,
       dark: error.dark,
+    },
+    success: {
+      main: mode === 'light' ? success.light : success.dark,
+      light: success.light,
+      dark: success.dark,
     },
     text: {
       primary: mode === 'light' ? text.primary.light : text.primary.dark,

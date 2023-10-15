@@ -4,17 +4,13 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
-import {
-  connectivityStatusStyles,
-  containerStyles,
-  iconContainerStyles,
-  textItemStyles,
-} from './styles'
-import { Grow, Slide, Typography } from '@mui/material'
+import { containerStyles, iconContainerStyles, textItemStyles } from './styles'
+import { Avatar, Badge, Grow, Slide, Typography } from '@mui/material'
 import { DisplayMode } from '../../Theme/types'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { isConnected } from '../../store/connection/selector'
 import { setActiveSideBar } from '../../store/sidebar/slice'
+import { useGetProfileQuery } from '../../store/api/slice'
 
 interface IMenu {
   displayMode: DisplayMode
@@ -26,6 +22,7 @@ export const Menu: React.FC<IMenu> = ({
   toggleDisplayMode,
 }: IMenu) => {
   const connected = useAppSelector(isConnected)
+  const { isFetching, data } = useGetProfileQuery(undefined)
   const appDispatch = useAppDispatch()
 
   return (
@@ -78,17 +75,44 @@ export const Menu: React.FC<IMenu> = ({
         </Box>
       </Grow>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
-        <Box sx={{ ...iconContainerStyles, position: 'relative' }}>
-          <Typography
-            title={connected ? 'Online' : 'Offline'}
-            component="span"
+        <Badge
+          overlap="circular"
+          color={connected ? 'success' : 'error'}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          variant="dot"
+        >
+          <Box
             sx={{
-              ...connectivityStatusStyles,
-              backgroundColor: connected ? 'green' : 'red',
+              width: '30px',
+              height: '30px',
+              borderRadius: '50%',
+              boxSizing: 'border-box',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              '&:hover': {
+                backgroundColor: 'action.hover',
+                cursor: 'pointer',
+              },
             }}
-          ></Typography>
-          <AccountCircleOutlinedIcon titleAccess="Profile" />
-        </Box>
+          >
+            {isFetching ? (
+              <AccountCircleOutlinedIcon titleAccess="Profile picture loading" />
+            ) : (
+              <Avatar
+                alt={data?.fullname}
+                src={data?.profileImgSrc}
+                sx={{
+                  width: '80%',
+                  height: '80%',
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+              />
+            )}
+          </Box>
+        </Badge>
       </Grow>
     </Box>
   )

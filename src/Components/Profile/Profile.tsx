@@ -4,14 +4,24 @@ import { containerStyles } from './styles'
 import { useGetProfileQuery } from '../../store/api/slice'
 import { ProfileHeader } from './ProfileHeader'
 import { ProfileAvatar } from './ProfileAvatar'
+import { useAppSelector } from '../../store/hooks'
+import { getActiveProfileUser } from '../../store/profile/selector'
 
 export const Profile: React.FC = () => {
-  const { isSuccess, data } = useGetProfileQuery()
+  const activeProfileUser = useAppSelector(getActiveProfileUser)
+  const { isFetching, isSuccess, data } = useGetProfileQuery(
+    activeProfileUser?.userId,
+    {
+      skip: !Boolean(activeProfileUser?.userId),
+    }
+  )
+
+  console.log('data', data)
 
   return (
     <Box sx={containerStyles}>
       <ProfileHeader />
-      {isSuccess && data ? (
+      {!isFetching && isSuccess && data ? (
         <Stack
           direction="column"
           alignItems="center"

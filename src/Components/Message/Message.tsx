@@ -16,6 +16,7 @@ export const Message: React.FC<IMessage> = ({
   text,
   source,
 }: IMessage) => {
+  console.log('A new message printing from ', name)
   return (
     <Box
       sx={{

@@ -1,22 +1,31 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+interface IConversationDetail {
+  conversationId: string
+  conversationName: string
+}
+
 interface IChatsState {
-  activeChatName: string
+  activeConversation: IConversationDetail | undefined
 }
 
 const initialState: IChatsState = {
-  activeChatName: '',
+  activeConversation: undefined,
 }
 
 const chatsSlice = createSlice({
   name: 'chats',
   initialState: initialState,
   reducers: {
-    setActiveChatName: (state, action: PayloadAction<string>) => {
-      state.activeChatName = action.payload
+    setActiveConversation: (
+      state,
+      action: PayloadAction<IConversationDetail>
+    ) => {
+      state.activeConversation = action.payload
     },
   },
 })
 
-export const { setActiveChatName } = chatsSlice.actions
+export const { setActiveConversation: setActiveConversation } =
+  chatsSlice.actions
 export const chatsReducer = chatsSlice.reducer

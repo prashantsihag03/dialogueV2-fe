@@ -12,10 +12,11 @@ import {
   subContainerStyles,
 } from './styles'
 import { useAppDispatch } from '../../store/hooks'
-import { setActiveChatName } from '../../store/chats/slice'
+import { setActiveConversation } from '../../store/chats/slice'
 
 export const ChatQuickView: React.FC<IChatQuickView> = ({
-  name,
+  conversationId,
+  conversationName,
   unseen,
   lastMessage,
   lastMessageTime,
@@ -23,7 +24,7 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
   const AppDispatch = useAppDispatch()
 
   const onClickHandler = () => {
-    AppDispatch(setActiveChatName(name))
+    AppDispatch(setActiveConversation({ conversationId, conversationName }))
   }
 
   return (
@@ -33,14 +34,14 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
           <img
             style={{ width: '100%' }}
             src={placeholderProfilePicture}
-            alt={`${name}'s profile`}
+            alt={`${conversationName}'s profile`}
           />
         </Box>
 
         <Box sx={contentContainerStyles}>
           <Box sx={contentMainTextStyles}>
             <Typography variant="body2" sx={{ width: '100%' }}>
-              {name}
+              {conversationName}
             </Typography>
             <Typography
               component="div"

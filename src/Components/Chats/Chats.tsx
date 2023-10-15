@@ -60,7 +60,7 @@ export const Chats: React.FC = () => {
         ) : null}
         {isSuccess && data?.length > 0
           ? data.map((chatInfo) => (
-              <ChatQuickView key={chatInfo.name} {...chatInfo} />
+              <ChatQuickView key={chatInfo.conversationId} {...chatInfo} />
             ))
           : null}
         {isSuccess && data?.length === 0 ? (

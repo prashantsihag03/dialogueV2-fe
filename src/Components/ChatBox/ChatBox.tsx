@@ -1,140 +1,60 @@
-import { Box, Divider } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import { Header } from './Header/Header'
 import {
   chatBoxHeadingContainerStyle,
   containerStyle,
   messages,
+  noConversationContainerStyle,
 } from './styles'
 import MessageInputBox from './MessageInputBox'
 import Message from '../Message'
 import { useAppSelector } from '../../store/hooks'
-import { getActiveChatName } from '../../store/chats/selector'
+import { getActiveConversation } from '../../store/chats/selector'
+import { useGetMessagesQuery } from '../../store/api/slice'
+import { Stack } from '@mui/system'
 
 export const ChatBox: React.FC = () => {
-  const name = useAppSelector(getActiveChatName)
-  return (
+  const activeConversation = useAppSelector(getActiveConversation)
+  const { isFetching, data } = useGetMessagesQuery(undefined, {
+    skip: !Boolean(activeConversation?.conversationId),
+  })
+  return activeConversation ? (
     <Box sx={containerStyle}>
       <Box sx={chatBoxHeadingContainerStyle}>
-        <Header name={name} online={true} />
+        <Header
+          userId={activeConversation.conversationId}
+          fullName={activeConversation.conversationName}
+          online={true}
+        />
         <Divider color="primary" sx={{ width: '100%' }} />
       </Box>
       <Box sx={messages}>
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
+        {isFetching ? (
+          <Stack direction={'row'} width={'100%'} height={'100%'}>
+            <Typography variant="body1">Loading</Typography>
+          </Stack>
+        ) : null}
+        {data
+          ? data.map((msg) => (
+              <Message
+                key={msg.messageId}
+                name={msg.senderUserId}
+                timeStamp={msg.timestamp}
+                source={msg.source}
+                text={msg.text}
+              />
+            ))
+          : null}
       </Box>
       <Box sx={{ width: '100%', paddingTop: '2rem' }}>
         <MessageInputBox />
       </Box>
+    </Box>
+  ) : (
+    <Box sx={noConversationContainerStyle}>
+      <Typography variant="h2">
+        Select a conversation to display it here
+      </Typography>
     </Box>
   )
 }

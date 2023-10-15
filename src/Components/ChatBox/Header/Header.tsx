@@ -13,36 +13,48 @@ import {
 } from './styles'
 import { useAppDispatch } from '../../../store/hooks'
 import { setActiveSideBar } from '../../../store/sidebar/slice'
+import { setActiveProfileUserId } from '../../../store/profile/slice'
 
 export interface IActiveChatHeader {
-  name: string
+  userId: string
+  fullName: string
   online: boolean
 }
 
 export const Header: React.FC<IActiveChatHeader> = ({
-  name,
+  userId,
+  fullName,
   online,
 }: IActiveChatHeader) => {
   const appDispatch = useAppDispatch()
 
   return (
     <Box sx={containerStyle}>
-      <Box sx={profileContainer}>
-        <Box
-          sx={pictureContainer}
-          onClick={() => appDispatch(setActiveSideBar('profile'))}
-        >
+      <Box sx={profileContainer} borderRadius={1}>
+        <Box sx={pictureContainer}>
           <img
             style={{ width: '100%' }}
             src={placeholderProfilePicture}
-            alt={`${name}'s profile`}
+            alt={`${fullName}'s profile`}
           />
         </Box>
-        <Box sx={userDetailContainer}>
-          <Typography variant="h3">{name}</Typography>
+        <Box
+          sx={userDetailContainer}
+          borderRadius={1}
+          onClick={() => {
+            appDispatch(setActiveProfileUserId({ userId, fullName: fullName }))
+            appDispatch(setActiveSideBar('profile'))
+          }}
+        >
+          <Typography variant="h3" sx={{ color: 'inherit' }}>
+            {fullName}
+          </Typography>
           <Typography
             variant="subtitle1"
-            sx={{ color: online ? 'green' : 'gray' }}
+            fontWeight={'bold'}
+            sx={{
+              color: online ? 'success.main' : 'gray',
+            }}
           >
             {online ? 'Online' : 'Offline'}
           </Typography>

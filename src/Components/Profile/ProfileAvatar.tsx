@@ -12,6 +12,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
   lastOnline,
   profileImgSrc,
 }: IProfileAvatarProps) => {
+  console.log(name, lastOnline, profileImgSrc)
   return (
     <Box
       sx={{
@@ -23,7 +24,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
     >
       <Avatar
         alt={`${name}'s Profile Picture`}
-        src={profileImgSrc}
+        src={`${profileImgSrc}`}
         sx={{
           width: '12vw',
           maxWidth: '400px',

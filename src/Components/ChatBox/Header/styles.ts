@@ -23,18 +23,21 @@ export const pictureContainer: SxProps<Theme> = {
   justifyContent: 'center',
   alignItems: 'center',
   overflow: 'hidden',
-  '&:hover': {
-    cursor: 'pointer',
-  },
 }
 
 export const userDetailContainer: SxProps<Theme> = {
-  width: '100%',
-  marginLeft: '2%',
+  marginLeft: '0.2rem',
+  padding: '0.5rem 0.7rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
+  color: 'primary.main',
+  '&:hover': {
+    cursor: 'pointer',
+    backgroundColor: 'action.hover',
+    color: 'secondary.main',
+  },
 }
 
 export const optionContainer: SxProps<Theme> = {

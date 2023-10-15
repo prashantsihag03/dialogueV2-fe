@@ -29,7 +29,7 @@ export const Main = (args: Args) => {
         height: `${args.height}px`,
       }}
     >
-      <Profile />
+      <Profile userid="steverogers" />
     </Box>
   )
 }

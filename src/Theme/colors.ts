@@ -13,6 +13,11 @@ export const error = {
   dark: '#c72525',
 }
 
+export const success = {
+  light: '#00a005',
+  dark: '#04ff00',
+}
+
 export const highlight = {
   light: '#3d6599',
   dark: '#3d6599',

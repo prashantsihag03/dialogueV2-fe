@@ -12,6 +12,7 @@ import Chats from '../Chats'
 
 export const MainSection: React.FC = () => {
   const activeSideBar = useAppSelector(getActiveSideBar)
+
   return (
     <Box sx={containerStyles}>
       <Box sx={chatBoxSectionStyles} borderRadius={1}>

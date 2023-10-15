@@ -3,10 +3,12 @@ import { apiSlice } from './api/slice'
 import { chatsReducer } from './chats/slice'
 import { connectionReducer } from './connection/slice'
 import { sideBarReducer } from './sidebar/slice'
+import { profileReducer } from './profile/slice'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
   chats: chatsReducer,
+  profile: profileReducer,
   sideBar: sideBarReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 })
