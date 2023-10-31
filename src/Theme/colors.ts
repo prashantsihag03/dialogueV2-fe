@@ -34,7 +34,7 @@ export const background = {
     dark: '#222222',
   },
   paper: {
-    light: 'white',
+    light: '#FFF',
     dark: '#181818',
   },
 }

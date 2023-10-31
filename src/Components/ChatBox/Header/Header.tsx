@@ -42,7 +42,13 @@ export const Header: React.FC<IActiveChatHeader> = ({
           sx={userDetailContainer}
           borderRadius={1}
           onClick={() => {
-            appDispatch(setActiveProfileUserId({ userId, fullName: fullName }))
+            appDispatch(
+              setActiveProfileUserId({
+                userId,
+                fullName: fullName,
+                isLoggedInUser: false,
+              })
+            )
             appDispatch(setActiveSideBar('profile'))
           }}
         >

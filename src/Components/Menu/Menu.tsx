@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { isConnected } from '../../store/connection/selector'
 import { setActiveSideBar } from '../../store/sidebar/slice'
 import { useGetProfileQuery } from '../../store/api/slice'
+import { setActiveProfileUserId } from '../../store/profile/slice'
 
 interface IMenu {
   displayMode: DisplayMode
@@ -96,12 +97,22 @@ export const Menu: React.FC<IMenu> = ({
               },
             }}
           >
-            {isFetching ? (
+            {isFetching || !data ? (
               <AccountCircleOutlinedIcon titleAccess="Profile picture loading" />
             ) : (
               <Avatar
                 alt={data?.fullname}
                 src={data?.profileImgSrc}
+                onClick={() => {
+                  appDispatch(
+                    setActiveProfileUserId({
+                      userId: data.id,
+                      fullName: data.fullname,
+                      isLoggedInUser: true,
+                    })
+                  )
+                  appDispatch(setActiveSideBar('profile'))
+                }}
                 sx={{
                   width: '80%',
                   height: '80%',

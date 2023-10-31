@@ -6,9 +6,18 @@ import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined'
 import { iconStyles, messageBox, messageOptions } from './styles'
 import EmojiPicker, { Theme, EmojiClickData } from 'emoji-picker-react'
 import { useEffect, useState } from 'react'
+import {
+  useGetProfileQuery,
+  useSendMessageMutation,
+} from '../../../store/api/slice'
+import { useAppSelector } from '../../../store/hooks'
+import { getActiveConversation } from '../../../store/chats/selector'
 
 export const MessageInputBox: React.FC = () => {
   const [message, setMessage] = useState<string>('')
+  const activeConversation = useAppSelector(getActiveConversation)
+  const { data } = useGetProfileQuery(undefined)
+  const [sendMessageMutation] = useSendMessageMutation()
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
   const [emoticonEle, setEmoticonEle] = useState<SVGSVGElement | null>(null)
 
@@ -69,6 +78,20 @@ export const MessageInputBox: React.FC = () => {
         fontSize="large"
         sx={iconStyles}
         titleAccess="send message"
+        onClick={() => {
+          if (activeConversation?.conversationId == null || data?.id == null) {
+            console.error('ConversationId couldnt be found')
+            return
+          }
+          sendMessageMutation({
+            conversationId: activeConversation.conversationId,
+            messageId: '',
+            senderUserId: data?.id,
+            source: 'outgoing',
+            text: message,
+            timestamp: '',
+          })
+        }}
       />
       {emojiPickerLeftPos != null &&
       emojiPickerBottomPos != null &&

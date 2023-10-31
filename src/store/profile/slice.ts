@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface UserDetail {
   userId: string
   fullName: string | undefined
+  isLoggedInUser: boolean
 }
 
 interface IProfileState {

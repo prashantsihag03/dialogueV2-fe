@@ -15,6 +15,8 @@ export interface IChatQuickView {
    */
   lastMessage: string
 
+  isGroup: boolean
+
   /**
    * Number of text messages signed in user has not seen in a particular chat.
    */
@@ -28,5 +30,5 @@ export interface IChatQuickView {
    * - anytime before yesterday, date followed by first
    * three letter of the month. e.g. 21 Jan, 01 Sep
    */
-  lastMessageTime: string
+  lastMessageTime: number | undefined
 }

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Skeleton, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import placeholderProfilePicture from '../../assets/steverRogers.jpg'
 import { IChatQuickView } from './types'
@@ -13,18 +13,41 @@ import {
 } from './styles'
 import { useAppDispatch } from '../../store/hooks'
 import { setActiveConversation } from '../../store/chats/slice'
+import { useGetProfileQuery } from '../../store/api/slice'
+import cleanTimeUTCInstant from '../../utils/date-time-utils'
 
 export const ChatQuickView: React.FC<IChatQuickView> = ({
   conversationId,
   conversationName,
   unseen,
+  isGroup,
   lastMessage,
   lastMessageTime,
 }: IChatQuickView) => {
   const AppDispatch = useAppDispatch()
+  const { isFetching: isFetchingOtherUser, data: otherUserData } =
+    useGetProfileQuery(conversationName, {
+      skip: Boolean(isGroup),
+    })
+
+  const isConversationNameLoading = (): boolean => {
+    if (isGroup) return false
+    return isFetchingOtherUser
+  }
+
+  const getConversationName = (): string => {
+    if (isGroup) return conversationName
+    if (isFetchingOtherUser || otherUserData === undefined) return ''
+    return otherUserData.fullname
+  }
 
   const onClickHandler = () => {
-    AppDispatch(setActiveConversation({ conversationId, conversationName }))
+    AppDispatch(
+      setActiveConversation({
+        conversationId,
+        conversationName: getConversationName(),
+      })
+    )
   }
 
   return (
@@ -40,9 +63,13 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
 
         <Box sx={contentContainerStyles}>
           <Box sx={contentMainTextStyles}>
-            <Typography variant="body2" sx={{ width: '100%' }}>
-              {conversationName}
-            </Typography>
+            {isConversationNameLoading() ? (
+              <Skeleton variant="rectangular" width="100%" />
+            ) : (
+              <Typography variant="body2" sx={{ width: '100%' }}>
+                {getConversationName()}
+              </Typography>
+            )}
             <Typography
               component="div"
               variant="subtitle2"
@@ -58,7 +85,9 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
           </Box>
 
           <Box sx={chatIndicatorStyles}>
-            <Typography variant="subtitle2">{lastMessageTime}</Typography>
+            <Typography variant="subtitle2">
+              {cleanTimeUTCInstant(lastMessageTime)}
+            </Typography>
             {unseen > 0 ? (
               <Box sx={chatUnSeenMsgContainerStyles}>
                 <Typography variant="subtitle2" sx={{ color: 'white' }}>

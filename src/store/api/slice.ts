@@ -8,6 +8,7 @@ export interface IProfileData {
   fullname: string
   profileImgSrc: string
   lastOnlineUTCDateTime: string
+  bio: string
 }
 
 export interface IMessageData {
@@ -16,6 +17,20 @@ export interface IMessageData {
   timestamp: string
   source: 'outgoing' | 'incoming'
   text: string
+}
+
+export interface IMessagePostBody extends IMessageData {
+  conversationId: string
+}
+
+export interface ConversationAttributes {
+  isGroup: boolean
+  conversationUserId: string
+  conversationName?: string
+}
+
+export interface ISearchUser {
+  id: string
 }
 
 // Define our single API slice object
@@ -28,17 +43,50 @@ export const apiSlice = createApi({
     getChats: builder.query<IChatQuickView[], void>({
       query: () => '/conversations',
     }),
+    createConversation: builder.mutation<string, ConversationAttributes>({
+      query: (body) => ({
+        url: `/conversations`,
+        method: 'POST',
+        body,
+      }),
+    }),
     getProfile: builder.query<IProfileData, string | undefined>({
       query: (userid: string | undefined) => {
         if (userid) return `/profile/${userid}`
         return `/profile`
       },
     }),
-    getMessages: builder.query<IMessageData[], void>({
-      query: () => '/messages',
+    getMembers: builder.query<string[], string | undefined>({
+      query: (conversationId: string) => {
+        return `/conversations/${conversationId}/members`
+      },
+    }),
+    getMessages: builder.query<IMessageData[], string>({
+      query: (conversationId: string) =>
+        `/conversations/${conversationId}/messages`,
+    }),
+    sendMessage: builder.mutation<string, IMessagePostBody>({
+      query: (body) => ({
+        url: `/conversations/message`,
+        method: 'POST',
+        body: {
+          ...body,
+          source: 'outgoing',
+        },
+      }),
+    }),
+    searchUser: builder.query<ISearchUser[], string>({
+      query: (userid: string) => `/user/search/${userid}`,
     }),
   }),
 })
 
-export const { useGetChatsQuery, useGetProfileQuery, useGetMessagesQuery } =
-  apiSlice
+export const {
+  useGetChatsQuery,
+  useGetProfileQuery,
+  useGetMessagesQuery,
+  useSearchUserQuery,
+  useCreateConversationMutation,
+  useGetMembersQuery,
+  useSendMessageMutation,
+} = apiSlice

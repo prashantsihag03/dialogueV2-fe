@@ -12,12 +12,16 @@ import { useAppSelector } from '../../store/hooks'
 import { getActiveConversation } from '../../store/chats/selector'
 import { useGetMessagesQuery } from '../../store/api/slice'
 import { Stack } from '@mui/system'
+import cleanTimeUTCInstant from '../../utils/date-time-utils'
 
 export const ChatBox: React.FC = () => {
   const activeConversation = useAppSelector(getActiveConversation)
-  const { isFetching, data } = useGetMessagesQuery(undefined, {
-    skip: !Boolean(activeConversation?.conversationId),
-  })
+  const { isFetching, data } = useGetMessagesQuery(
+    activeConversation?.conversationId || '',
+    {
+      skip: !Boolean(activeConversation?.conversationId),
+    }
+  )
   return activeConversation ? (
     <Box sx={containerStyle}>
       <Box sx={chatBoxHeadingContainerStyle}>
@@ -39,7 +43,7 @@ export const ChatBox: React.FC = () => {
               <Message
                 key={msg.messageId}
                 name={msg.senderUserId}
-                timeStamp={msg.timestamp}
+                timeStamp={cleanTimeUTCInstant(Number(msg.timestamp))}
                 source={msg.source}
                 text={msg.text}
               />
@@ -52,7 +56,7 @@ export const ChatBox: React.FC = () => {
     </Box>
   ) : (
     <Box sx={noConversationContainerStyle}>
-      <Typography variant="h2">
+      <Typography variant="body2" fontSize="1em">
         Select a conversation to display it here
       </Typography>
     </Box>

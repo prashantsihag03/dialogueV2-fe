@@ -16,8 +16,6 @@ export const Profile: React.FC = () => {
     }
   )
 
-  console.log('data', data)
-
   return (
     <Box sx={containerStyles}>
       <ProfileHeader />
@@ -44,7 +42,7 @@ export const Profile: React.FC = () => {
                   } as Partial<FilledInputProps>
                 }
                 label="Bio"
-                value="I can do this all day."
+                value={data.bio}
                 variant="filled"
                 disabled
                 sx={{
@@ -56,20 +54,31 @@ export const Profile: React.FC = () => {
               />
             </Stack>
           </Stack>
-          <Stack direction="column" alignItems="center" width={'100%'}>
-            <Button variant="text" color="primary">
-              Clear Chat
-            </Button>
-            <Button variant="text" color="primary">
-              Delete Chat
-            </Button>
-            <Button variant="text" color="error">
-              Block {data.fullname}
-            </Button>
-            <Button variant="text" color="error">
-              Report {data.fullname}
-            </Button>
-          </Stack>
+          {!activeProfileUser?.isLoggedInUser ? (
+            <Stack direction="column" alignItems="center" width={'100%'}>
+              <Button variant="text" color="primary">
+                Clear Chat
+              </Button>
+              <Button variant="text" color="primary">
+                Delete Chat
+              </Button>
+              <Button variant="text" color="error">
+                Block {data.fullname}
+              </Button>
+              <Button variant="text" color="error">
+                Report {data.fullname}
+              </Button>
+            </Stack>
+          ) : (
+            <Stack direction="column" alignItems="center" width={'100%'}>
+              <Button variant="text" color="primary" href="/logout">
+                Log out
+              </Button>
+              <Button variant="text" color="error">
+                Delete Account
+              </Button>
+            </Stack>
+          )}
         </Stack>
       ) : null}
     </Box>
