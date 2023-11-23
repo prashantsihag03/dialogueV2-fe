@@ -7,6 +7,7 @@ export const containerStyles: SxProps<Theme> = {
 
   '&:hover': {
     cursor: 'pointer',
+    fontWeight: 'bold',
     backgroundColor: 'action.hover',
   },
 }

@@ -1,6 +1,6 @@
 export const primary = {
-  light: '#f9f9f9',
-  dark: '#101010',
+  light: '#101010',
+  dark: '#f9f9f9',
 }
 
 export const secondary = {
@@ -8,9 +8,19 @@ export const secondary = {
   dark: '#8dafff',
 }
 
+export const error = {
+  light: '#ff0000',
+  dark: '#c72525',
+}
+
+export const success = {
+  light: '#00a005',
+  dark: '#04ff00',
+}
+
 export const highlight = {
-  light: '#3d6599',
-  dark: '#3d6599',
+  light: '#adc6ff',
+  dark: '#2b6bff',
 }
 
 export const text = {
@@ -24,7 +34,7 @@ export const background = {
     dark: '#222222',
   },
   paper: {
-    light: 'white',
+    light: '#FFF',
     dark: '#181818',
   },
 }
@@ -33,7 +43,7 @@ export const action = {
   active: '#FFF',
   hover: {
     light: 'rgba(128, 128, 128, 0.2)',
-    dark: 'rgba(128, 128, 128, 0.5)',
+    dark: '#2d2d2d80',
   },
 }
 

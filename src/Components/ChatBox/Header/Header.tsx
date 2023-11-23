@@ -1,78 +1,66 @@
-import { Box, SxProps, Typography } from '@mui/material'
-import { Theme } from '@mui/system'
+import { Box, Typography } from '@mui/material'
 import placeholderProfilePicture from '../../../assets/steverRogers.jpg'
 import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined'
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined'
-
-const containerStyle: SxProps<Theme> = {
-  width: '100%',
-  padding: '0.5rem',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}
-
-const profileContainer: SxProps<Theme> = {
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-}
-
-const pictureContainer: SxProps<Theme> = {
-  width: '3rem',
-  borderRadius: '100vw',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  overflow: 'hidden',
-}
-
-const userDetailContainer: SxProps<Theme> = {
-  width: '100%',
-  marginLeft: '2%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-}
-
-const optionContainer: SxProps<Theme> = {
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-}
-
-const iconStyles: SxProps<Theme> = {
-  marginLeft: '1.2rem',
-}
+import {
+  iconStyles,
+  containerStyle,
+  optionContainer,
+  pictureContainer,
+  profileContainer,
+  userDetailContainer,
+} from './styles'
+import { useAppDispatch } from '../../../store/hooks'
+import { setActiveSideBar } from '../../../store/sidebar/slice'
+import { setActiveProfileUserId } from '../../../store/profile/slice'
 
 export interface IActiveChatHeader {
-  name: string
+  userId: string
+  fullName: string
   online: boolean
 }
 
 export const Header: React.FC<IActiveChatHeader> = ({
-  name,
+  userId,
+  fullName,
   online,
 }: IActiveChatHeader) => {
+  const appDispatch = useAppDispatch()
+
   return (
     <Box sx={containerStyle}>
-      <Box sx={profileContainer}>
+      <Box sx={profileContainer} borderRadius={1}>
         <Box sx={pictureContainer}>
           <img
             style={{ width: '100%' }}
             src={placeholderProfilePicture}
-            alt={`${name}'s profile`}
+            alt={`${fullName}'s profile`}
           />
         </Box>
-        <Box sx={userDetailContainer}>
-          <Typography variant="h3">{name}</Typography>
+        <Box
+          sx={userDetailContainer}
+          borderRadius={1}
+          onClick={() => {
+            appDispatch(
+              setActiveProfileUserId({
+                id: userId,
+                name: fullName,
+                isLoggedInUser: false,
+              })
+            )
+            appDispatch(setActiveSideBar('profile'))
+          }}
+        >
+          <Typography variant="h3" sx={{ color: 'inherit' }}>
+            {fullName}
+          </Typography>
           <Typography
             variant="subtitle1"
-            sx={{ color: online ? 'green' : 'gray' }}
+            fontWeight={'bold'}
+            sx={{
+              color: online ? 'success.main' : 'gray',
+            }}
           >
             {online ? 'Online' : 'Offline'}
           </Typography>

@@ -1,0 +1,4 @@
+{
+  "/profile": "/profile/steverogers",
+  "/user/search/:userid": "/user?id=:userid"
+}

@@ -1,15 +1,21 @@
 export interface IChatQuickView {
   /**
-   * Name of the chat. This could be a person with who signed in
-   * user has previously created a chat with or a group chat.
+   * Id of the conversation, could be other party's userid or a name if its a group
    */
-  name: string
+  conversationId: string
+
+  /**
+   * Name of the conversation, could be other party's userid or a name if its a group
+   */
+  conversationName: string
 
   /**
    * Text representing most recent message sent in a particular chat.
    * This could be from either party or anyone from the group chat.
    */
   lastMessage: string
+
+  isGroup: boolean
 
   /**
    * Number of text messages signed in user has not seen in a particular chat.
@@ -24,5 +30,7 @@ export interface IChatQuickView {
    * - anytime before yesterday, date followed by first
    * three letter of the month. e.g. 21 Jan, 01 Sep
    */
-  lastMessageTime: string
+  lastMessageTime: number | undefined
+
+  lastMessageSenderId: string
 }

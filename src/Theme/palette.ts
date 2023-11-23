@@ -1,5 +1,14 @@
 import { PaletteOptions } from '@mui/material'
-import { action, background, primary, secondary, text } from './colors'
+import {
+  action,
+  highlight,
+  background,
+  error,
+  primary,
+  secondary,
+  success,
+  text,
+} from './colors'
 import { DisplayMode } from './types'
 
 declare module '@mui/material/styles' {
@@ -9,9 +18,19 @@ declare module '@mui/material/styles' {
       light: string
       dark: string
     }
+    highlight: {
+      main: string
+      light: string
+      dark: string
+    }
   }
   interface PaletteOptions {
     focus: {
+      main: string
+      light: string
+      dark: string
+    }
+    highlight: {
       main: string
       light: string
       dark: string
@@ -32,6 +51,16 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       light: secondary.light,
       dark: secondary.dark,
     },
+    error: {
+      main: mode === 'light' ? error.light : error.dark,
+      light: error.light,
+      dark: error.dark,
+    },
+    success: {
+      main: mode === 'light' ? success.light : success.dark,
+      light: success.light,
+      dark: success.dark,
+    },
     text: {
       primary: mode === 'light' ? text.primary.light : text.primary.dark,
       secondary: mode === 'light' ? text.secondary.light : text.secondary.dark,
@@ -50,6 +79,11 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       main: mode === 'light' ? primary.light : primary.dark,
       light: primary.light,
       dark: primary.dark,
+    },
+    highlight: {
+      main: mode === 'light' ? highlight.light : highlight.dark,
+      light: highlight.light,
+      dark: highlight.dark,
     },
   }
 }

@@ -1,21 +1,20 @@
 import { Box } from '@mui/material'
 import { ComponentMeta } from '@storybook/react'
 import { baseCustomDecorator } from '../../utils/storybook-utils'
-import { Chats } from './Chats'
+import { Profile } from './Profile'
 
 export default {
-  title: 'Organisms/Chats',
-  component: Chats,
+  title: 'Organisms/Profile',
+  component: Profile,
   decorators: [baseCustomDecorator],
   parameters: {
     docs: {
       description: {
-        component:
-          "List of all messages that the signed-in user is part of. All messages are represented by Chat's Quick View",
+        component: '',
       },
     },
   },
-} as ComponentMeta<typeof Chats>
+} as ComponentMeta<typeof Profile>
 
 interface Args {
   width: number
@@ -28,15 +27,14 @@ export const Main = (args: Args) => {
       sx={{
         width: `${args.width}px`,
         height: `${args.height}px`,
-        margin: 'auto',
       }}
     >
-      <Chats />
+      <Profile userid="steverogers" />
     </Box>
   )
 }
 
 Main.args = {
   width: 450,
-  height: 700,
+  height: 900,
 }

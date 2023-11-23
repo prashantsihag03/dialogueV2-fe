@@ -1,140 +1,192 @@
-import { Box, Divider } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import { Header } from './Header/Header'
 import {
-  chatBoxHeadingContainerStyle,
   containerStyle,
   messages,
+  noConversationContainerStyle,
 } from './styles'
 import MessageInputBox from './MessageInputBox'
 import Message from '../Message'
-import { useAppSelector } from '../../store/hooks'
-import { getActiveChatName } from '../../store/chats/selector'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import {
+  getActiveConversation,
+  getShowLatestMsgInView,
+} from '../../store/chats/selector'
+import {
+  IMessageData,
+  useGetMessagesQuery,
+  useGetProfileQuery,
+} from '../../store/api/slice'
+import { Stack } from '@mui/system'
+import cleanTimeUTCInstant from '../../utils/date-time-utils'
+import { useEffect, useState } from 'react'
+import {
+  OngoingMessageValue,
+  addOngoingMessages,
+  createEmptyConversation,
+} from '../../store/onGoingMessages/slice'
+import { getOngoingMessagesByConversationId } from '../../store/onGoingMessages/selector'
+import { setShowLatestMsgInView } from '../../store/chats/slice'
 
 export const ChatBox: React.FC = () => {
-  const name = useAppSelector(getActiveChatName)
-  return (
+  const appDispatch = useAppDispatch()
+  const { data: loggedProfileData } = useGetProfileQuery(undefined)
+  // const [currentLastMessage, setCurentLastMessage] =
+  //   useState<HTMLDivElement | null>(null)
+  const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
+  const activeConversation = useAppSelector(getActiveConversation)
+  const onGoingMessages = useAppSelector(
+    getOngoingMessagesByConversationId(activeConversation?.conversationId || '')
+  )
+  const [msgBoxEle, setMsgBoxEle] = useState<HTMLDivElement | null>(null)
+  const { isFetching, isSuccess, data } = useGetMessagesQuery(
+    activeConversation?.conversationId || '',
+    {
+      skip: !Boolean(activeConversation?.conversationId),
+    }
+  )
+
+  useEffect(() => {
+    if (showLatestMsgOnDataChange && msgBoxEle) {
+      console.log('scrolling')
+      msgBoxEle.scrollIntoView({
+        behavior: 'smooth',
+      })
+      appDispatch(setShowLatestMsgInView(false))
+    }
+  }, [appDispatch, onGoingMessages, msgBoxEle, showLatestMsgOnDataChange])
+
+  useEffect(() => {
+    if (
+      !isFetching &&
+      isSuccess &&
+      data &&
+      activeConversation?.conversationId
+    ) {
+      const oldMessages: OngoingMessageValue[] = data.map(
+        (msgApiResult: IMessageData) => {
+          return {
+            conversationId: activeConversation.conversationId,
+            messageId: msgApiResult.messageId,
+            timeStamp: Number(msgApiResult.timestamp),
+            message: msgApiResult.text,
+            senderId: msgApiResult.senderUserId,
+            status: 'sent',
+            localMessageId: '',
+          }
+        }
+      )
+      console.log('Adding ongoing messages as: ', oldMessages)
+      if (oldMessages.length > 0) {
+        appDispatch(addOngoingMessages(oldMessages))
+        return
+      }
+      appDispatch(createEmptyConversation(activeConversation?.conversationId))
+    }
+  }, [data])
+
+  useEffect(() => {
+    console.log('Checking whether to scroll to bottom')
+    if (msgBoxEle) {
+      console.log('Scrolling to bottom')
+      // Calculate the scroll height and scroll to the bottom
+      msgBoxEle.scrollIntoView({
+        behavior: 'instant',
+      })
+    }
+  }, [msgBoxEle])
+
+  return activeConversation ? (
     <Box sx={containerStyle}>
-      <Box sx={chatBoxHeadingContainerStyle}>
-        <Header name={name} online={true} />
+      <Stack
+        direction="column"
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Header
+          userId={activeConversation.profileId}
+          fullName={activeConversation.conversationName}
+          online={true}
+        />
         <Divider color="primary" sx={{ width: '100%' }} />
-      </Box>
-      <Box sx={messages}>
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="outgoing"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
-        <Message
-          name={name}
-          timeStamp={'9:13'}
-          source="incoming"
-          text={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. '
-          }
-        />
+      </Stack>
+      <Box
+        sx={messages}
+        onScroll={(e) => {
+          console.log(e)
+        }}
+      >
+        {isFetching ? (
+          <Stack direction={'row'} width={'100%'} height={'100%'}>
+            <Typography variant="body1">Loading</Typography>
+          </Stack>
+        ) : null}
+        {data &&
+        loggedProfileData &&
+        onGoingMessages &&
+        onGoingMessages.length > 0
+          ? onGoingMessages.map((msg, index) => {
+              if (onGoingMessages.length - 1 === index) {
+                return (
+                  <>
+                    <Message
+                      key={msg.messageId}
+                      name={msg.senderId}
+                      timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                      source={
+                        msg.senderId === loggedProfileData.id
+                          ? 'outgoing'
+                          : 'incoming'
+                      }
+                      text={msg.message}
+                      status={msg.status}
+                    />
+                    <div
+                      ref={(node) => {
+                        setMsgBoxEle(node)
+                      }}
+                    ></div>
+                  </>
+                )
+              }
+              return (
+                <Message
+                  key={msg.messageId}
+                  name={msg.senderId}
+                  timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                  source={
+                    msg.senderId === loggedProfileData.id
+                      ? 'outgoing'
+                      : 'incoming'
+                  }
+                  text={msg.message}
+                  status={msg.status}
+                />
+              )
+            })
+          : null}
+
+        {data &&
+        loggedProfileData &&
+        onGoingMessages &&
+        onGoingMessages.length == 0 ? (
+          <Box sx={noConversationContainerStyle}>
+            <Typography variant="body2" fontSize="1em">
+              No messages to display.
+            </Typography>
+          </Box>
+        ) : null}
       </Box>
       <Box sx={{ width: '100%', paddingTop: '2rem' }}>
         <MessageInputBox />
       </Box>
+    </Box>
+  ) : (
+    <Box sx={noConversationContainerStyle}>
+      <Typography variant="body2" fontSize="1em">
+        Select a conversation to display it here
+      </Typography>
     </Box>
   )
 }

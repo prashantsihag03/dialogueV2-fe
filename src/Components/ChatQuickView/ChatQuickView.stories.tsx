@@ -36,7 +36,8 @@ export const Main = (args: Args) => {
 }
 
 Main.args = {
-  name: 'Steve Rogers',
+  conversationId: 'steverogers',
+  conversationName: 'Steve Rogers',
   unseen: 1,
   lastMessageTime: '9:13',
   lastMessage:

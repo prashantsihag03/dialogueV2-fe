@@ -8,6 +8,20 @@ export interface IMessage {
   timeStamp: string
   text: string
   source: 'incoming' | 'outgoing'
+  status: 'sent' | 'pending' | 'failed'
+}
+
+const getBackgroundColor = (
+  status: 'sent' | 'pending' | 'failed',
+  source: 'outgoing' | 'incoming'
+) => {
+  if (status === 'pending') {
+    return 'action.hover'
+  }
+  if (status === 'failed') {
+    return 'maroon'
+  }
+  return source === 'outgoing' ? secondary.light : 'background.default'
 }
 
 export const Message: React.FC<IMessage> = ({
@@ -15,6 +29,7 @@ export const Message: React.FC<IMessage> = ({
   timeStamp,
   text,
   source,
+  status,
 }: IMessage) => {
   return (
     <Box
@@ -40,14 +55,15 @@ export const Message: React.FC<IMessage> = ({
           alignItems: source === 'incoming' ? 'flex-start' : 'flex-end',
         }}
       >
-        <Typography variant="subtitle1">{name}</Typography>
+        <Typography variant="subtitle1">
+          {source === 'outgoing' ? 'you' : name}
+        </Typography>
         <Typography
           variant="body2"
           sx={{
             ...message,
             color: source === 'outgoing' ? 'white' : 'palette.text.primary',
-            backgroundColor:
-              source === 'outgoing' ? secondary.light : 'background.default',
+            backgroundColor: getBackgroundColor(status, source),
           }}
         >
           {text}

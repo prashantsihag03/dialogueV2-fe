@@ -13,7 +13,7 @@ export const subContainer: SxProps<Theme> = {
   display: 'flex',
   height: '100%',
   flexDirection: 'column',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
 }
 
@@ -28,8 +28,9 @@ export const profileContainer: SxProps<Theme> = {
 }
 
 export const message: SxProps<Theme> = {
-  padding: '1rem',
+  padding: '0.7rem',
   maxWidth: '600px',
+  minWidth: '4rem',
   letterSpacing: '0.7pt',
   backgroundColor: 'background.default',
   borderRadius: '0.5rem',
