@@ -4,19 +4,27 @@ import { chatsReducer } from './chats/slice'
 import { connectionReducer } from './connection/slice'
 import { sideBarReducer } from './sidebar/slice'
 import { profileReducer } from './profile/slice'
+import { socketMiddleware } from './middlewares/socket'
+import { io } from 'socket.io-client'
+import { onGoingMessagesReducer } from './onGoingMessages/slice'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
   chats: chatsReducer,
   profile: profileReducer,
   sideBar: sideBarReducer,
+  onGoingMessages: onGoingMessagesReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 })
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware()
+      .concat(apiSlice.middleware)
+      .concat(
+        socketMiddleware(io('http://localhost:3000/', { autoConnect: false }))
+      ),
 })
 
 export type RootState = ReturnType<typeof store.getState>

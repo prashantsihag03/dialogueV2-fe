@@ -44,8 +44,8 @@ export const Header: React.FC<IActiveChatHeader> = ({
           onClick={() => {
             appDispatch(
               setActiveProfileUserId({
-                userId,
-                fullName: fullName,
+                id: userId,
+                name: fullName,
                 isLoggedInUser: false,
               })
             )

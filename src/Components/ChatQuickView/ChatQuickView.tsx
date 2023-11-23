@@ -1,4 +1,4 @@
-import { Skeleton, Typography } from '@mui/material'
+import { Skeleton, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import placeholderProfilePicture from '../../assets/steverRogers.jpg'
 import { IChatQuickView } from './types'
@@ -8,13 +8,14 @@ import {
   containerStyles,
   contentContainerStyles,
   contentMainTextStyles,
-  profileContainerStyle,
-  subContainerStyles,
 } from './styles'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { setActiveConversation } from '../../store/chats/slice'
 import { useGetProfileQuery } from '../../store/api/slice'
 import cleanTimeUTCInstant from '../../utils/date-time-utils'
+import { getMyProfileData } from '../../store/profile/selector'
+import { useEffect } from 'react'
+import { getActiveConversation } from '../../store/chats/selector'
 
 export const ChatQuickView: React.FC<IChatQuickView> = ({
   conversationId,
@@ -23,8 +24,11 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
   isGroup,
   lastMessage,
   lastMessageTime,
+  lastMessageSenderId,
 }: IChatQuickView) => {
   const AppDispatch = useAppDispatch()
+  const myProfile = useAppSelector(getMyProfileData)
+  const activeConversation = useAppSelector(getActiveConversation)
   const { isFetching: isFetchingOtherUser, data: otherUserData } =
     useGetProfileQuery(conversationName, {
       skip: Boolean(isGroup),
@@ -46,20 +50,61 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
       setActiveConversation({
         conversationId,
         conversationName: getConversationName(),
+        isGroup: isGroup,
+        profileId: isGroup ? conversationId : conversationName,
       })
     )
+    AppDispatch({ type: 'socket/hello', payload: 'Hello from frontend' })
   }
 
+  const getLastMsgDisplayValue = () => {
+    if (lastMessage != null && lastMessage.length > 0) {
+      if (myProfile.id === lastMessageSenderId) {
+        return `You: ${lastMessage}`
+      }
+      return `${lastMessageSenderId}: ${lastMessage}`
+    }
+    return ''
+  }
+
+  useEffect(() => {
+    console.log('MyProfile: ', myProfile)
+  }, [myProfile])
+
   return (
-    <Box sx={containerStyles} onClick={onClickHandler} borderRadius={1}>
-      <Box sx={subContainerStyles}>
-        <Box sx={profileContainerStyle}>
+    <Box
+      sx={{
+        ...containerStyles,
+        backgroundColor:
+          activeConversation?.conversationId === conversationId
+            ? 'action.hover'
+            : undefined,
+      }}
+      onClick={onClickHandler}
+      borderRadius={1}
+    >
+      <Stack
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
+        width="100%"
+        padding="2%"
+        sx={{ transition: 'all 0.35s linear' }}
+      >
+        <Stack
+          direction="row"
+          width="10%"
+          borderRadius={100}
+          justifyContent="center"
+          alignItems="center"
+          overflow="hidden"
+        >
           <img
             style={{ width: '100%' }}
             src={placeholderProfilePicture}
             alt={`${conversationName}'s profile`}
           />
-        </Box>
+        </Stack>
 
         <Box sx={contentContainerStyles}>
           <Box sx={contentMainTextStyles}>
@@ -80,7 +125,7 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
                 textOverflow: 'ellipsis',
               }}
             >
-              {lastMessage}
+              {getLastMsgDisplayValue()}
             </Typography>
           </Box>
 
@@ -97,7 +142,7 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
             ) : null}
           </Box>
         </Box>
-      </Box>
+      </Stack>
     </Box>
   )
 }

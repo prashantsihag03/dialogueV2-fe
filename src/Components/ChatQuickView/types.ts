@@ -31,4 +31,6 @@ export interface IChatQuickView {
    * three letter of the month. e.g. 21 Jan, 01 Sep
    */
   lastMessageTime: number | undefined
+
+  lastMessageSenderId: string
 }

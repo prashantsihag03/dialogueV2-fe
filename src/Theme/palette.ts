@@ -1,6 +1,7 @@
 import { PaletteOptions } from '@mui/material'
 import {
   action,
+  highlight,
   background,
   error,
   primary,
@@ -17,9 +18,19 @@ declare module '@mui/material/styles' {
       light: string
       dark: string
     }
+    highlight: {
+      main: string
+      light: string
+      dark: string
+    }
   }
   interface PaletteOptions {
     focus: {
+      main: string
+      light: string
+      dark: string
+    }
+    highlight: {
       main: string
       light: string
       dark: string
@@ -68,6 +79,11 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       main: mode === 'light' ? primary.light : primary.dark,
       light: primary.light,
       dark: primary.dark,
+    },
+    highlight: {
+      main: mode === 'light' ? highlight.light : highlight.dark,
+      light: highlight.light,
+      dark: highlight.dark,
     },
   }
 }

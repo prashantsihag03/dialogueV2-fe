@@ -1,11 +1,12 @@
 /* React-specific entry point that automatically generates
    hooks corresponding to the defined endpoints */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IChatQuickView } from '../../Components/ChatQuickView/types'
+import { MyProfileData } from '../profile/slice'
 
 export interface IProfileData {
   id: string
   fullname: string
+  email?: string
   profileImgSrc: string
   lastOnlineUTCDateTime: string
   bio: string
@@ -19,8 +20,18 @@ export interface IMessageData {
   text: string
 }
 
+export interface MessagePostResult {
+  conversationId: string
+  messageId: string
+  timeStamp: number
+  message: string
+  senderId: string
+  localMessageId: string
+}
+
 export interface IMessagePostBody extends IMessageData {
   conversationId: string
+  localMessageId: string
 }
 
 export interface ConversationAttributes {
@@ -37,13 +48,11 @@ export interface ISearchUser {
 export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
   reducerPath: 'api',
+  tagTypes: ['Profile', 'Conversation'],
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
-    getChats: builder.query<IChatQuickView[], void>({
-      query: () => '/conversations',
-    }),
-    createConversation: builder.mutation<string, ConversationAttributes>({
+    createConversation: builder.mutation<void, ConversationAttributes>({
       query: (body) => ({
         url: `/conversations`,
         method: 'POST',
@@ -55,6 +64,26 @@ export const apiSlice = createApi({
         if (userid) return `/profile/${userid}`
         return `/profile`
       },
+      providesTags: (result, error, args) => {
+        // Make sure to provide an array of FullTagDescriptions
+        return args
+          ? [{ type: 'Profile', id: args }]
+          : [{ type: 'Profile', id: 'myProfile' }]
+      },
+    }),
+    updateMyProfile: builder.mutation<void, MyProfileData>({
+      query: (body) => ({
+        url: `/profile`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Profile', id: 'myProfile' }],
+    }),
+    clearConversation: builder.mutation<void, string>({
+      query: (body) => ({
+        url: `/conversations/${body}/messages`,
+        method: 'DELETE',
+      }),
     }),
     getMembers: builder.query<string[], string | undefined>({
       query: (conversationId: string) => {
@@ -65,7 +94,7 @@ export const apiSlice = createApi({
       query: (conversationId: string) =>
         `/conversations/${conversationId}/messages`,
     }),
-    sendMessage: builder.mutation<string, IMessagePostBody>({
+    sendMessage: builder.mutation<MessagePostResult, IMessagePostBody>({
       query: (body) => ({
         url: `/conversations/message`,
         method: 'POST',
@@ -82,11 +111,12 @@ export const apiSlice = createApi({
 })
 
 export const {
-  useGetChatsQuery,
   useGetProfileQuery,
   useGetMessagesQuery,
   useSearchUserQuery,
   useCreateConversationMutation,
   useGetMembersQuery,
   useSendMessageMutation,
+  useUpdateMyProfileMutation,
+  useClearConversationMutation,
 } = apiSlice

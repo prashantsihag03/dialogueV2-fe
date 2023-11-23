@@ -1,27 +1,30 @@
-import { Avatar, Typography } from '@mui/material'
-import { Box } from '@mui/system'
+import { Avatar, Stack, Typography } from '@mui/material'
+import { ChangeEvent } from 'react'
+import ProfileTextField from './ProfileTextField'
 
 interface IProfileAvatarProps {
+  userId: string
   name: string
+  newName: string
+  edit: boolean
+  onNameChange: (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => void
   lastOnline: string
   profileImgSrc: string
 }
 
 export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
+  userId,
   name,
+  newName,
+  edit,
+  onNameChange,
   lastOnline,
   profileImgSrc,
 }: IProfileAvatarProps) => {
-  console.log(name, lastOnline, profileImgSrc)
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <Stack direction="column" justifyContent="center" alignItems="center">
       <Avatar
         alt={`${name}'s Profile Picture`}
         src={`${profileImgSrc}`}
@@ -31,10 +34,21 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
           height: '12vw',
         }}
       />
-      <Typography variant="body1" fontSize="1.5rem" sx={{ marginTop: '0.5em' }}>
-        {name}
-      </Typography>
-      <Typography variant="subtitle1">Last online {lastOnline}</Typography>
-    </Box>
+      <ProfileTextField
+        showLabel="onEdit"
+        inputTextAlign="center"
+        fieldValue={edit ? newName : name}
+        fieldSize={edit ? 'small' : 'medium'}
+        inputFontSize={edit ? '1rem' : '1.5rem'}
+        labelText="Full name"
+        mode={edit ? 'edit' : 'view'}
+        onFieldValueChange={onNameChange}
+        textFieldVariant={edit ? 'outlined' : 'standard'}
+      />
+      {lastOnline.length > 0 ? (
+        <Typography variant="subtitle1">Last online {lastOnline}</Typography>
+      ) : null}
+      <Typography variant="subtitle1">userid: {userId}</Typography>
+    </Stack>
   )
 }

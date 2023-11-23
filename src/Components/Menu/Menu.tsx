@@ -35,14 +35,14 @@ export const Menu: React.FC<IMenu> = ({
             appDispatch(setActiveSideBar('chats'))
           }}
         >
-          <Typography variant="subtitle1" sx={textItemStyles}>
+          <Typography variant="subtitle2" sx={textItemStyles}>
             Conversations
           </Typography>
         </Box>
       </Slide>
       <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
         <Box sx={iconContainerStyles}>
-          <Typography variant="subtitle1" sx={textItemStyles}>
+          <Typography variant="subtitle2" sx={textItemStyles}>
             Terms of Use
           </Typography>
         </Box>
@@ -106,8 +106,8 @@ export const Menu: React.FC<IMenu> = ({
                 onClick={() => {
                   appDispatch(
                     setActiveProfileUserId({
-                      userId: data.id,
-                      fullName: data.fullname,
+                      id: data.id,
+                      name: data.fullname,
                       isLoggedInUser: true,
                     })
                   )

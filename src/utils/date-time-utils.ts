@@ -1,13 +1,8 @@
 const cleanTimeUTCInstant = (utcInstant: number | undefined): string => {
-  console.log('Provided utcinstant is: ', utcInstant)
   if (!utcInstant || isNaN(utcInstant)) return ''
 
   const now = new Date()
   const localDate = new Date(utcInstant)
-
-  console.log('UTC Date converted into local date is: ', localDate)
-  console.log('Converted local time is: ', localDate.toLocaleTimeString())
-  console.log('Converted local date is: ', localDate.toLocaleDateString())
 
   // Check if the local date is today
   if (
@@ -16,7 +11,6 @@ const cleanTimeUTCInstant = (utcInstant: number | undefined): string => {
     localDate.getFullYear() === now.getFullYear()
   ) {
     // It's today, return in hh:mm format
-    console.log("It's today, return in hh:mm format")
     const hours = localDate.getHours().toString().padStart(2, '0')
     const minutes = localDate.getMinutes().toString().padStart(2, '0')
     return `${hours}:${minutes}`

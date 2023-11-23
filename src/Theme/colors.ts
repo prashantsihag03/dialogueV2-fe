@@ -19,8 +19,8 @@ export const success = {
 }
 
 export const highlight = {
-  light: '#3d6599',
-  dark: '#3d6599',
+  light: '#adc6ff',
+  dark: '#2b6bff',
 }
 
 export const text = {
@@ -43,7 +43,7 @@ export const action = {
   active: '#FFF',
   hover: {
     light: 'rgba(128, 128, 128, 0.2)',
-    dark: 'rgba(128, 128, 128, 0.5)',
+    dark: '#2d2d2d80',
   },
 }
 

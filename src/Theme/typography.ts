@@ -24,7 +24,7 @@ export const getTypographyTheme = (palette: Palette): TypographyOptions => {
     },
     subtitle1: {
       color: palette.text.secondary,
-      fontSize: '0.8rem',
+      fontSize: '0.6rem',
     },
     subtitle2: {
       color: palette.text.secondary,

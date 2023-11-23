@@ -47,7 +47,7 @@ export const getComponentsTheme = (
             textTransform: 'none',
             padding: '0.4rem 1rem',
             background: 'none',
-            fontSize: '1.1rem',
+            fontSize: '1rem',
             '&:hover': {
               background: 'none',
             },

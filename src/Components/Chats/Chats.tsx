@@ -15,15 +15,26 @@ import { ChatQuickView } from '../ChatQuickView/ChatQuickView'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { useCallback, useRef, useState } from 'react'
-import { useGetChatsQuery } from '../../store/api/slice'
 import { ChatsSkeleton } from './ChatsSkeleton'
 import CreateConversationDialog from '../CreateConversationDialog/CreateConversationDialog'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import {
+  getConversationSort,
+  getConversations,
+  getConversationsError,
+  isConversationsLoading,
+} from '../../store/chats/selector'
+import { sortConversations } from '../../store/chats/slice'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
+  const appDispatch = useAppDispatch()
   const [openCreateConvoDialog, setOpenCreateConvoDialog] =
     useState<boolean>(false)
-  const { isLoading, isFetching, isSuccess, isError, data } = useGetChatsQuery()
+  const sort = useAppSelector(getConversationSort)
+  const data = useAppSelector(getConversations)
+  const isFetching = useAppSelector(isConversationsLoading)
+  const error = useAppSelector(getConversationsError)
 
   const scrollClickHandler = useCallback(
     (toTop: boolean) => {
@@ -46,7 +57,6 @@ export const Chats: React.FC = () => {
             <CreateConversationDialog
               open={openCreateConvoDialog}
               onBackdropClick={() => {
-                console.log('Executing')
                 setOpenCreateConvoDialog(false)
               }}
             />
@@ -57,12 +67,21 @@ export const Chats: React.FC = () => {
               }}
             />
             <SearchIcon sx={actionIconStyles} />
-            <SortIcon sx={actionIconStyles} />
+            <SortIcon
+              onClick={() => {
+                if (sort === 'asc') appDispatch(sortConversations('desc'))
+                else appDispatch(sortConversations('asc'))
+              }}
+              sx={{
+                ...actionIconStyles,
+                transform: sort === 'asc' ? 'scaleX(-1) scaleY(-1)' : undefined,
+              }}
+            />
           </Box>
         </Box>
         <Box sx={chatsListStyles} component="div" ref={chatsListEleRef}>
-          {isLoading || isFetching ? <ChatsSkeleton /> : null}
-          {isError && !isLoading ? (
+          {isFetching ? <ChatsSkeleton /> : null}
+          {error && !isFetching ? (
             <Typography
               variant="body2"
               component={'p'}
@@ -76,12 +95,12 @@ export const Chats: React.FC = () => {
               No conversation to show
             </Typography>
           ) : null}
-          {isSuccess && data?.length > 0
+          {data && data.length > 0
             ? data.map((chatInfo) => (
                 <ChatQuickView key={chatInfo.conversationId} {...chatInfo} />
               ))
             : null}
-          {isSuccess && data?.length === 0 ? (
+          {data && data.length === 0 ? (
             <Typography
               variant="body2"
               component={'p'}

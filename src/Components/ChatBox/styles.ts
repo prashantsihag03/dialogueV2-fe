@@ -20,14 +20,6 @@ export const noConversationContainerStyle: SxProps<Theme> = {
   alignItems: 'center',
 }
 
-export const chatBoxHeadingContainerStyle: SxProps<Theme> = {
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-}
-
 export const chatContainer: SxProps<Theme> = {
   width: '100%',
   padding: '1rem',
@@ -45,7 +37,7 @@ export const messages: SxProps<Theme> = {
   padding: '2rem 1rem',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   overflowY: 'scroll',
 }

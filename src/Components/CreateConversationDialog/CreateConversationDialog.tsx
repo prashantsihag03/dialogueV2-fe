@@ -7,7 +7,6 @@ import {
   DialogTitle,
   List,
   ListItem,
-  ListItemText,
   Popover,
   Slide,
   TextField,
@@ -17,6 +16,9 @@ import {
   useCreateConversationMutation,
   useSearchUserQuery,
 } from '../../store/api/slice'
+import UserSearchResult from './UserSearchResult'
+import { useAppDispatch } from '../../store/hooks'
+import { getUserConversations } from '../../store/chats/thunk'
 
 interface ICreateConversationDialog {
   open: boolean
@@ -27,9 +29,13 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
   open,
   onBackdropClick,
 }: ICreateConversationDialog) => {
+  const appDispatch = useAppDispatch()
   const [searchUserId, setSearchUserId] = useState<string>('')
   const [startConversationValidation, setStartConversationValidation] =
     useState<string>('')
+  const [convoValidationColor, setConvoValidationColor] = useState<
+    'red' | 'green' | 'blue'
+  >('red')
   const [allowStart, setAllowStart] = useState<boolean>(false)
   const [showUserResult, setShowUserResult] = useState<boolean>(false)
   const [allowInput, setAllowInput] = useState<boolean>(true)
@@ -45,12 +51,29 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
 
   useEffect(() => {
     if (result && result.isSuccess) {
-      console.log(result)
+      appDispatch(getUserConversations())
+      setConvoValidationColor('green')
       setStartConversationValidation('Successfully created')
-      setAllowInput(true)
+      setSearchUserId('')
+      onBackdropClick()
+    }
+    if (result && result.isError) {
+      setConvoValidationColor('red')
+      setStartConversationValidation(
+        'Error. Conversation may have been created. Check and try again!'
+      )
       setSearchUserId('')
     }
-  }, [result])
+    setAllowInput(true)
+  }, [
+    result,
+    setConvoValidationColor,
+    setStartConversationValidation,
+    setSearchUserId,
+    setAllowInput,
+    onBackdropClick,
+    appDispatch,
+  ])
 
   return (
     <Dialog
@@ -60,7 +83,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
       fullWidth
       sx={{
         '& .MuiPaper-root': {
-          backgroundColor: 'background.default',
+          backgroundColor: 'background.paper',
         },
       }}
       onClose={(e, reason) => {
@@ -81,7 +104,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           <DialogContentText
             variant="body2"
             sx={{ marginBottom: '1em' }}
-            color="error"
+            color={convoValidationColor}
           >
             {startConversationValidation}
           </DialogContentText>
@@ -94,7 +117,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           fullWidth
           margin="none"
           id="userSearchbar"
-          label="Enter user id"
+          label="Search user by userid"
           type="search"
           variant="standard"
           onKeyDown={(e) => {
@@ -125,7 +148,12 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
             horizontal: 'left',
           }}
         >
-          <DialogContent>
+          <DialogContent
+            sx={{
+              padding: '0',
+              margin: '0',
+            }}
+          >
             {isFetching ? <DialogContentText>Loading</DialogContentText> : null}
             {isError ? (
               <DialogContentText>
@@ -143,25 +171,15 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
             searchUserId === originalArgs ? (
               <List dense>
                 {currentData.map((user, index) => (
-                  <ListItem
-                    key={index}
-                    sx={{
-                      borderRadius: 0.8,
-                      '&:hover': {
-                        backgroundColor: 'action.hover',
-                      },
-                    }}
-                  >
-                    <ListItemText
-                      sx={{ '&:hover': { cursor: 'pointer' } }}
+                  <ListItem key={index} dense>
+                    <UserSearchResult
+                      name={user.id}
                       onClick={() => {
                         setAllowStart(true)
                         setSearchUserId(user.id)
                         setShowUserResult(false)
                       }}
-                    >
-                      {user.id}
-                    </ListItemText>
+                    />
                   </ListItem>
                 ))}
               </List>
@@ -180,6 +198,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
             // if request failed, set response message as validation message
             setAllowStart(false)
             setAllowInput(false)
+            setConvoValidationColor('blue')
             setStartConversationValidation('Creating conversation ... ')
             createConversation({
               isGroup: false,
