@@ -13,6 +13,7 @@ interface IChatsState {
   activeConversation: IConversationDetail | undefined
   showLatestMsgInView: boolean
   conversations: IChatQuickView[]
+  convoFilteredList: IChatQuickView[]
   conversationsLoading: boolean
   conversationsError: SerializedError | undefined
   sort: 'asc' | 'desc'
@@ -29,6 +30,7 @@ const initialState: IChatsState = {
   activeConversation: undefined,
   showLatestMsgInView: true,
   conversations: [],
+  convoFilteredList: [],
   conversationsLoading: true,
   conversationsError: undefined,
   sort: 'desc',
@@ -85,6 +87,12 @@ const chatsSlice = createSlice({
       state.sort = action.payload
       state.conversations = sortConvo(state.conversations, action.payload)
     },
+    filterConversationList: (state, action: PayloadAction<string>) => {
+      const filteredConvo = state.conversations.filter((convo) =>
+        convo.conversationName.includes(action.payload)
+      )
+      state.convoFilteredList = filteredConvo
+    },
     updateConversationLastMessage: (
       state,
       action: PayloadAction<ConversationLastMessage>
@@ -129,6 +137,7 @@ const chatsSlice = createSlice({
 
 export const {
   sortConversations,
+  filterConversationList,
   setActiveConversation: setActiveConversation,
   updateConversationLastMessage: updateConversationLastMessage,
   setShowLatestMsgInView: setShowLatestMsgInView,

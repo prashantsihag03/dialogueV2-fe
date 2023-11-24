@@ -85,6 +85,12 @@ export const apiSlice = createApi({
         method: 'DELETE',
       }),
     }),
+    deleteConversation: builder.mutation<void, string>({
+      query: (conversationId) => ({
+        url: `/conversations/${conversationId}`,
+        method: 'DELETE',
+      }),
+    }),
     getMembers: builder.query<string[], string | undefined>({
       query: (conversationId: string) => {
         return `/conversations/${conversationId}/members`
@@ -119,4 +125,5 @@ export const {
   useSendMessageMutation,
   useUpdateMyProfileMutation,
   useClearConversationMutation,
+  useDeleteConversationMutation,
 } = apiSlice

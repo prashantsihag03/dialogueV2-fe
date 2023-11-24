@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { FilledInputProps, Popover, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import SearchIcon from '@mui/icons-material/Search'
 import SortIcon from '@mui/icons-material/Sort'
@@ -19,15 +19,22 @@ import { ChatsSkeleton } from './ChatsSkeleton'
 import CreateConversationDialog from '../CreateConversationDialog/CreateConversationDialog'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
+  getConversationFilteredList,
   getConversationSort,
   getConversations,
   getConversationsError,
   isConversationsLoading,
 } from '../../store/chats/selector'
-import { sortConversations } from '../../store/chats/slice'
+import {
+  filterConversationList,
+  sortConversations,
+} from '../../store/chats/slice'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
+  const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null)
+  const [search, setSearch] = useState<string>('')
+  const [searching, setSearching] = useState<boolean>(false)
   const appDispatch = useAppDispatch()
   const [openCreateConvoDialog, setOpenCreateConvoDialog] =
     useState<boolean>(false)
@@ -35,6 +42,7 @@ export const Chats: React.FC = () => {
   const data = useAppSelector(getConversations)
   const isFetching = useAppSelector(isConversationsLoading)
   const error = useAppSelector(getConversationsError)
+  const conversationFilteredList = useAppSelector(getConversationFilteredList)
 
   const scrollClickHandler = useCallback(
     (toTop: boolean) => {
@@ -66,7 +74,63 @@ export const Chats: React.FC = () => {
                 setOpenCreateConvoDialog(true)
               }}
             />
-            <SearchIcon sx={actionIconStyles} />
+            <SearchIcon
+              sx={actionIconStyles}
+              onClick={(event) => {
+                setAnchorEl(event.currentTarget)
+              }}
+            />
+            <Popover
+              id={Boolean(anchorEl) ? 'simple-popover' : undefined}
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={() => {
+                setAnchorEl(null)
+              }}
+              sx={{
+                backgroundColor: 'transparent',
+              }}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <TextField
+                InputProps={
+                  {
+                    disableUnderline: true,
+                    sx: {
+                      fontSize: '0.8rem',
+                    },
+                  } as Partial<FilledInputProps>
+                }
+                sx={{ margin: '0.5rem 0.5rem' }}
+                size="small"
+                InputLabelProps={{
+                  style: {
+                    fontSize: '0.9rem',
+                    color: '#838383',
+                  },
+                }}
+                variant="outlined"
+                label="Find conversation"
+                value={search}
+                onChange={(event) => {
+                  setSearching(false)
+                  setSearch(event.target.value)
+                }}
+                onKeyDown={(e) => {
+                  if (e.code.toString() === 'Enter') {
+                    setSearching(true)
+                    appDispatch(filterConversationList(search))
+                  }
+                }}
+              />
+            </Popover>
             <SortIcon
               onClick={() => {
                 if (sort === 'asc') appDispatch(sortConversations('desc'))
@@ -92,15 +156,15 @@ export const Chats: React.FC = () => {
                 height: '100%',
               }}
             >
-              No conversation to show
+              Error
             </Typography>
           ) : null}
-          {data && data.length > 0
+          {data && data.length > 0 && !searching
             ? data.map((chatInfo) => (
                 <ChatQuickView key={chatInfo.conversationId} {...chatInfo} />
               ))
             : null}
-          {data && data.length === 0 ? (
+          {data && data.length === 0 && !searching ? (
             <Typography
               variant="body2"
               component={'p'}
@@ -111,7 +175,26 @@ export const Chats: React.FC = () => {
                 height: '100%',
               }}
             >
-              No conversation to show
+              You have no conversations.
+            </Typography>
+          ) : null}
+          {searching && conversationFilteredList.length > 0
+            ? conversationFilteredList.map((chatInfo) => (
+                <ChatQuickView key={chatInfo.conversationId} {...chatInfo} />
+              ))
+            : null}
+          {searching && conversationFilteredList.length === 0 ? (
+            <Typography
+              variant="body2"
+              component={'p'}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+              }}
+            >
+              No conversation matches search criteria.
             </Typography>
           ) : null}
         </Box>

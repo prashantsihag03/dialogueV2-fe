@@ -3,6 +3,7 @@ import { Box } from '@mui/system'
 import { containerStyles } from './styles'
 import {
   useClearConversationMutation,
+  useDeleteConversationMutation,
   useGetProfileQuery,
   useUpdateMyProfileMutation,
 } from '../../store/api/slice'
@@ -31,6 +32,8 @@ export const Profile: React.FC = () => {
   const [newEmailValue, setNewEmailValue] = useState<string>('')
   const conversations = useAppSelector(getConversations)
   const [clearConversation, clearConvoResult] = useClearConversationMutation()
+  const [deleteConversation, deleteConvoResult] =
+    useDeleteConversationMutation()
   const { isFetching, isSuccess, data } = useGetProfileQuery(
     Boolean(activeProfileUser?.isLoggedInUser)
       ? undefined
@@ -67,6 +70,23 @@ export const Profile: React.FC = () => {
       appDispatch(getUserConversations())
     }
   }, [clearConvoResult])
+
+  useEffect(() => {
+    console.log(deleteConvoResult)
+    if (deleteConvoResult.isSuccess) {
+      const convoId = getConversationId()
+      if (convoId != null) {
+        // remove this convo if its active.
+        if (activeConversation?.conversationId === convoId) {
+          appDispatch(setActiveConversation(undefined))
+        }
+        // remove all ongoing messages for this conversation
+        appDispatch(removeOngoingMessages(convoId))
+      }
+      // remove the profile of this user as well.
+      appDispatch(getUserConversations())
+    }
+  }, [deleteConvoResult])
 
   return (
     <Box sx={containerStyles}>
@@ -149,10 +169,19 @@ export const Profile: React.FC = () => {
                   clearConversation(convoId)
                 }}
               >
-                Clear Chat
+                Clear Conversation
               </Button>
-              <Button variant="text" color="primary">
-                Delete Chat
+              <Button
+                variant="text"
+                color="primary"
+                disabled={getConversationId() == null ? true : false}
+                onClick={() => {
+                  const convoId = getConversationId()
+                  if (convoId == null) return
+                  deleteConversation(convoId)
+                }}
+              >
+                Delete Conversation
               </Button>
               <Button variant="text" color="error">
                 Block {data.fullname}

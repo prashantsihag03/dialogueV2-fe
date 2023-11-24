@@ -15,3 +15,6 @@ export const getShowLatestMsgInView = (state: RootState) =>
   state.chats.showLatestMsgInView
 
 export const getConversationSort = (state: RootState) => state.chats.sort
+
+export const getConversationFilteredList = (state: RootState) =>
+  state.chats.convoFilteredList
