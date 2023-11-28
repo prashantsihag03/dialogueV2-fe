@@ -15,10 +15,18 @@ export const MainSection: React.FC = () => {
 
   return (
     <Box sx={containerStyles}>
-      <Box sx={chatBoxSectionStyles} borderRadius={1}>
+      <Box
+        sx={chatBoxSectionStyles}
+        borderRadius={1}
+        className="chatbox-joyride"
+      >
         <ChatBox />
       </Box>
-      <Box sx={sideBarSectionStyles} borderRadius={1}>
+      <Box
+        sx={sideBarSectionStyles}
+        borderRadius={1}
+        className="sidebar-joyride"
+      >
         {activeSideBar === 'chats' ? <Chats /> : null}
         {activeSideBar === 'profile' ? <Profile /> : null}
       </Box>

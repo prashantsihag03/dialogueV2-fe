@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Button,
   Dialog,
@@ -17,31 +18,52 @@ import {
   useSearchUserQuery,
 } from '../../store/api/slice'
 import UserSearchResult from './UserSearchResult'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getUserConversations } from '../../store/chats/thunk'
+import {
+  getConversationsError,
+  getOpenCreateConvoDialog,
+  getShowCreateConvoSearchResult,
+  isConversationsLoading,
+  isCreateConvoEnabled,
+} from '../../store/chats/selector'
+import {
+  setCreateConvoDialogTransitionEnded,
+  setCreateConvoEnabled,
+  setShowCreateConvoSearchResult,
+} from '../../store/chats/slice'
 
 interface ICreateConversationDialog {
-  open: boolean
   onBackdropClick: () => void
 }
 
 const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
-  open,
   onBackdropClick,
 }: ICreateConversationDialog) => {
   const appDispatch = useAppDispatch()
+
   const [searchUserId, setSearchUserId] = useState<string>('')
+  const [allowInput, setAllowInput] = useState<boolean>(true)
+
   const [startConversationValidation, setStartConversationValidation] =
     useState<string>('')
   const [convoValidationColor, setConvoValidationColor] = useState<
-    'red' | 'green' | 'blue'
+    'red' | 'green' | 'skyblue'
   >('red')
-  const [allowStart, setAllowStart] = useState<boolean>(false)
-  const [showUserResult, setShowUserResult] = useState<boolean>(false)
-  const [allowInput, setAllowInput] = useState<boolean>(true)
+
+  const openCreateConvoDialog = useAppSelector(getOpenCreateConvoDialog)
+  const createConvoEnabled = useAppSelector(isCreateConvoEnabled)
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null)
   const [search, setSearch] = useState<boolean>(false)
+
+  const showCreateConvoSearchResult = useAppSelector(
+    getShowCreateConvoSearchResult
+  )
+
+  const [refreshConversation, setRefreshConversation] = useState<boolean>(false)
   const [createConversation, result] = useCreateConversationMutation()
+  const isConversationsFetching = useAppSelector(isConversationsLoading)
+  const conversationsError = useAppSelector(getConversationsError)
   const { isFetching, isError, currentData, originalArgs } = useSearchUserQuery(
     searchUserId.toLocaleLowerCase(),
     {
@@ -50,12 +72,16 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
   )
 
   useEffect(() => {
-    if (result && result.isSuccess) {
-      appDispatch(getUserConversations())
-      setConvoValidationColor('green')
-      setStartConversationValidation('Successfully created')
+    if (result && result.isSuccess && searchUserId !== '') {
       setSearchUserId('')
-      onBackdropClick()
+      if (!isConversationsFetching) {
+        appDispatch(getUserConversations())
+        setRefreshConversation(true)
+      }
+      setConvoValidationColor('green')
+      setStartConversationValidation(
+        'Conversation created. Refreshing conversation list ...'
+      )
     }
     if (result && result.isError) {
       setConvoValidationColor('red')
@@ -65,19 +91,25 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
       setSearchUserId('')
     }
     setAllowInput(true)
-  }, [
-    result,
-    setConvoValidationColor,
-    setStartConversationValidation,
-    setSearchUserId,
-    setAllowInput,
-    onBackdropClick,
-    appDispatch,
-  ])
+  }, [result])
+
+  useEffect(() => {
+    if (
+      !isConversationsFetching &&
+      !conversationsError &&
+      refreshConversation
+    ) {
+      setRefreshConversation(false)
+      onBackdropClick()
+    }
+  }, [isConversationsFetching])
 
   return (
     <Dialog
-      open={open}
+      onTransitionEnd={() => {
+        appDispatch(setCreateConvoDialogTransitionEnded(true))
+      }}
+      open={openCreateConvoDialog}
       keepMounted={false}
       TransitionComponent={Slide}
       fullWidth
@@ -92,7 +124,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
         }
         setSearchUserId('')
         setStartConversationValidation('')
-        setAllowStart(false)
+        appDispatch(setCreateConvoEnabled(false))
         setSearch(false)
       }}
     >
@@ -113,6 +145,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           ref={(node) => {
             setAnchorEl(node)
           }}
+          className="create-convo-search-userid"
           disabled={!allowInput}
           fullWidth
           margin="none"
@@ -123,13 +156,13 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           onKeyDown={(e) => {
             if (e.code.toString() === 'Enter') {
               setSearch(true)
-              setAllowStart(false)
-              setShowUserResult(true)
+              appDispatch(setCreateConvoEnabled(false))
+              appDispatch(setShowCreateConvoSearchResult(true))
             }
           }}
           onChange={(event) => {
             setSearch(false)
-            setAllowStart(false)
+            appDispatch(setCreateConvoEnabled(false))
             setSearchUserId(event.target.value)
           }}
         />
@@ -138,10 +171,10 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           PaperProps={{
             style: { width: anchorEl?.clientWidth },
           }}
-          open={showUserResult}
+          open={showCreateConvoSearchResult}
           anchorEl={anchorEl}
           onClose={() => {
-            setShowUserResult(false)
+            appDispatch(setShowCreateConvoSearchResult(false))
           }}
           anchorOrigin={{
             vertical: 'bottom',
@@ -173,11 +206,13 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
                 {currentData.map((user, index) => (
                   <ListItem key={index} dense>
                     <UserSearchResult
+                      id={index === 0 ? 'first' : undefined}
                       name={user.id}
                       onClick={() => {
-                        setAllowStart(true)
+                        appDispatch(setCreateConvoEnabled(true))
+                        setSearch(false)
                         setSearchUserId(user.id)
-                        setShowUserResult(false)
+                        appDispatch(setShowCreateConvoSearchResult(false))
                       }}
                     />
                   </ListItem>
@@ -189,24 +224,25 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
       </DialogContent>
       <DialogActions>
         <Button
-          disabled={!allowStart}
+          className="create-convo-btn"
+          disabled={!createConvoEnabled}
           variant="contained"
           color="secondary"
           sx={{ padding: '0.2em 1em' }}
           onClick={() => {
             // send request to create a new conversation for this user.
             // if request failed, set response message as validation message
-            setAllowStart(false)
+            appDispatch(setCreateConvoEnabled(false))
             setAllowInput(false)
-            setConvoValidationColor('blue')
-            setStartConversationValidation('Creating conversation ... ')
+            setConvoValidationColor('skyblue')
+            setStartConversationValidation('Creating conversation .')
             createConversation({
               isGroup: false,
               conversationUserId: searchUserId,
             })
           }}
         >
-          Start
+          Create
         </Button>
       </DialogActions>
     </Dialog>

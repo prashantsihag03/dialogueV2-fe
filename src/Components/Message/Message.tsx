@@ -9,6 +9,7 @@ export interface IMessage {
   text: string
   source: 'incoming' | 'outgoing'
   status: 'sent' | 'pending' | 'failed'
+  id?: string
 }
 
 const getBackgroundColor = (
@@ -30,23 +31,33 @@ export const Message: React.FC<IMessage> = ({
   text,
   source,
   status,
+  id,
 }: IMessage) => {
   return (
     <Box
+      className={id ? `${id}-message-container` : undefined}
       sx={{
         ...container,
         flexDirection: source === 'incoming' ? 'row' : 'row-reverse',
       }}
     >
       <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
-        <Box sx={profileContainer}>
+        <Box
+          sx={profileContainer}
+          className={id ? `${id}-message-profile-picture` : undefined}
+        >
           <img
             style={{ width: '100%' }}
             src={placeholderProfilePicture}
             alt={`${name}'s profile`}
           />
         </Box>
-        <Typography variant="subtitle1">{timeStamp}</Typography>
+        <Typography
+          variant="subtitle1"
+          className={id ? `${id}-message-timestamp` : undefined}
+        >
+          {timeStamp}
+        </Typography>
       </Box>
       <Box
         sx={{
@@ -55,11 +66,15 @@ export const Message: React.FC<IMessage> = ({
           alignItems: source === 'incoming' ? 'flex-start' : 'flex-end',
         }}
       >
-        <Typography variant="subtitle1">
+        <Typography
+          variant="subtitle1"
+          className={id ? `${id}-message-sender-id` : undefined}
+        >
           {source === 'outgoing' ? 'you' : name}
         </Typography>
         <Typography
           variant="body2"
+          className={id ? `${id}-message-text` : undefined}
           sx={{
             ...message,
             color: source === 'outgoing' ? 'white' : 'palette.text.primary',

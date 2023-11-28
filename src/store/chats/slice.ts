@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit'
 import { getUserConversations } from './thunk'
 import { IChatQuickView } from '../../Components/ChatQuickView/types'
+import sortConvo from '../../utils/convo-utils'
 
 interface IConversationDetail {
   conversationId: string
@@ -17,6 +18,12 @@ interface IChatsState {
   conversationsLoading: boolean
   conversationsError: SerializedError | undefined
   sort: 'asc' | 'desc'
+  openCreateConvoDialog: boolean
+  createConvoDialogTransitionEnded: boolean
+  createConvoSearchTerm: string
+  showCreateConvoSearchResult: boolean
+  firstUserSearchResultMounted: boolean
+  createConvoEnabled: boolean
 }
 
 interface ConversationLastMessage {
@@ -34,46 +41,34 @@ const initialState: IChatsState = {
   conversationsLoading: true,
   conversationsError: undefined,
   sort: 'desc',
-}
-
-const sortConvo = (conversations: IChatQuickView[], sort: 'asc' | 'desc') => {
-  const emptyConversations: IChatQuickView[] = []
-  const nonEmptyConversations: IChatQuickView[] = []
-
-  conversations.forEach((msg) => {
-    if (msg.lastMessageTime != null) {
-      nonEmptyConversations.push(msg)
-    } else {
-      emptyConversations.push(msg)
-    }
-  })
-
-  let sortedNonEmptyConvos: IChatQuickView[]
-
-  if (sort === 'asc') {
-    // earliest message first
-    sortedNonEmptyConvos = nonEmptyConversations.sort((a, b) => {
-      if (a.lastMessageTime == null || b.lastMessageTime == null) {
-        return 0
-      }
-      return a.lastMessageTime - b.lastMessageTime
-    })
-  } else {
-    sortedNonEmptyConvos = nonEmptyConversations.sort((a, b) => {
-      if (a.lastMessageTime == null || b.lastMessageTime == null) {
-        return 0
-      }
-      return b.lastMessageTime - a.lastMessageTime
-    })
-  }
-
-  return [...sortedNonEmptyConvos, ...emptyConversations]
+  // create conversation dialog state
+  openCreateConvoDialog: false,
+  createConvoDialogTransitionEnded: false,
+  createConvoSearchTerm: '',
+  showCreateConvoSearchResult: false,
+  firstUserSearchResultMounted: false,
+  createConvoEnabled: false,
 }
 
 const chatsSlice = createSlice({
   name: 'chats',
   initialState: initialState,
   reducers: {
+    setFirstUserSearchResultMounted: (
+      state,
+      action: PayloadAction<boolean>
+    ) => {
+      state.firstUserSearchResultMounted = action.payload
+    },
+    setCreateConvoSearchTerm: (state, action: PayloadAction<string>) => {
+      state.createConvoSearchTerm = action.payload
+    },
+    setCreateConvoEnabled: (state, action: PayloadAction<boolean>) => {
+      state.createConvoEnabled = action.payload
+    },
+    setShowCreateConvoSearchResult: (state, action: PayloadAction<boolean>) => {
+      state.showCreateConvoSearchResult = action.payload
+    },
     setShowLatestMsgInView: (state, action: PayloadAction<boolean>) => {
       state.showLatestMsgInView = action.payload
     },
@@ -115,6 +110,18 @@ const chatsSlice = createSlice({
 
       state.conversations = sortConvo(newList, state.sort)
     },
+    setOpenCreateConvoDialog: (state, action: PayloadAction<boolean>) => {
+      state.openCreateConvoDialog = action.payload
+      if (!action.payload) {
+        state.createConvoDialogTransitionEnded = false
+      }
+    },
+    setCreateConvoDialogTransitionEnded: (
+      state,
+      action: PayloadAction<boolean>
+    ) => {
+      state.createConvoDialogTransitionEnded = action.payload
+    },
   },
   extraReducers(builder) {
     builder.addCase(getUserConversations.fulfilled, (state, { payload }) => {
@@ -136,10 +143,16 @@ const chatsSlice = createSlice({
 })
 
 export const {
+  setFirstUserSearchResultMounted,
+  setCreateConvoEnabled,
+  setCreateConvoSearchTerm,
+  setShowCreateConvoSearchResult,
   sortConversations,
+  setOpenCreateConvoDialog,
+  setCreateConvoDialogTransitionEnded,
   filterConversationList,
-  setActiveConversation: setActiveConversation,
-  updateConversationLastMessage: updateConversationLastMessage,
-  setShowLatestMsgInView: setShowLatestMsgInView,
+  setActiveConversation,
+  updateConversationLastMessage,
+  setShowLatestMsgInView,
 } = chatsSlice.actions
 export const chatsReducer = chatsSlice.reducer

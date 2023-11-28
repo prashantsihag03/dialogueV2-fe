@@ -26,6 +26,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
   return (
     <Stack direction="column" justifyContent="center" alignItems="center">
       <Avatar
+        className="profile-avatar"
         alt={`${name}'s Profile Picture`}
         src={`${profileImgSrc}`}
         sx={{
@@ -35,6 +36,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
         }}
       />
       <ProfileTextField
+        id="profile-fullname"
         showLabel="onEdit"
         inputTextAlign="center"
         fieldValue={edit ? newName : name}
@@ -48,7 +50,9 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
       {lastOnline.length > 0 ? (
         <Typography variant="subtitle1">Last online {lastOnline}</Typography>
       ) : null}
-      <Typography variant="subtitle1">userid: {userId}</Typography>
+      <Typography className="profile-userid" variant="subtitle1">
+        userid: {userId}
+      </Typography>
     </Stack>
   )
 }

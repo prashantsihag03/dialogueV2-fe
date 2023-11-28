@@ -14,10 +14,14 @@ import { setActiveConversation } from '../../store/chats/slice'
 import { useGetProfileQuery } from '../../store/api/slice'
 import cleanTimeUTCInstant from '../../utils/date-time-utils'
 import { getMyProfileData } from '../../store/profile/selector'
-import { useEffect } from 'react'
 import { getActiveConversation } from '../../store/chats/selector'
 
-export const ChatQuickView: React.FC<IChatQuickView> = ({
+interface ChatQuickViewProps extends IChatQuickView {
+  className?: string
+  onClick?: () => void
+}
+
+export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
   conversationId,
   conversationName,
   unseen,
@@ -25,7 +29,9 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
   lastMessage,
   lastMessageTime,
   lastMessageSenderId,
-}: IChatQuickView) => {
+  className,
+  onClick,
+}: ChatQuickViewProps) => {
   const AppDispatch = useAppDispatch()
   const myProfile = useAppSelector(getMyProfileData)
   const activeConversation = useAppSelector(getActiveConversation)
@@ -54,7 +60,7 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
         profileId: isGroup ? conversationId : conversationName,
       })
     )
-    AppDispatch({ type: 'socket/hello', payload: 'Hello from frontend' })
+    if (onClick != null) onClick()
   }
 
   const getLastMsgDisplayValue = () => {
@@ -67,12 +73,9 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
     return ''
   }
 
-  useEffect(() => {
-    console.log('MyProfile: ', myProfile)
-  }, [myProfile])
-
   return (
     <Box
+      className={className ?? undefined}
       sx={{
         ...containerStyles,
         backgroundColor:
@@ -80,7 +83,9 @@ export const ChatQuickView: React.FC<IChatQuickView> = ({
             ? 'action.hover'
             : undefined,
       }}
-      onClick={onClickHandler}
+      onClick={() => {
+        onClickHandler()
+      }}
       borderRadius={1}
     >
       <Stack

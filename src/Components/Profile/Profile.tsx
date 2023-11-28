@@ -89,7 +89,7 @@ export const Profile: React.FC = () => {
   }, [deleteConvoResult])
 
   return (
-    <Box sx={containerStyles}>
+    <Box sx={containerStyles} className="profile-sidebar">
       <ProfileHeader
         showEdit={Boolean(activeProfileUser?.isLoggedInUser)}
         editing={edit}
@@ -134,6 +134,7 @@ export const Profile: React.FC = () => {
             />
             <Stack direction="column" alignItems="center" width={'100%'}>
               <ProfileTextField
+                id="profile-bio"
                 fieldValue={edit ? newBioValue : data.bio}
                 mode={edit ? 'edit' : 'view'}
                 labelText="Bio"
@@ -145,6 +146,7 @@ export const Profile: React.FC = () => {
               {activeProfileUser?.isLoggedInUser ? (
                 <>
                   <ProfileTextField
+                    id="profile-email"
                     fieldValue={edit ? newEmailValue : data.email}
                     mode={edit ? 'edit' : 'view'}
                     labelText="Email"
@@ -158,7 +160,12 @@ export const Profile: React.FC = () => {
             </Stack>
           </Stack>
           {!activeProfileUser?.isLoggedInUser ? (
-            <Stack direction="column" alignItems="center" width={'100%'}>
+            <Stack
+              direction="column"
+              alignItems="center"
+              width={'100%'}
+              className="other-profile-options"
+            >
               <Button
                 variant="text"
                 color="primary"

@@ -2,6 +2,7 @@ import { FilledInputProps, TextField } from '@mui/material'
 import { ChangeEvent } from 'react'
 
 interface ProfileTextFieldProps {
+  id?: string
   mode: 'edit' | 'view'
   fieldSize?: 'small' | 'medium'
   fieldValue: unknown
@@ -27,9 +28,11 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
   isFullWidth,
   inputTextAlign,
   showLabel,
+  id,
 }: ProfileTextFieldProps) => {
   return (
     <TextField
+      className={id ? `${id}-textfield` : undefined}
       fullWidth={isFullWidth ?? true}
       size={fieldSize ?? undefined}
       InputProps={

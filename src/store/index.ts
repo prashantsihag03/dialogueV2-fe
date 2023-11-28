@@ -7,6 +7,7 @@ import { profileReducer } from './profile/slice'
 import { socketMiddleware } from './middlewares/socket'
 import { io } from 'socket.io-client'
 import { onGoingMessagesReducer } from './onGoingMessages/slice'
+import { configReducer } from './config/slice'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
@@ -14,6 +15,7 @@ export const rootReducer = combineReducers({
   profile: profileReducer,
   sideBar: sideBarReducer,
   onGoingMessages: onGoingMessagesReducer,
+  config: configReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 })
 
