@@ -9,6 +9,7 @@ export interface IMessage {
   text: string
   source: 'incoming' | 'outgoing'
   status: 'sent' | 'pending' | 'failed'
+  id?: string
 }
 
 const getBackgroundColor = (
@@ -30,9 +31,11 @@ export const Message: React.FC<IMessage> = ({
   text,
   source,
   status,
+  id,
 }: IMessage) => {
   return (
     <Box
+      className={id ? `${id}-message-container` : undefined}
       sx={{
         ...container,
         flexDirection: source === 'incoming' ? 'row' : 'row-reverse',

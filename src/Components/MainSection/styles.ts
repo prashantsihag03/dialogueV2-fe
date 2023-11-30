@@ -5,6 +5,7 @@ export const containerStyles: SxProps<Theme> = {
   width: '100%',
   padding: '0% 1%',
   height: '90%',
+  overflow: 'hidden',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',

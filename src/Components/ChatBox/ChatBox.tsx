@@ -31,8 +31,6 @@ import { setShowLatestMsgInView } from '../../store/chats/slice'
 export const ChatBox: React.FC = () => {
   const appDispatch = useAppDispatch()
   const { data: loggedProfileData } = useGetProfileQuery(undefined)
-  // const [currentLastMessage, setCurentLastMessage] =
-  //   useState<HTMLDivElement | null>(null)
   const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
   const activeConversation = useAppSelector(getActiveConversation)
   const onGoingMessages = useAppSelector(
@@ -48,7 +46,6 @@ export const ChatBox: React.FC = () => {
 
   useEffect(() => {
     if (showLatestMsgOnDataChange && msgBoxEle) {
-      console.log('scrolling')
       msgBoxEle.scrollIntoView({
         behavior: 'smooth',
       })
@@ -76,7 +73,6 @@ export const ChatBox: React.FC = () => {
           }
         }
       )
-      console.log('Adding ongoing messages as: ', oldMessages)
       if (oldMessages.length > 0) {
         appDispatch(addOngoingMessages(oldMessages))
         return
@@ -86,9 +82,7 @@ export const ChatBox: React.FC = () => {
   }, [data])
 
   useEffect(() => {
-    console.log('Checking whether to scroll to bottom')
     if (msgBoxEle) {
-      console.log('Scrolling to bottom')
       // Calculate the scroll height and scroll to the bottom
       msgBoxEle.scrollIntoView({
         behavior: 'instant',
@@ -132,6 +126,7 @@ export const ChatBox: React.FC = () => {
                   <>
                     <Message
                       key={msg.messageId}
+                      id="latest"
                       name={msg.senderId}
                       timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
                       source={

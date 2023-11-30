@@ -1,16 +1,42 @@
-import { Box, CssBaseline, ThemeProvider } from '@mui/material'
+import {
+  Box,
+  Button,
+  CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+  ThemeProvider,
+  Typography,
+} from '@mui/material'
 import { useEffect } from 'react'
 import useDisplayMode from '../../hooks/useDisplayMode'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import Header from '../Header'
 import MainSection from '../MainSection'
 import { containerStyles } from './styles'
 import { getUserConversations } from '../../store/chats/thunk'
 import { getMyProfile } from '../../store/profile/thunk'
+import {
+  getGreet,
+  getRunGuidedTour,
+  showGuidedTourFinishedDialog,
+} from '../../store/config/selector'
+import {
+  setGreet,
+  setRunGuidedTour,
+  setShowGuidedTourFinishedDialog,
+} from '../../store/config/slice'
+import GuidedTour from '../GuidedTour/GuidedTour'
 
 export const App = () => {
-  const { theme, displayMode, toggleDisplayMode } = useDisplayMode()
   const dispatch = useAppDispatch()
+  const { theme, displayMode, toggleDisplayMode } = useDisplayMode()
+  const greet = useAppSelector(getGreet)
+  const showTourFinishedDialog = useAppSelector(showGuidedTourFinishedDialog)
+  const appGuideTour = useAppSelector(getRunGuidedTour)
 
   useEffect(() => {
     dispatch(getUserConversations())
@@ -25,6 +51,113 @@ export const App = () => {
     <CssBaseline>
       <ThemeProvider theme={theme}>
         <Box sx={containerStyles}>
+          <Dialog
+            open={greet}
+            keepMounted={false}
+            TransitionComponent={Slide}
+            transitionDuration={200}
+            fullWidth
+            sx={{
+              '& .MuiPaper-root': {
+                backgroundColor: 'background.paper',
+              },
+            }}
+            onClose={(e, reason) => {
+              if (reason === 'backdropClick') return
+              dispatch(setGreet(false))
+            }}
+          >
+            <DialogTitle sx={{ color: 'secondary.main' }}>
+              <b>Greetings,</b>
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                <Typography variant="body2" component="p">
+                  Thank you for taking the time to explore Dialogue.
+                </Typography>
+                <br />
+                <Typography variant="body2" component="p">
+                  Dialogue is more than just a chat application; it&apos;s a
+                  personal project crafted with the intention to upskill and
+                  showcase my proficiency in a variety of tools and
+                  technologies.
+                </Typography>
+                <br />
+                <Typography variant="body2" component="p">
+                  Would you be interested in a brief tour of the application?
+                  It&apos;s an opportunity to witness firsthand the dedication
+                  and innovation behind this self-upskilling endeavor.{' '}
+                </Typography>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ padding: '0.2em 1em' }}
+                onClick={() => {
+                  dispatch(setGreet(false))
+                  dispatch(setRunGuidedTour(true))
+                }}
+              >
+                Start Tour
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                sx={{ padding: '0.2em 1em', fontSize: '0.9rem' }}
+                onClick={() => {
+                  dispatch(setGreet(false))
+                  dispatch(setRunGuidedTour(false))
+                }}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {showTourFinishedDialog ? (
+            <Dialog
+              open={showTourFinishedDialog}
+              keepMounted={false}
+              TransitionComponent={Slide}
+              transitionDuration={200}
+              fullWidth
+              sx={{
+                '& .MuiPaper-root': {
+                  backgroundColor: 'background.paper',
+                },
+              }}
+            >
+              <DialogTitle sx={{ color: 'secondary.main' }}>
+                <b>Tour Finished</b>
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Typography variant="body1" component="p">
+                    Thank you for finishing the tour. I hope you liked it.
+                  </Typography>
+                  <br />
+                  <Typography variant="body1" component="p">
+                    Please feel free to leave any feedback as a message to my
+                    userid: <i>prashant</i>
+                  </Typography>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ padding: '0.2em 1em' }}
+                  onClick={() => {
+                    dispatch(setShowGuidedTourFinishedDialog(false))
+                  }}
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          ) : null}
+          <Box>{appGuideTour ? <GuidedTour /> : null}</Box>
           <Header
             displayMode={displayMode}
             toggleDisplayMode={toggleDisplayMode}

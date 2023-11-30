@@ -31,49 +31,69 @@ export const Header: React.FC<IActiveChatHeader> = ({
   return (
     <Box sx={containerStyle}>
       <Box sx={profileContainer} borderRadius={1}>
-        <Box sx={pictureContainer}>
-          <img
-            style={{ width: '100%' }}
-            src={placeholderProfilePicture}
-            alt={`${fullName}'s profile`}
-          />
-        </Box>
         <Box
-          sx={userDetailContainer}
-          borderRadius={1}
-          onClick={() => {
-            appDispatch(
-              setActiveProfileUserId({
-                id: userId,
-                name: fullName,
-                isLoggedInUser: false,
-              })
-            )
-            appDispatch(setActiveSideBar('profile'))
+          className="conversation-box-profile-heading"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
           }}
         >
-          <Typography variant="h3" sx={{ color: 'inherit' }}>
-            {fullName}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            fontWeight={'bold'}
-            sx={{
-              color: online ? 'success.main' : 'gray',
+          <Box sx={pictureContainer}>
+            <img
+              style={{ width: '100%' }}
+              src={placeholderProfilePicture}
+              alt={`${fullName}'s profile`}
+            />
+          </Box>
+          <Box
+            sx={userDetailContainer}
+            className="conversation-box-conversation-profile-box"
+            borderRadius={1}
+            onClick={() => {
+              appDispatch(
+                setActiveProfileUserId({
+                  id: userId,
+                  name: fullName,
+                  isLoggedInUser: false,
+                })
+              )
+              appDispatch(setActiveSideBar('profile'))
             }}
           >
-            {online ? 'Online' : 'Offline'}
-          </Typography>
+            <Typography variant="h3" sx={{ color: 'inherit' }}>
+              {fullName}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              fontWeight={'bold'}
+              sx={{
+                color: online ? 'success.main' : 'gray',
+              }}
+            >
+              {online ? 'Online' : 'Offline'}
+            </Typography>
+          </Box>
         </Box>
       </Box>
-      <Box sx={optionContainer}>
+      <Box sx={optionContainer} className="conversation-box-header-options">
         <PermMediaOutlinedIcon
           sx={iconStyles}
           fontSize="small"
           titleAccess="Media files"
+          className="conversation-box-conversation-media-icon"
         />
-        <CallOutlinedIcon sx={iconStyles} titleAccess="audio call" />
-        <VideoCallOutlinedIcon sx={iconStyles} titleAccess="video call" />
+        <CallOutlinedIcon
+          sx={iconStyles}
+          titleAccess="audio call"
+          className="conversation-box-conversation-audio-call-icon"
+        />
+        <VideoCallOutlinedIcon
+          sx={iconStyles}
+          titleAccess="video call"
+          className="conversation-box-conversation-video-call-icon"
+        />
       </Box>
     </Box>
   )

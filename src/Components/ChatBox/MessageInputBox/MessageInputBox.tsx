@@ -63,7 +63,7 @@ export const MessageInputBox: React.FC = () => {
   }
 
   return (
-    <Box sx={messageOptions}>
+    <Box sx={messageOptions} className="message-input-box">
       <Box sx={messageBox}>
         <CustomEmojiPicker addEmojiToInput={addEmojiToInput} />
         <TextField
