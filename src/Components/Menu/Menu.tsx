@@ -78,7 +78,13 @@ export const Menu: React.FC<IMenu> = ({
       </Grow>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
         <Box sx={iconContainerStyles}>
-          <TuneOutlinedIcon titleAccess="Settings" />
+          <TuneOutlinedIcon
+            titleAccess="Settings"
+            className="settings-joyride"
+            onClick={() => {
+              appDispatch(setActiveSideBar('setting'))
+            }}
+          />
         </Box>
       </Grow>
       <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
