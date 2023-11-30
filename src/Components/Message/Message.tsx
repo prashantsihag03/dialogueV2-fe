@@ -42,22 +42,14 @@ export const Message: React.FC<IMessage> = ({
       }}
     >
       <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
-        <Box
-          sx={profileContainer}
-          className={id ? `${id}-message-profile-picture` : undefined}
-        >
+        <Box sx={profileContainer}>
           <img
             style={{ width: '100%' }}
             src={placeholderProfilePicture}
             alt={`${name}'s profile`}
           />
         </Box>
-        <Typography
-          variant="subtitle1"
-          className={id ? `${id}-message-timestamp` : undefined}
-        >
-          {timeStamp}
-        </Typography>
+        <Typography variant="subtitle1">{timeStamp}</Typography>
       </Box>
       <Box
         sx={{
@@ -66,15 +58,11 @@ export const Message: React.FC<IMessage> = ({
           alignItems: source === 'incoming' ? 'flex-start' : 'flex-end',
         }}
       >
-        <Typography
-          variant="subtitle1"
-          className={id ? `${id}-message-sender-id` : undefined}
-        >
+        <Typography variant="subtitle1">
           {source === 'outgoing' ? 'you' : name}
         </Typography>
         <Typography
           variant="body2"
-          className={id ? `${id}-message-text` : undefined}
           sx={{
             ...message,
             color: source === 'outgoing' ? 'white' : 'palette.text.primary',

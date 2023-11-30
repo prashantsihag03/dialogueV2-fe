@@ -63,12 +63,11 @@ export const MessageInputBox: React.FC = () => {
   }
 
   return (
-    <Box sx={messageOptions}>
+    <Box sx={messageOptions} className="message-input-box">
       <Box sx={messageBox}>
         <CustomEmojiPicker addEmojiToInput={addEmojiToInput} />
         <TextField
           id="standard-textarea"
-          className="message-input-box"
           variant="standard"
           placeholder="Type your message here"
           multiline
@@ -82,12 +81,10 @@ export const MessageInputBox: React.FC = () => {
           sx={{ marginLeft: '0.5rem' }}
         />
         <MicNoneOutlinedIcon
-          className="message-input-box-audio-file"
           sx={iconStyles}
           titleAccess="record audio message"
         />
         <AttachFileRoundedIcon
-          className="message-input-box-attachments"
           sx={iconStyles}
           titleAccess="attach file/files"
         />

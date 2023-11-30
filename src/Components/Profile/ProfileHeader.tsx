@@ -22,7 +22,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       {showEdit ? (
         <Box sx={actionStyles}>
           {editing ? (
-            <CheckSharpIcon sx={actionIconStyles} onClick={onConfirmClick} />
+            <CheckSharpIcon
+              sx={actionIconStyles}
+              onClick={onConfirmClick}
+              className="profile-save"
+            />
           ) : (
             <EditOutlinedIcon
               sx={actionIconStyles}

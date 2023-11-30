@@ -35,7 +35,11 @@ export const Menu: React.FC<IMenu> = ({
             appDispatch(setActiveSideBar('chats'))
           }}
         >
-          <Typography variant="subtitle2" sx={textItemStyles}>
+          <Typography
+            variant="subtitle2"
+            sx={textItemStyles}
+            className="main-menu-conversations-joyride"
+          >
             Conversations
           </Typography>
         </Box>
@@ -53,6 +57,7 @@ export const Menu: React.FC<IMenu> = ({
             <LightModeIcon
               titleAccess="Switch to light mode"
               onClick={toggleDisplayMode}
+              className="main-menu-display-mode-joyride"
             />
           </Grow>
         ) : (
@@ -60,6 +65,7 @@ export const Menu: React.FC<IMenu> = ({
             <DarkModeIcon
               color="primary"
               titleAccess="Switch to dark mode"
+              className="main-menu-display-mode-joyride"
               onClick={toggleDisplayMode}
             />
           </Grow>
@@ -101,6 +107,7 @@ export const Menu: React.FC<IMenu> = ({
               <AccountCircleOutlinedIcon titleAccess="Profile picture loading" />
             ) : (
               <Avatar
+                className="logged-in-profile-avatar"
                 alt={data?.fullname}
                 src={data?.profileImgSrc}
                 onClick={() => {

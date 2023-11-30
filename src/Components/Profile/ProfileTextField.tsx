@@ -15,6 +15,7 @@ interface ProfileTextFieldProps {
   isFullWidth?: boolean
   inputTextAlign?: 'left' | 'center' | 'right'
   showLabel?: 'onEdit' | 'always'
+  multiline?: boolean
 }
 
 const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
@@ -29,12 +30,15 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
   inputTextAlign,
   showLabel,
   id,
+  multiline,
 }: ProfileTextFieldProps) => {
   return (
     <TextField
       className={id ? `${id}-textfield` : undefined}
       fullWidth={isFullWidth ?? true}
       size={fieldSize ?? undefined}
+      multiline={multiline ?? false}
+      maxRows={5}
       InputProps={
         {
           disableUnderline: true,

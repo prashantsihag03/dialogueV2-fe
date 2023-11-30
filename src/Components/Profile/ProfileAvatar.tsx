@@ -24,7 +24,12 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
   profileImgSrc,
 }: IProfileAvatarProps) => {
   return (
-    <Stack direction="column" justifyContent="center" alignItems="center">
+    <Stack
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      className="profile-avatar"
+    >
       <Avatar
         className="profile-avatar"
         alt={`${name}'s Profile Picture`}

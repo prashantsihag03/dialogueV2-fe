@@ -32,50 +32,52 @@ export const Header: React.FC<IActiveChatHeader> = ({
     <Box sx={containerStyle}>
       <Box sx={profileContainer} borderRadius={1}>
         <Box
-          sx={pictureContainer}
-          className="conversation-box-conversation-profile-picture"
-        >
-          <img
-            style={{ width: '100%' }}
-            src={placeholderProfilePicture}
-            alt={`${fullName}'s profile`}
-          />
-        </Box>
-        <Box
-          sx={userDetailContainer}
-          className="conversation-box-conversation-profile-box"
-          borderRadius={1}
-          onClick={() => {
-            appDispatch(
-              setActiveProfileUserId({
-                id: userId,
-                name: fullName,
-                isLoggedInUser: false,
-              })
-            )
-            appDispatch(setActiveSideBar('profile'))
+          className="conversation-box-profile-heading"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
           }}
         >
-          <Typography
-            variant="h3"
-            sx={{ color: 'inherit' }}
-            className="conversation-box-conversation-name"
-          >
-            {fullName}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            fontWeight={'bold'}
-            className="conversation-box-conversation-live-status"
-            sx={{
-              color: online ? 'success.main' : 'gray',
+          <Box sx={pictureContainer}>
+            <img
+              style={{ width: '100%' }}
+              src={placeholderProfilePicture}
+              alt={`${fullName}'s profile`}
+            />
+          </Box>
+          <Box
+            sx={userDetailContainer}
+            className="conversation-box-conversation-profile-box"
+            borderRadius={1}
+            onClick={() => {
+              appDispatch(
+                setActiveProfileUserId({
+                  id: userId,
+                  name: fullName,
+                  isLoggedInUser: false,
+                })
+              )
+              appDispatch(setActiveSideBar('profile'))
             }}
           >
-            {online ? 'Online' : 'Offline'}
-          </Typography>
+            <Typography variant="h3" sx={{ color: 'inherit' }}>
+              {fullName}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              fontWeight={'bold'}
+              sx={{
+                color: online ? 'success.main' : 'gray',
+              }}
+            >
+              {online ? 'Online' : 'Offline'}
+            </Typography>
+          </Box>
         </Box>
       </Box>
-      <Box sx={optionContainer}>
+      <Box sx={optionContainer} className="conversation-box-header-options">
         <PermMediaOutlinedIcon
           sx={iconStyles}
           fontSize="small"

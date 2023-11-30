@@ -10,7 +10,10 @@ import {
 import { ProfileHeader } from './ProfileHeader'
 import { ProfileAvatar } from './ProfileAvatar'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { getActiveProfileUser } from '../../store/profile/selector'
+import {
+  getActiveProfileUser,
+  isEditingMyProfile,
+} from '../../store/profile/selector'
 import { useEffect, useState } from 'react'
 import ProfileTextField from './ProfileTextField'
 import {
@@ -20,20 +23,24 @@ import {
 import { setActiveConversation } from '../../store/chats/slice'
 import { removeOngoingMessages } from '../../store/onGoingMessages/slice'
 import { getUserConversations } from '../../store/chats/thunk'
+import { setEditingMyProfile } from '../../store/profile/slice'
 
 export const Profile: React.FC = () => {
   const appDispatch = useAppDispatch()
+  const conversations = useAppSelector(getConversations)
   const activeProfileUser = useAppSelector(getActiveProfileUser)
   const activeConversation = useAppSelector(getActiveConversation)
-  const [edit, setEdit] = useState<boolean>(false)
-  const [updateMyProfile] = useUpdateMyProfileMutation()
+  const isEditEnabled = useAppSelector(isEditingMyProfile)
+
   const [newBioValue, setNewBioValue] = useState<string>('')
   const [newNameValue, setNewNameValue] = useState<string>('')
   const [newEmailValue, setNewEmailValue] = useState<string>('')
-  const conversations = useAppSelector(getConversations)
+
+  const [updateMyProfile] = useUpdateMyProfileMutation()
   const [clearConversation, clearConvoResult] = useClearConversationMutation()
   const [deleteConversation, deleteConvoResult] =
     useDeleteConversationMutation()
+
   const { isFetching, isSuccess, data } = useGetProfileQuery(
     Boolean(activeProfileUser?.isLoggedInUser)
       ? undefined
@@ -58,7 +65,6 @@ export const Profile: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log(clearConvoResult)
     if (clearConvoResult.isSuccess) {
       const convoId = getConversationId()
       if (convoId != null) {
@@ -72,7 +78,6 @@ export const Profile: React.FC = () => {
   }, [clearConvoResult])
 
   useEffect(() => {
-    console.log(deleteConvoResult)
     if (deleteConvoResult.isSuccess) {
       const convoId = getConversationId()
       if (convoId != null) {
@@ -92,16 +97,16 @@ export const Profile: React.FC = () => {
     <Box sx={containerStyles} className="profile-sidebar">
       <ProfileHeader
         showEdit={Boolean(activeProfileUser?.isLoggedInUser)}
-        editing={edit}
+        editing={isEditEnabled}
         onEditClick={() => {
           setNewBioValue(data?.bio || '')
           setNewNameValue(data?.fullname || '')
           setNewEmailValue(data?.email || '')
-          setEdit(!edit)
+          appDispatch(setEditingMyProfile(true))
         }}
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         onConfirmClick={() => {
-          setEdit(false)
+          appDispatch(setEditingMyProfile(false))
           updateMyProfile({
             bio: newBioValue,
             email: newEmailValue,
@@ -120,10 +125,15 @@ export const Profile: React.FC = () => {
           width="100%"
           height="100%"
         >
-          <Stack direction="column" alignItems="center" width="100%">
+          <Stack
+            direction="column"
+            alignItems="center"
+            width="100%"
+            className="profile-fields"
+          >
             <ProfileAvatar
               userId={data.id}
-              edit={edit}
+              edit={isEditEnabled}
               newName={newNameValue}
               onNameChange={(event) => {
                 setNewNameValue(event.target.value)
@@ -135,25 +145,26 @@ export const Profile: React.FC = () => {
             <Stack direction="column" alignItems="center" width={'100%'}>
               <ProfileTextField
                 id="profile-bio"
-                fieldValue={edit ? newBioValue : data.bio}
-                mode={edit ? 'edit' : 'view'}
+                fieldValue={isEditEnabled ? newBioValue : data.bio}
+                mode={isEditEnabled ? 'edit' : 'view'}
                 labelText="Bio"
+                multiline={true}
                 onFieldValueChange={(event) => {
                   setNewBioValue(event.target.value)
                 }}
-                textFieldVariant={edit ? 'outlined' : 'filled'}
+                textFieldVariant={isEditEnabled ? 'outlined' : 'filled'}
               />
               {activeProfileUser?.isLoggedInUser ? (
                 <>
                   <ProfileTextField
                     id="profile-email"
-                    fieldValue={edit ? newEmailValue : data.email}
-                    mode={edit ? 'edit' : 'view'}
+                    fieldValue={isEditEnabled ? newEmailValue : data.email}
+                    mode={isEditEnabled ? 'edit' : 'view'}
                     labelText="Email"
                     onFieldValueChange={(event) => {
                       setNewEmailValue(event.target.value)
                     }}
-                    textFieldVariant={edit ? 'outlined' : 'filled'}
+                    textFieldVariant={isEditEnabled ? 'outlined' : 'filled'}
                   />
                 </>
               ) : null}
@@ -198,7 +209,12 @@ export const Profile: React.FC = () => {
               </Button>
             </Stack>
           ) : (
-            <Stack direction="column" alignItems="center" width={'100%'}>
+            <Stack
+              direction="column"
+              alignItems="center"
+              width={'100%'}
+              className="other-profile-options"
+            >
               <Button variant="text" color="primary" href="/logout">
                 Log out
               </Button>
