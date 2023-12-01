@@ -6,7 +6,10 @@ import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined'
 import { iconStyles, messageBox, messageOptions } from './styles'
 import { EmojiClickData } from 'emoji-picker-react'
 import { useState } from 'react'
-import { useGetProfileQuery } from '../../../store/api/slice'
+import {
+  useGetProfileQuery,
+  useGetUserSettingsQuery,
+} from '../../../store/api/slice'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { getActiveConversation } from '../../../store/chats/selector'
 import {
@@ -19,6 +22,8 @@ import { setShowLatestMsgInView } from '../../../store/chats/slice'
 export const MessageInputBox: React.FC = () => {
   const appDispatch = useAppDispatch()
   const activeConversation = useAppSelector(getActiveConversation)
+  const { data: settingQueryData } =
+    useGetUserSettingsQuery('enterSendsMessage')
   const { data } = useGetProfileQuery(undefined)
   const [message, setMessage] = useState<string>('')
 
@@ -75,8 +80,24 @@ export const MessageInputBox: React.FC = () => {
           maxRows={6}
           value={message}
           onChange={(e) => {
+            if (
+              settingQueryData &&
+              settingQueryData.enterSendsMessage === 'true' &&
+              e.target.value === '\n'
+            ) {
+              return
+            }
             setMessage(e.target.value)
           }}
+          onKeyDown={
+            settingQueryData && settingQueryData.enterSendsMessage === 'true'
+              ? (e) => {
+                  if (e.code.toString() === 'Enter') {
+                    sendBtnClickHandler()
+                  }
+                }
+              : undefined
+          }
           InputProps={{ disableUnderline: true }}
           sx={{ marginLeft: '0.5rem' }}
         />
