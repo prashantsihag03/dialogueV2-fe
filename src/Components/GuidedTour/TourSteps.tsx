@@ -398,8 +398,7 @@ const TourSteps: Step[] = [
     target: '.settings-joyride',
     content: (
       <p>
-        This opens settings sidebar from where you can change the application
-        behaviour. Please click on this to proceed further.
+        This opens settings sidebar. Please click on this to proceed further.
       </p>
     ),
     disableBeacon: true,
@@ -413,6 +412,18 @@ const TourSteps: Step[] = [
         display: 'none',
       },
     },
+  },
+  {
+    target: '.setting-sidebar',
+    content: (
+      <p>
+        This is settings sidebar. You can change the application behaviour
+        regarding several aspects.
+      </p>
+    ),
+    disableBeacon: true,
+    placement: 'left',
+    spotlightClicks: false,
   },
 ]
 

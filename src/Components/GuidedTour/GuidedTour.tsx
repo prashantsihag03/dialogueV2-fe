@@ -25,6 +25,7 @@ import {
   setShowGuidedTourFinishedDialog,
 } from '../../store/config/slice'
 import { getRunGuidedTour } from '../../store/config/selector'
+import { getActiveSideBar } from '../../store/sidebar/selector'
 
 const GuidedTour: React.FC = () => {
   const theme = useTheme()
@@ -33,18 +34,20 @@ const GuidedTour: React.FC = () => {
   const appGuideTour = useAppSelector(getRunGuidedTour)
   const openCreateConvoDialog = useAppSelector(getOpenCreateConvoDialog)
   const isProfileEditEnabled = useAppSelector(isEditingMyProfile)
+  const activeConversation = useAppSelector(getActiveConversation)
+  const activeProfile = useAppSelector(getActiveProfileUser)
+  const activeSideBar = useAppSelector(getActiveSideBar)
+  const createConvoEnabled = useAppSelector(isCreateConvoEnabled)
   const firstUserSearchResultMounted = useAppSelector(
     isFirstUserSearchResultMounted
   )
-  const activeConversation = useAppSelector(getActiveConversation)
-  const activeProfile = useAppSelector(getActiveProfileUser)
-  const [joyRideSteps] = useState<Step[]>(TourSteps)
-  const createConvoEnabled = useAppSelector(isCreateConvoEnabled)
-  const [tourStep, setTourStep] = useState<number>(0)
-  const [helpers, setHelpers] = useState<Joyride.StoreHelpers | null>(null)
   const createConvoDialogRendered = useAppSelector(
     getCreateConvoDialogTransitionEnded
   )
+
+  const [joyRideSteps] = useState<Step[]>(TourSteps)
+  const [tourStep, setTourStep] = useState<number>(0)
+  const [helpers, setHelpers] = useState<Joyride.StoreHelpers | null>(null)
 
   const userActionBasedNextHandler = useCallback(
     (target: string, when: boolean) => {
@@ -116,6 +119,14 @@ const GuidedTour: React.FC = () => {
     userActionBasedNextHandler('.create-convo-btn', !openCreateConvoDialog)
   }, [openCreateConvoDialog])
 
+  useEffect(() => {
+    if (activeSideBar === 'setting')
+      userActionBasedNextHandler(
+        '.settings-joyride',
+        activeSideBar === 'setting'
+      )
+  }, [activeSideBar])
+
   return (
     <Joyride
       spotlightClicks={false}
@@ -126,8 +137,9 @@ const GuidedTour: React.FC = () => {
           setTourStep(tourStep + (action === ACTIONS.PREV ? -1 : 1))
         } else if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
           dispatch(setRunGuidedTour(false))
-          if (status === STATUS.FINISHED)
+          if (status === STATUS.FINISHED) {
             dispatch(setShowGuidedTourFinishedDialog(true))
+          }
         }
       }}
       run={appGuideTour}

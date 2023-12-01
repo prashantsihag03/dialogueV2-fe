@@ -11,7 +11,7 @@ import {
   ThemeProvider,
   Typography,
 } from '@mui/material'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useDisplayMode from '../../hooks/useDisplayMode'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import Header from '../Header'
@@ -30,12 +30,21 @@ import {
   setShowGuidedTourFinishedDialog,
 } from '../../store/config/slice'
 import GuidedTour from '../GuidedTour/GuidedTour'
+import {
+  useGetUserSettingsQuery,
+  useUpdateUserSettingMutation,
+} from '../../store/api/slice'
 
 export const App = () => {
   const dispatch = useAppDispatch()
+  const [initialGuideAttempted, setInitialGuideAttempted] =
+    useState<boolean>(false)
+  const { isFetching, isError, data } =
+    useGetUserSettingsQuery('greetMeEverytime')
   const { theme, displayMode, toggleDisplayMode } = useDisplayMode()
   const greet = useAppSelector(getGreet)
   const showTourFinishedDialog = useAppSelector(showGuidedTourFinishedDialog)
+  const [updateUserSetting] = useUpdateUserSettingMutation()
   const appGuideTour = useAppSelector(getRunGuidedTour)
 
   useEffect(() => {
@@ -47,12 +56,31 @@ export const App = () => {
     }
   }, [dispatch])
 
+  useEffect(() => {
+    setInitialGuideAttempted((prevValue) => {
+      if (prevValue === true) return false
+      return true
+    })
+  }, [data])
+
+  if (isFetching) {
+    return
+  }
+
+  if (isError || data?.greetMeEverytime == null) {
+    return
+  }
+
   return (
     <CssBaseline>
       <ThemeProvider theme={theme}>
         <Box sx={containerStyles}>
           <Dialog
-            open={greet}
+            open={
+              data?.greetMeEverytime === 'true' &&
+              !initialGuideAttempted &&
+              greet
+            }
             keepMounted={false}
             TransitionComponent={Slide}
             transitionDuration={200}
@@ -86,7 +114,7 @@ export const App = () => {
                 <Typography variant="body2" component="p">
                   Would you be interested in a brief tour of the application?
                   It&apos;s an opportunity to witness firsthand the dedication
-                  and innovation behind this self-upskilling endeavor.{' '}
+                  and innovation behind this self-upskilling endeavor.
                 </Typography>
               </DialogContentText>
             </DialogContent>
@@ -150,6 +178,10 @@ export const App = () => {
                   sx={{ padding: '0.2em 1em' }}
                   onClick={() => {
                     dispatch(setShowGuidedTourFinishedDialog(false))
+                    updateUserSetting({
+                      key: 'greetMeEverytime',
+                      value: false,
+                    })
                   }}
                 >
                   Close

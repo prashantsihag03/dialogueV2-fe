@@ -44,11 +44,25 @@ export interface ISearchUser {
   id: string
 }
 
+export interface IUserSettings {
+  enterSendsMessage: boolean
+  greetMeEverytime: boolean
+}
+
+export type IUserSetting = {
+  key: keyof IUserSettings
+  value: unknown
+}
+
+export type IUserSettingResponse = {
+  [key in keyof IUserSettings]: unknown
+}
+
 // Define our single API slice object
 export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
   reducerPath: 'api',
-  tagTypes: ['Profile', 'Conversation'],
+  tagTypes: ['Profile', 'Conversation', 'Settings'],
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
@@ -78,6 +92,24 @@ export const apiSlice = createApi({
         body,
       }),
       invalidatesTags: [{ type: 'Profile', id: 'myProfile' }],
+    }),
+    getUserSettings: builder.query<IUserSettingResponse, keyof IUserSettings>({
+      query: (settingKey) => {
+        return `/user/settings/${settingKey}`
+      },
+      providesTags: (result, error, settingKey) => {
+        // Make sure to provide an array of FullTagDescriptions
+        return [{ type: 'Settings', id: settingKey }]
+      },
+    }),
+    updateUserSetting: builder.mutation<void, IUserSetting>({
+      query: (body) => ({
+        url: `/user/settings/${body.key}/${body.value}`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, error, { key }) => [
+        { type: 'Settings', id: key },
+      ],
     }),
     clearConversation: builder.mutation<void, string>({
       query: (body) => ({
@@ -126,4 +158,6 @@ export const {
   useUpdateMyProfileMutation,
   useClearConversationMutation,
   useDeleteConversationMutation,
+  useGetUserSettingsQuery,
+  useUpdateUserSettingMutation,
 } = apiSlice
