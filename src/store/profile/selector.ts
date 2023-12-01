@@ -11,3 +11,6 @@ export const isMyProfileDataLoading = (state: RootState) =>
 
 export const getMyProfileDataError = (state: RootState) =>
   state.profile.myProfile.error
+
+export const isEditingMyProfile = (state: RootState) =>
+  state.profile.editingMyProfile

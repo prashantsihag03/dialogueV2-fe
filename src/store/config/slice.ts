@@ -13,7 +13,7 @@ const initialState: ConfigState = {
 }
 
 const configSlice = createSlice({
-  name: 'chats',
+  name: 'config',
   initialState: initialState,
   reducers: {
     setGreet: (state, action: PayloadAction<boolean>) => {

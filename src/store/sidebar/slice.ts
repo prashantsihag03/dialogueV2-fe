@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type SIDEBAR_TYPE = 'profile' | 'chats'
+export type SIDEBAR_TYPE = 'profile' | 'chats' | 'setting'
 
 interface ISideBarState {
   activeSideBar: SIDEBAR_TYPE

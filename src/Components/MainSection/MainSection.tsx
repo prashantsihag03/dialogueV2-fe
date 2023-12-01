@@ -9,6 +9,7 @@ import { Profile } from '../Profile/Profile'
 import { useAppSelector } from '../../store/hooks'
 import { getActiveSideBar } from '../../store/sidebar/selector'
 import Chats from '../Chats'
+import Setting from '../Setting'
 
 export const MainSection: React.FC = () => {
   const activeSideBar = useAppSelector(getActiveSideBar)
@@ -29,6 +30,7 @@ export const MainSection: React.FC = () => {
       >
         {activeSideBar === 'chats' ? <Chats /> : null}
         {activeSideBar === 'profile' ? <Profile /> : null}
+        {activeSideBar === 'setting' ? <Setting /> : null}
       </Box>
     </Box>
   )

@@ -29,6 +29,7 @@ interface IProfileState {
    */
   activeProfileUser: ProfileDetail | undefined
   myProfile: MyProfileState
+  editingMyProfile: boolean
 }
 
 const initialState: IProfileState = {
@@ -45,6 +46,7 @@ const initialState: IProfileState = {
     },
     error: undefined,
   },
+  editingMyProfile: false,
 }
 
 const profileSlice = createSlice({
@@ -53,6 +55,9 @@ const profileSlice = createSlice({
   reducers: {
     setActiveProfileUserId: (state, action: PayloadAction<ProfileDetail>) => {
       state.activeProfileUser = action.payload
+    },
+    setEditingMyProfile: (state, action: PayloadAction<boolean>) => {
+      state.editingMyProfile = action.payload
     },
   },
   extraReducers(builder) {
@@ -82,5 +87,6 @@ const profileSlice = createSlice({
   },
 })
 
-export const { setActiveProfileUserId } = profileSlice.actions
+export const { setActiveProfileUserId, setEditingMyProfile } =
+  profileSlice.actions
 export const profileReducer = profileSlice.reducer
