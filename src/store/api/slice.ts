@@ -7,7 +7,7 @@ export interface IProfileData {
   id: string
   fullname: string
   email?: string
-  profileImgSrc: string
+  profileImg: string
   lastOnlineUTCDateTime: string
   bio: string
 }
@@ -18,6 +18,8 @@ export interface IMessageData {
   timestamp: string
   source: 'outgoing' | 'incoming'
   text: string
+  img?: File
+  file?: string
 }
 
 export interface MessagePostResult {
@@ -27,6 +29,7 @@ export interface MessagePostResult {
   message: string
   senderId: string
   localMessageId: string
+  file?: string
 }
 
 export interface IMessagePostBody extends IMessageData {
@@ -47,6 +50,7 @@ export interface ISearchUser {
 export interface IUserSettings {
   enterSendsMessage: boolean
   greetMeEverytime: boolean
+  openExistingConversation: boolean
 }
 
 export type IUserSetting = {
@@ -56,6 +60,10 @@ export type IUserSetting = {
 
 export type IUserSettingResponse = {
   [key in keyof IUserSettings]: unknown
+}
+
+export interface UpdateProfileBody extends Omit<MyProfileData, 'profileImg'> {
+  profileImg?: File
 }
 
 // Define our single API slice object
@@ -85,12 +93,21 @@ export const apiSlice = createApi({
           : [{ type: 'Profile', id: 'myProfile' }]
       },
     }),
-    updateMyProfile: builder.mutation<void, MyProfileData>({
-      query: (body) => ({
-        url: `/profile`,
-        method: 'POST',
-        body,
-      }),
+    updateMyProfile: builder.mutation<void, UpdateProfileBody>({
+      query: (body) => {
+        const formData = new FormData()
+        if (body.profileImg) formData.append('profileImg', body.profileImg)
+        formData.append('bio', body.bio)
+        formData.append('email', body.email)
+        formData.append('fullname', body.fullname)
+        formData.append('id', body.id)
+        return {
+          url: `/profile`,
+          method: 'POST',
+          body: formData,
+        }
+      },
+
       invalidatesTags: [{ type: 'Profile', id: 'myProfile' }],
     }),
     getUserSettings: builder.query<IUserSettingResponse, keyof IUserSettings>({
@@ -133,14 +150,22 @@ export const apiSlice = createApi({
         `/conversations/${conversationId}/messages`,
     }),
     sendMessage: builder.mutation<MessagePostResult, IMessagePostBody>({
-      query: (body) => ({
-        url: `/conversations/message`,
-        method: 'POST',
-        body: {
-          ...body,
-          source: 'outgoing',
-        },
-      }),
+      query: (body) => {
+        const formData = new FormData()
+        if (body.img) formData.append('img', body.img)
+        formData.append('conversationId', body.conversationId)
+        formData.append('localMessageId', body.localMessageId)
+        formData.append('messageId', body.messageId)
+        formData.append('senderUserId', body.senderUserId)
+        formData.append('text', body.text)
+        formData.append('timestamp', body.timestamp)
+        formData.append('source', body.source)
+        return {
+          url: `/conversations/message`,
+          method: 'POST',
+          body: formData,
+        }
+      },
     }),
     searchUser: builder.query<ISearchUser[], string>({
       query: (userid: string) => `/user/search/${userid}`,

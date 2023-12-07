@@ -13,6 +13,7 @@ import {
   useUpdateUserSettingMutation,
 } from '../../store/api/slice'
 import React from 'react'
+import isTrue from '../../utils/common-utils'
 
 interface SwitchSettingProps {
   settingKey: keyof IUserSettings
@@ -62,7 +63,7 @@ const SwitchSetting: React.FC<SwitchSettingProps> = ({
               'aria-labelledby': 'switch-list-label-wifi',
             }}
             disabled={result.isLoading}
-            defaultChecked={data[settingKey] === 'true'}
+            defaultChecked={isTrue(data[settingKey])}
             onChange={(e, checked) => {
               updateUserSettings({
                 key: settingKey,

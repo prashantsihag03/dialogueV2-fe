@@ -1,6 +1,5 @@
 import { Skeleton, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import placeholderProfilePicture from '../../assets/steverRogers.jpg'
 import { IChatQuickView } from './types'
 import {
   chatIndicatorStyles,
@@ -43,6 +42,12 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
   const isConversationNameLoading = (): boolean => {
     if (isGroup) return false
     return isFetchingOtherUser
+  }
+
+  const getConversationPicture = (): string | undefined => {
+    if (!isGroup && otherUserData?.profileImg != null)
+      return `data:image;base64,${otherUserData?.profileImg}`
+    return undefined
   }
 
   const getConversationName = (): string => {
@@ -98,7 +103,8 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
       >
         <Stack
           direction="row"
-          width="10%"
+          width="2rem"
+          height="2rem"
           borderRadius={100}
           justifyContent="center"
           alignItems="center"
@@ -106,7 +112,7 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
         >
           <img
             style={{ width: '100%' }}
-            src={placeholderProfilePicture}
+            src={getConversationPicture()}
             alt={`${conversationName}'s profile`}
           />
         </Stack>

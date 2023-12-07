@@ -1,7 +1,12 @@
 import { RootState } from '..'
 
+export const getDraggingFiles = (state: RootState) => state.chats.draggingFiles
+
 export const getActiveConversation = (state: RootState) =>
   state.chats.activeConversation
+
+export const getConversationIdByName = (name: string) => (state: RootState) =>
+  state.chats.conversations.find((convo) => convo.conversationName === name)
 
 export const isFirstUserSearchResultMounted = (state: RootState) =>
   state.chats.firstUserSearchResultMounted

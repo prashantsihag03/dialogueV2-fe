@@ -2,6 +2,7 @@ import { Button, Stack } from '@mui/material'
 import { Box } from '@mui/system'
 import { containerStyles } from './styles'
 import {
+  UpdateProfileBody,
   useClearConversationMutation,
   useDeleteConversationMutation,
   useGetProfileQuery,
@@ -35,6 +36,7 @@ export const Profile: React.FC = () => {
   const [newBioValue, setNewBioValue] = useState<string>('')
   const [newNameValue, setNewNameValue] = useState<string>('')
   const [newEmailValue, setNewEmailValue] = useState<string>('')
+  const [newProfileImg, setNewProfileImg] = useState<File | null>(null)
 
   const [updateMyProfile] = useUpdateMyProfileMutation()
   const [clearConversation, clearConvoResult] = useClearConversationMutation()
@@ -107,14 +109,16 @@ export const Profile: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         onConfirmClick={() => {
           appDispatch(setEditingMyProfile(false))
-          updateMyProfile({
+          const newUpdatedProfile: UpdateProfileBody = {
             bio: newBioValue,
             email: newEmailValue,
             fullname: newNameValue,
             id: '',
-            lastOnlineUTCDateTime: '',
-            profileImgSrc: '',
-          })
+          }
+          if (newProfileImg != null) {
+            newUpdatedProfile.profileImg = newProfileImg
+          }
+          updateMyProfile(newUpdatedProfile)
         }}
       />
       {!isFetching && isSuccess && data ? (
@@ -140,7 +144,10 @@ export const Profile: React.FC = () => {
               }}
               name={data.fullname}
               lastOnline={data.lastOnlineUTCDateTime}
-              profileImgSrc={data.profileImgSrc}
+              profileImgSrc={data.profileImg}
+              onProfileImgChange={(newImg: File) => {
+                setNewProfileImg(newImg)
+              }}
             />
             <Stack direction="column" alignItems="center" width={'100%'}>
               <ProfileTextField

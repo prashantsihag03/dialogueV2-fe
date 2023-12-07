@@ -15,12 +15,14 @@ import {
 import React, { useEffect, useState } from 'react'
 import {
   useCreateConversationMutation,
+  useGetUserSettingsQuery,
   useSearchUserQuery,
 } from '../../store/api/slice'
 import UserSearchResult from './UserSearchResult'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getUserConversations } from '../../store/chats/thunk'
 import {
+  getConversationIdByName,
   getConversationsError,
   getOpenCreateConvoDialog,
   getShowCreateConvoSearchResult,
@@ -28,10 +30,13 @@ import {
   isCreateConvoEnabled,
 } from '../../store/chats/selector'
 import {
+  setActiveConversation,
+  setActiveConversationByName,
   setCreateConvoDialogTransitionEnded,
   setCreateConvoEnabled,
   setShowCreateConvoSearchResult,
 } from '../../store/chats/slice'
+import isTrue from '../../utils/common-utils'
 
 interface ICreateConversationDialog {
   onBackdropClick: () => void
@@ -44,6 +49,10 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
 
   const [searchUserId, setSearchUserId] = useState<string>('')
   const [allowInput, setAllowInput] = useState<boolean>(true)
+
+  const { data: settingsData } = useGetUserSettingsQuery(
+    'openExistingConversation'
+  )
 
   const [startConversationValidation, setStartConversationValidation] =
     useState<string>('')
@@ -71,6 +80,13 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
     }
   )
 
+  const cleanState = () => {
+    setSearchUserId('')
+    setStartConversationValidation('')
+    appDispatch(setCreateConvoEnabled(false))
+    setSearch(false)
+  }
+
   useEffect(() => {
     if (result && result.isSuccess && searchUserId !== '') {
       setSearchUserId('')
@@ -84,10 +100,23 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
       )
     }
     if (result && result.isError) {
+      const errorMsg =
+        'data' in result.error
+          ? (result.error.data as { error: string }).error
+          : 'Conversation may have been created. Check and try again!'
       setConvoValidationColor('red')
-      setStartConversationValidation(
-        'Error. Conversation may have been created. Check and try again!'
-      )
+      setStartConversationValidation(errorMsg)
+      if (isTrue(settingsData?.openExistingConversation)) {
+        if (
+          errorMsg.toLocaleLowerCase().includes('conversation already exists')
+        ) {
+          appDispatch(
+            setActiveConversationByName(result.originalArgs?.conversationUserId)
+          )
+          cleanState()
+          onBackdropClick()
+        }
+      }
       setSearchUserId('')
     }
     setAllowInput(true)
@@ -122,10 +151,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
         if (reason === 'backdropClick') {
           onBackdropClick()
         }
-        setSearchUserId('')
-        setStartConversationValidation('')
-        appDispatch(setCreateConvoEnabled(false))
-        setSearch(false)
+        cleanState()
       }}
     >
       <DialogTitle>

@@ -23,6 +23,12 @@ const Setting: React.FC = () => {
           icon={<TourIcon fontSize="medium" />}
           note="Greetings will be offered next time site reloads."
         />
+        <SwitchSetting
+          settingKey="openExistingConversation"
+          settingKeyDisplayName="Open Existing Conversation"
+          icon={<TourIcon fontSize="medium" />}
+          note="When creating new conversations, if conversation already exists, open it. This only applies to one on one conversations."
+        />
       </List>
     </Box>
   )

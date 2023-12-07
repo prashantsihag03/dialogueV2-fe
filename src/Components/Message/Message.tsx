@@ -1,7 +1,7 @@
-import { Box, Typography } from '@mui/material'
-import placeholderProfilePicture from '../../assets/steverRogers.jpg'
+import { Box, Stack, Typography } from '@mui/material'
 import { secondary } from '../../Theme/colors'
 import { container, message, profileContainer, subContainer } from './styles'
+import { useGetProfileQuery } from '../../store/api/slice'
 
 export interface IMessage {
   name: string
@@ -10,6 +10,7 @@ export interface IMessage {
   source: 'incoming' | 'outgoing'
   status: 'sent' | 'pending' | 'failed'
   id?: string
+  file?: string
 }
 
 const getBackgroundColor = (
@@ -32,7 +33,10 @@ export const Message: React.FC<IMessage> = ({
   source,
   status,
   id,
+  file,
 }: IMessage) => {
+  const { data: profileData } = useGetProfileQuery(name)
+
   return (
     <Box
       className={id ? `${id}-message-container` : undefined}
@@ -42,10 +46,18 @@ export const Message: React.FC<IMessage> = ({
       }}
     >
       <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
-        <Box sx={profileContainer}>
+        <Box
+          sx={{
+            ...profileContainer,
+            width: '2rem',
+            height: '2rem',
+            marginLeft: '0.5rem',
+            marginRight: '0.5rem',
+          }}
+        >
           <img
             style={{ width: '100%' }}
-            src={placeholderProfilePicture}
+            src={`data:image;base64,${profileData?.profileImg}`}
             alt={`${name}'s profile`}
           />
         </Box>
@@ -69,6 +81,22 @@ export const Message: React.FC<IMessage> = ({
             backgroundColor: getBackgroundColor(status, source),
           }}
         >
+          {file ? (
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              maxWidth="15rem"
+              maxHeight="15rem"
+            >
+              <img
+                src={`data:image;base64,${file}`}
+                alt="img"
+                width="100%"
+                height="100%"
+              />
+            </Stack>
+          ) : null}
           {text}
         </Typography>
       </Box>

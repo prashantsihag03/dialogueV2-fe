@@ -33,7 +33,7 @@ export const getComponentsTheme = (
           props: { variant: 'outlined' },
           style: {
             textTransform: 'none',
-            padding: '0.8rem 1rem',
+            padding: '0.4rem 1rem',
             fontSize: '1.1rem',
             ['@media only screen and (max-width: 600px)']: {
               fontSize: '1rem',

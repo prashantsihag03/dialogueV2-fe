@@ -1,15 +1,13 @@
 import { Box, Divider, Typography } from '@mui/material'
 import { Header } from './Header/Header'
-import {
-  containerStyle,
-  messages,
-  noConversationContainerStyle,
-} from './styles'
+import { messages, noConversationContainerStyle } from './styles'
 import MessageInputBox from './MessageInputBox'
 import Message from '../Message'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'
 import {
   getActiveConversation,
+  getDraggingFiles,
   getShowLatestMsgInView,
 } from '../../store/chats/selector'
 import {
@@ -19,20 +17,28 @@ import {
 } from '../../store/api/slice'
 import { Stack } from '@mui/system'
 import cleanTimeUTCInstant from '../../utils/date-time-utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   OngoingMessageValue,
   addOngoingMessages,
   createEmptyConversation,
 } from '../../store/onGoingMessages/slice'
 import { getOngoingMessagesByConversationId } from '../../store/onGoingMessages/selector'
-import { setShowLatestMsgInView } from '../../store/chats/slice'
+import {
+  setDraggingFiles,
+  setShowLatestMsgInView,
+} from '../../store/chats/slice'
+import Dropzone from 'react-dropzone'
+import { setAttachmentByConvoId } from '../../store/inputMessages/slice'
+import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
 
 export const ChatBox: React.FC = () => {
   const appDispatch = useAppDispatch()
+  const dropzoneRef = useRef<HTMLInputElement | null>(null)
   const { data: loggedProfileData } = useGetProfileQuery(undefined)
   const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
   const activeConversation = useAppSelector(getActiveConversation)
+  const draggingFiles = useAppSelector(getDraggingFiles)
   const onGoingMessages = useAppSelector(
     getOngoingMessagesByConversationId(activeConversation?.conversationId || '')
   )
@@ -43,6 +49,12 @@ export const ChatBox: React.FC = () => {
       skip: !Boolean(activeConversation?.conversationId),
     }
   )
+
+  const handleOpenFilePicker = () => {
+    if (dropzoneRef.current) {
+      dropzoneRef.current.click()
+    }
+  }
 
   useEffect(() => {
     if (showLatestMsgOnDataChange && msgBoxEle) {
@@ -70,6 +82,7 @@ export const ChatBox: React.FC = () => {
             senderId: msgApiResult.senderUserId,
             status: 'sent',
             localMessageId: '',
+            file: msgApiResult.file,
           }
         }
       )
@@ -91,10 +104,21 @@ export const ChatBox: React.FC = () => {
   }, [msgBoxEle])
 
   return activeConversation ? (
-    <Box sx={containerStyle}>
+    <Stack
+      direction="column"
+      justifyContent="space-between"
+      alignItems="center"
+      padding="0.3rem"
+      width="100%"
+      height="100%"
+      onDragEnter={() => {
+        appDispatch(setDraggingFiles(true))
+      }}
+    >
       <Stack
         direction="column"
         width="100%"
+        height="10%"
         justifyContent="center"
         alignItems="center"
       >
@@ -105,78 +129,149 @@ export const ChatBox: React.FC = () => {
         />
         <Divider color="primary" sx={{ width: '100%' }} />
       </Stack>
-      <Box
-        sx={messages}
-        onScroll={(e) => {
-          console.log(e)
-        }}
+      <Stack
+        direction="column"
+        width="100%"
+        height="80%"
+        justifyContent="center"
+        alignItems="center"
+        position="relative"
       >
-        {isFetching ? (
-          <Stack direction={'row'} width={'100%'} height={'100%'}>
-            <Typography variant="body1">Loading</Typography>
-          </Stack>
-        ) : null}
-        {data &&
-        loggedProfileData &&
-        onGoingMessages &&
-        onGoingMessages.length > 0
-          ? onGoingMessages.map((msg, index) => {
-              if (onGoingMessages.length - 1 === index) {
-                return (
-                  <>
-                    <Message
-                      key={msg.messageId}
-                      id="latest"
-                      name={msg.senderId}
-                      timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
-                      source={
-                        msg.senderId === loggedProfileData.id
-                          ? 'outgoing'
-                          : 'incoming'
-                      }
-                      text={msg.message}
-                      status={msg.status}
-                    />
-                    <div
-                      ref={(node) => {
-                        setMsgBoxEle(node)
-                      }}
-                    ></div>
-                  </>
-                )
-              }
-              return (
-                <Message
-                  key={msg.messageId}
-                  name={msg.senderId}
-                  timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
-                  source={
-                    msg.senderId === loggedProfileData.id
-                      ? 'outgoing'
-                      : 'incoming'
-                  }
-                  text={msg.message}
-                  status={msg.status}
+        <Dropzone
+          onDrop={(acceptedFiles) => {
+            appDispatch(
+              setAttachmentByConvoId({
+                convoId: activeConversation.conversationId,
+                attachments: acceptedFiles,
+              })
+            )
+            appDispatch(setDraggingFiles(false))
+          }}
+          onDragLeave={() => {
+            appDispatch(setDraggingFiles(false))
+          }}
+          noClick={true}
+          multiple={true}
+          // accept={{ 'image/jpeg': ['.jpeg'] }}
+          // maxSize={409600}
+        >
+          {({ getRootProps, getInputProps }) => (
+            <Box
+              component="section"
+              sx={{
+                height: '100%',
+                width: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                backgroundColor: 'background.default',
+                zIndex: draggingFiles ? 1000 : -100,
+              }}
+            >
+              <Stack
+                sx={{ height: '100%', width: '100%' }}
+                component="div"
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+                {...getRootProps()}
+              >
+                <input {...getInputProps()} ref={dropzoneRef} />
+                <InsertDriveFileIcon
+                  sx={{ fontSize: '8.5rem', color: 'text.primary' }}
                 />
-              )
-            })
-          : null}
+                <Typography
+                  variant="subtitle1"
+                  fontSize="1.2rem"
+                  textAlign="center"
+                  width="70%"
+                >
+                  Drag &apos;n&apos; drop some files here, or click to select
+                  files
+                </Typography>
+              </Stack>
+            </Box>
+          )}
+        </Dropzone>
+        <AttachmentPreview conversationId={activeConversation.conversationId} />
+        <Box
+          sx={messages}
+          onScroll={(e) => {
+            console.log(e)
+          }}
+        >
+          {isFetching ? (
+            <Stack direction={'row'} width={'100%'} height={'100%'}>
+              <Typography variant="body1">Loading</Typography>
+            </Stack>
+          ) : null}
+          {data &&
+          loggedProfileData &&
+          onGoingMessages &&
+          onGoingMessages.length > 0
+            ? onGoingMessages.map((msg, index) => {
+                if (onGoingMessages.length - 1 === index) {
+                  return (
+                    <>
+                      <Message
+                        key={msg.messageId}
+                        id="latest"
+                        name={msg.senderId}
+                        timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                        source={
+                          msg.senderId === loggedProfileData.id
+                            ? 'outgoing'
+                            : 'incoming'
+                        }
+                        text={msg.message}
+                        status={msg.status}
+                        file={msg.file}
+                      />
+                      <div
+                        ref={(node) => {
+                          setMsgBoxEle(node)
+                        }}
+                      ></div>
+                    </>
+                  )
+                }
+                return (
+                  <Message
+                    key={msg.messageId}
+                    name={msg.senderId}
+                    timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                    source={
+                      msg.senderId === loggedProfileData.id
+                        ? 'outgoing'
+                        : 'incoming'
+                    }
+                    text={msg.message}
+                    status={msg.status}
+                  />
+                )
+              })
+            : null}
 
-        {data &&
-        loggedProfileData &&
-        onGoingMessages &&
-        onGoingMessages.length == 0 ? (
-          <Box sx={noConversationContainerStyle}>
-            <Typography variant="body2" fontSize="1em">
-              No messages to display.
-            </Typography>
-          </Box>
-        ) : null}
+          {data &&
+          loggedProfileData &&
+          onGoingMessages &&
+          onGoingMessages.length == 0 ? (
+            <Box sx={noConversationContainerStyle}>
+              <Typography variant="body2" fontSize="1em">
+                No messages to display.
+              </Typography>
+            </Box>
+          ) : null}
+        </Box>
+      </Stack>
+      <Box sx={{ width: '100%' }}>
+        <MessageInputBox
+          conversationId={activeConversation.conversationId}
+          receiver={activeConversation.profileId}
+          onAttachClick={handleOpenFilePicker}
+        />
       </Box>
-      <Box sx={{ width: '100%', paddingTop: '2rem' }}>
-        <MessageInputBox />
-      </Box>
-    </Box>
+    </Stack>
   ) : (
     <Box sx={noConversationContainerStyle}>
       <Typography variant="body2" fontSize="1em">
