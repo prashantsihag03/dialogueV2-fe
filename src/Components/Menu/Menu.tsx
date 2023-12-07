@@ -44,13 +44,13 @@ export const Menu: React.FC<IMenu> = ({
           </Typography>
         </Box>
       </Slide>
-      <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
+      {/* <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
         <Box sx={iconContainerStyles}>
           <Typography variant="subtitle2" sx={textItemStyles}>
             Terms of Use
           </Typography>
         </Box>
-      </Slide>
+      </Slide> */}
       <Box sx={iconContainerStyles}>
         {displayMode === 'dark' ? (
           <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
@@ -115,7 +115,7 @@ export const Menu: React.FC<IMenu> = ({
               <Avatar
                 className="logged-in-profile-avatar"
                 alt={data?.fullname}
-                src={data?.profileImgSrc}
+                src={`data:image;base64,${data.profileImg}`}
                 onClick={() => {
                   appDispatch(
                     setActiveProfileUserId({

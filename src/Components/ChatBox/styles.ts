@@ -1,15 +1,5 @@
 import { SxProps, Theme } from '@mui/system'
 
-export const containerStyle: SxProps<Theme> = {
-  width: '100%',
-  height: '100%',
-  padding: '0.3rem',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}
-
 export const noConversationContainerStyle: SxProps<Theme> = {
   width: '100%',
   height: '100%',
@@ -34,7 +24,7 @@ export const chatContainer: SxProps<Theme> = {
 export const messages: SxProps<Theme> = {
   width: '100%',
   height: '100%',
-  padding: '2rem 1rem',
+  margin: '0rem 1rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',

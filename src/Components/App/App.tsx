@@ -34,6 +34,7 @@ import {
   useGetUserSettingsQuery,
   useUpdateUserSettingMutation,
 } from '../../store/api/slice'
+import isTrue from '../../utils/common-utils'
 
 export const App = () => {
   const dispatch = useAppDispatch()
@@ -67,7 +68,7 @@ export const App = () => {
     return
   }
 
-  if (isError || data?.greetMeEverytime == null) {
+  if (isError || data == null) {
     return
   }
 
@@ -77,9 +78,7 @@ export const App = () => {
         <Box sx={containerStyles}>
           <Dialog
             open={
-              data?.greetMeEverytime === 'true' &&
-              !initialGuideAttempted &&
-              greet
+              isTrue(data.greetMeEverytime) && !initialGuideAttempted && greet
             }
             keepMounted={false}
             TransitionComponent={Slide}

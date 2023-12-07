@@ -18,9 +18,7 @@ export const subContainer: SxProps<Theme> = {
 }
 
 export const profileContainer: SxProps<Theme> = {
-  width: '10%',
-  minWidth: '40px',
-  borderRadius: '100vw',
+  borderRadius: '50%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

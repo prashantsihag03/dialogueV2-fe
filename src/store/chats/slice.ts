@@ -24,6 +24,7 @@ interface IChatsState {
   showCreateConvoSearchResult: boolean
   firstUserSearchResultMounted: boolean
   createConvoEnabled: boolean
+  draggingFiles: boolean
 }
 
 interface ConversationLastMessage {
@@ -48,12 +49,17 @@ const initialState: IChatsState = {
   showCreateConvoSearchResult: false,
   firstUserSearchResultMounted: false,
   createConvoEnabled: false,
+  // message box
+  draggingFiles: false,
 }
 
 const chatsSlice = createSlice({
   name: 'chats',
   initialState: initialState,
   reducers: {
+    setDraggingFiles: (state, action: PayloadAction<boolean>) => {
+      state.draggingFiles = action.payload
+    },
     setFirstUserSearchResultMounted: (
       state,
       action: PayloadAction<boolean>
@@ -76,7 +82,31 @@ const chatsSlice = createSlice({
       state,
       action: PayloadAction<IConversationDetail | undefined>
     ) => {
+      if (action.payload == undefined) {
+        state.activeConversation = action.payload
+      }
+      const convo = state.conversations.find(
+        (convo) => convo.conversationId === action.payload?.conversationId
+      )
+      if (!convo) return
       state.activeConversation = action.payload
+    },
+    setActiveConversationByName: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
+      const convo = state.conversations.find(
+        (convo) => convo.conversationName === action.payload
+      )
+      if (!convo) return
+      state.activeConversation = {
+        conversationId: convo.conversationId,
+        conversationName: convo.conversationName,
+        isGroup: convo.isGroup,
+        profileId: convo.isGroup
+          ? convo.conversationId
+          : convo.conversationName,
+      }
     },
     sortConversations: (state, action: PayloadAction<'asc' | 'desc'>) => {
       state.sort = action.payload
@@ -143,6 +173,8 @@ const chatsSlice = createSlice({
 })
 
 export const {
+  setActiveConversationByName,
+  setDraggingFiles,
   setFirstUserSearchResultMounted,
   setCreateConvoEnabled,
   setCreateConvoSearchTerm,

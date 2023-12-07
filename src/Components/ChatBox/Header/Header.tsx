@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import placeholderProfilePicture from '../../../assets/steverRogers.jpg'
 import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined'
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined'
@@ -14,6 +13,7 @@ import {
 import { useAppDispatch } from '../../../store/hooks'
 import { setActiveSideBar } from '../../../store/sidebar/slice'
 import { setActiveProfileUserId } from '../../../store/profile/slice'
+import { useGetProfileQuery } from '../../../store/api/slice'
 
 export interface IActiveChatHeader {
   userId: string
@@ -27,6 +27,13 @@ export const Header: React.FC<IActiveChatHeader> = ({
   online,
 }: IActiveChatHeader) => {
   const appDispatch = useAppDispatch()
+  const { data: otherUserData } = useGetProfileQuery(userId)
+
+  const getConversationPicture = (): string | undefined => {
+    if (otherUserData?.profileImg != null)
+      return `data:image;base64,${otherUserData?.profileImg}`
+    return undefined
+  }
 
   return (
     <Box sx={containerStyle}>
@@ -43,7 +50,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
           <Box sx={pictureContainer}>
             <img
               style={{ width: '100%' }}
-              src={placeholderProfilePicture}
+              src={getConversationPicture()}
               alt={`${fullName}'s profile`}
             />
           </Box>

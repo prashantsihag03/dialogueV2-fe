@@ -11,9 +11,8 @@ export interface MyProfileData {
   id: string
   fullname: string
   email: string
-  profileImgSrc: string
-  lastOnlineUTCDateTime: string
   bio: string
+  profileImg?: string
 }
 
 interface MyProfileState {
@@ -41,8 +40,7 @@ const initialState: IProfileState = {
       email: '',
       fullname: '',
       id: '',
-      lastOnlineUTCDateTime: '',
-      profileImgSrc: '',
+      profileImg: undefined,
     },
     error: undefined,
   },
@@ -78,8 +76,7 @@ const profileSlice = createSlice({
         email: '',
         fullname: '',
         id: '',
-        lastOnlineUTCDateTime: '',
-        profileImgSrc: '',
+        profileImg: undefined,
       }
       state.myProfile.isLoading = true
       state.myProfile.error = undefined

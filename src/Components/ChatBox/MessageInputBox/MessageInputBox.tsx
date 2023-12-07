@@ -10,23 +10,34 @@ import {
   useGetProfileQuery,
   useGetUserSettingsQuery,
 } from '../../../store/api/slice'
-import { useAppDispatch, useAppSelector } from '../../../store/hooks'
-import { getActiveConversation } from '../../../store/chats/selector'
+import { useAppDispatch } from '../../../store/hooks'
 import {
   OngoingMessageValue,
   addOngoingMessage,
 } from '../../../store/onGoingMessages/slice'
 import CustomEmojiPicker from './CustomEmojiPicker'
 import { setShowLatestMsgInView } from '../../../store/chats/slice'
+import isTrue from '../../../utils/common-utils'
+// import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
 
-export const MessageInputBox: React.FC = () => {
+interface MessageInputBoxProps {
+  onAttachClick: () => void
+  conversationId: string
+  receiver: string
+}
+
+export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
+  onAttachClick,
+  conversationId,
+  receiver,
+}: MessageInputBoxProps) => {
   const appDispatch = useAppDispatch()
-  const activeConversation = useAppSelector(getActiveConversation)
-  const { data: settingQueryData } =
-    useGetUserSettingsQuery('enterSendsMessage')
+  // const attachments = useAppSelector(
+  //   getInputMessageAttachmentsByConvoId(conversationId)
+  // )
+  const { data: settingsData } = useGetUserSettingsQuery('enterSendsMessage')
   const { data } = useGetProfileQuery(undefined)
   const [message, setMessage] = useState<string>('')
-
   const addEmojiToInput = (emojiObject: EmojiClickData) => {
     setMessage(
       message + String.fromCodePoint(Number(`0x${emojiObject.unified}`))
@@ -38,13 +49,13 @@ export const MessageInputBox: React.FC = () => {
       return
     }
 
-    if (activeConversation?.conversationId == null || data?.id == null) {
-      console.error('ConversationId couldnt be found')
+    if (data?.id == null) {
+      console.error('Invalid receiver userid.')
       return
     }
 
     const localMessage: OngoingMessageValue = {
-      conversationId: activeConversation.conversationId,
+      conversationId: conversationId,
       message: message,
       messageId: '',
       senderId: data?.id,
@@ -59,7 +70,7 @@ export const MessageInputBox: React.FC = () => {
       type: 'socket/message',
       payload: {
         text: localMessage.message,
-        receiver: activeConversation.profileId,
+        receiver: receiver,
         localMessageId: localMessage.localMessageId,
         conversationId: localMessage.conversationId,
       },
@@ -81,8 +92,7 @@ export const MessageInputBox: React.FC = () => {
           value={message}
           onChange={(e) => {
             if (
-              settingQueryData &&
-              settingQueryData.enterSendsMessage === 'true' &&
+              isTrue(settingsData?.enterSendsMessage) &&
               e.target.value === '\n'
             ) {
               return
@@ -90,7 +100,7 @@ export const MessageInputBox: React.FC = () => {
             setMessage(e.target.value)
           }}
           onKeyDown={
-            settingQueryData && settingQueryData.enterSendsMessage === 'true'
+            isTrue(settingsData?.enterSendsMessage)
               ? (e) => {
                   if (e.code.toString() === 'Enter') {
                     sendBtnClickHandler()
@@ -108,6 +118,7 @@ export const MessageInputBox: React.FC = () => {
         <AttachFileRoundedIcon
           sx={iconStyles}
           titleAccess="attach file/files"
+          onClick={onAttachClick}
         />
       </Box>
       <NorthIcon
