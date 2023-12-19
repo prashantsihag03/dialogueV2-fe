@@ -1,16 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { DefaultEventsMap } from '@socket.io/component-emitter'
 import { Socket } from 'socket.io-client'
-import { connected, disconnected } from '../connection/slice'
 import { Middleware } from '@reduxjs/toolkit'
-import {
-  addOngoingMessage,
-  updateOngoingMessageStatusToSent,
-} from '../onGoingMessages/slice'
-import { RootState } from '..'
-import {
-  setShowLatestMsgInView,
-  updateConversationLastMessage,
-} from '../chats/slice'
+import { updateOngoingMessageStatusToSent } from '../onGoingMessages/slice'
+import { updateConversationLastMessage } from '../chats/slice'
+import assignSocketEventHandlers from './EventHandlers'
+import { setCall } from '../rtc/slice'
 
 export const socketMiddleware =
   (io: Socket<DefaultEventsMap, DefaultEventsMap>): Middleware =>
@@ -21,58 +17,7 @@ export const socketMiddleware =
 
     switch (type) {
       case 'socket/connect':
-        io.connect()
-        io.on('connect', () => {
-          dispatch(connected())
-        })
-        io.on('disconnect', () => {
-          dispatch(disconnected())
-        })
-        io.on('message', (data) => {
-          const state: RootState = getState()
-          if (data.conversationId == null) {
-            console.error('ConversationId missing in received message event')
-            return
-          }
-
-          // if conversationId has onGoingMessages data
-          if (state.onGoingMessages[data.conversationId] != null) {
-            dispatch(
-              addOngoingMessage({
-                conversationId: data.conversationId,
-                message: data.message,
-                messageId: data.messageId,
-                senderId: data.senderId,
-                timeStamp: data.timeStamp,
-                status: 'sent',
-                localMessageId: data.localMessageId,
-              })
-            )
-          }
-
-          dispatch(
-            updateConversationLastMessage({
-              conversationId: data.conversationId,
-              lastMessage: data.message,
-              lastMessageTime: data.timeStamp,
-              lastMessageSenderId: data.senderId,
-            })
-          )
-
-          if (
-            state.chats.activeConversation?.conversationId != null &&
-            state.chats.activeConversation?.conversationId ===
-              data.conversationId
-          ) {
-            // // play new message music
-            console.log('Play active convo new msg audio!')
-            dispatch(setShowLatestMsgInView(true))
-          } else {
-            // Show notification since the convo is not active
-            // But should we show notification ? coz the conversation's last msg will get updated,
-            // and technically should come up top
-          }
-        })
+        assignSocketEventHandlers(io, dispatch, getState)
         break
 
       case 'socket/message':
@@ -105,7 +50,22 @@ export const socketMiddleware =
             )
           }
         })
-        console.log('Message event emitted with following payload', payload)
+        break
+
+      case 'socket/initiateCall':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        io.emit('initiateCall', payload, (ack: any) => {})
+        dispatch(
+          setCall({
+            call: 'initiating',
+            userId: payload.userToCall,
+          })
+        )
+        break
+
+      case 'socket/answerCall':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        io.emit('answerCall', payload, (ack: any) => {})
         break
 
       case 'socket/disconnect':

@@ -3,6 +3,7 @@ import { containerStyles, headingStyles } from './styles'
 import SwitchSetting from './SwitchSetting'
 import KeyboardIcon from '@mui/icons-material/Keyboard'
 import TourIcon from '@mui/icons-material/Tour'
+import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser'
 
 const Setting: React.FC = () => {
   return (
@@ -26,7 +27,7 @@ const Setting: React.FC = () => {
         <SwitchSetting
           settingKey="openExistingConversation"
           settingKeyDisplayName="Open Existing Conversation"
-          icon={<TourIcon fontSize="medium" />}
+          icon={<OpenInBrowserIcon fontSize="medium" />}
           note="When creating new conversations, if conversation already exists, open it. This only applies to one on one conversations."
         />
       </List>
