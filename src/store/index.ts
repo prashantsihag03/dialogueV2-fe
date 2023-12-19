@@ -9,6 +9,8 @@ import { io } from 'socket.io-client'
 import { onGoingMessagesReducer } from './onGoingMessages/slice'
 import { configReducer } from './config/slice'
 import { inputMessagesReducer } from './inputMessages/slice'
+import { rtcReducer } from './rtc/slice'
+import { webrtcMiddleware } from './middlewares/webrtc'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
@@ -18,6 +20,7 @@ export const rootReducer = combineReducers({
   onGoingMessages: onGoingMessagesReducer,
   config: configReducer,
   inputMessages: inputMessagesReducer,
+  rtc: rtcReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 })
 
@@ -28,7 +31,8 @@ const store = configureStore({
       .concat(apiSlice.middleware)
       .concat(
         socketMiddleware(io('http://localhost:3000/', { autoConnect: false }))
-      ),
+      )
+      .concat(webrtcMiddleware([])),
 })
 
 export type RootState = ReturnType<typeof store.getState>

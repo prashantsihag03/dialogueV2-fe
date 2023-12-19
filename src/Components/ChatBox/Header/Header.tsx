@@ -95,11 +95,63 @@ export const Header: React.FC<IActiveChatHeader> = ({
           sx={iconStyles}
           titleAccess="audio call"
           className="conversation-box-conversation-audio-call-icon"
+          onClick={() => {
+            navigator.mediaDevices
+              .getUserMedia({
+                video: true,
+                audio: true,
+              })
+              .then((mediaStream) => {
+                const video = document.getElementById(
+                  'localVideo'
+                ) as HTMLVideoElement | null
+
+                if (video == null) return
+                if ('srcObject' in video) {
+                  video.srcObject = mediaStream
+                }
+                video.play()
+                appDispatch({
+                  type: 'rtc/createOffer',
+                  payload: {
+                    stream: mediaStream,
+                    userIdToConnect: otherUserData?.id,
+                  },
+                })
+              })
+              .catch()
+          }}
         />
         <VideoCallOutlinedIcon
           sx={iconStyles}
           titleAccess="video call"
           className="conversation-box-conversation-video-call-icon"
+          onClick={() => {
+            navigator.mediaDevices
+              .getUserMedia({
+                video: true,
+                audio: true,
+              })
+              .then((mediaStream) => {
+                const video = document.getElementById(
+                  'localVideo'
+                ) as HTMLVideoElement | null
+
+                if (video == null) return
+                if ('srcObject' in video) {
+                  video.srcObject = mediaStream
+                }
+                video.play()
+                appDispatch({
+                  type: 'rtc/createOffer',
+                  payload: {
+                    stream: mediaStream,
+                    userIdToConnect: otherUserData?.id,
+                  },
+                })
+              })
+              .catch()
+          }}
         />
       </Box>
     </Box>

@@ -1,4 +1,4 @@
-import { Box, Divider, Typography } from '@mui/material'
+import { Box, CircularProgress, Divider, Typography } from '@mui/material'
 import { Header } from './Header/Header'
 import { messages, noConversationContainerStyle } from './styles'
 import MessageInputBox from './MessageInputBox'
@@ -31,6 +31,7 @@ import {
 import Dropzone from 'react-dropzone'
 import { setAttachmentByConvoId } from '../../store/inputMessages/slice'
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
+import CallView from './CallView/CallView'
 
 export const ChatBox: React.FC = () => {
   const appDispatch = useAppDispatch()
@@ -194,15 +195,17 @@ export const ChatBox: React.FC = () => {
           )}
         </Dropzone>
         <AttachmentPreview conversationId={activeConversation.conversationId} />
-        <Box
-          sx={messages}
-          onScroll={(e) => {
-            console.log(e)
-          }}
-        >
+        <CallView />
+        <Box sx={messages}>
           {isFetching ? (
-            <Stack direction={'row'} width={'100%'} height={'100%'}>
-              <Typography variant="body1">Loading</Typography>
+            <Stack
+              direction={'row'}
+              width={'100%'}
+              height={'100%'}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress />
             </Stack>
           ) : null}
           {data &&
