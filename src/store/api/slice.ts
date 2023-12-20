@@ -71,7 +71,7 @@ export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
   reducerPath: 'api',
   tagTypes: ['Profile', 'Conversation', 'Settings'],
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
     createConversation: builder.mutation<void, ConversationAttributes>({

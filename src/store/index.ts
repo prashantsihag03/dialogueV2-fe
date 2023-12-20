@@ -29,9 +29,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(apiSlice.middleware)
-      .concat(
-        socketMiddleware(io('http://localhost:3000/', { autoConnect: false }))
-      )
+      .concat(socketMiddleware(io('/', { autoConnect: false })))
       .concat(webrtcMiddleware([])),
 })
 

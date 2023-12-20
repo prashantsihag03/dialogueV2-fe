@@ -8,7 +8,7 @@ import {
   setShowLatestMsgInView,
   updateConversationLastMessage,
 } from '../chats/slice'
-import { setCall, setCallAnswer } from '../rtc/slice'
+import { setCall } from '../rtc/slice'
 
 export const config = {
   iceServers: [{ urls: 'stun:stun.stunprotocol.org' }],
@@ -70,7 +70,6 @@ const assignSocketEventHandlers = (
       type: 'rtc/receivedAnswer',
       payload: { userId: data.from, signalData: data.answer },
     })
-    dispatch(setCallAnswer(data.answer))
   })
 
   io.on('message', (data) => {
