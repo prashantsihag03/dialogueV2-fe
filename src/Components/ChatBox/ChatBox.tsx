@@ -119,7 +119,7 @@ export const ChatBox: React.FC = () => {
       <Stack
         direction="column"
         width="100%"
-        height="10%"
+        flex={1}
         justifyContent="center"
         alignItems="center"
       >
@@ -133,7 +133,7 @@ export const ChatBox: React.FC = () => {
       <Stack
         direction="column"
         width="100%"
-        height="80%"
+        flex={1000}
         justifyContent="center"
         alignItems="center"
         position="relative"
@@ -267,7 +267,7 @@ export const ChatBox: React.FC = () => {
           ) : null}
         </Box>
       </Stack>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', flex: 1 }}>
         <MessageInputBox
           conversationId={activeConversation.conversationId}
           receiver={activeConversation.profileId}
