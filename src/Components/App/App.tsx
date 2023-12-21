@@ -10,6 +10,7 @@ import {
   Slide,
   ThemeProvider,
   Typography,
+  useMediaQuery,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import useDisplayMode from '../../hooks/useDisplayMode'
@@ -35,9 +36,11 @@ import {
   useUpdateUserSettingMutation,
 } from '../../store/api/slice'
 import isTrue from '../../utils/common-utils'
+import { setSideBarPreference } from '../../store/sidebar/slice'
 
 export const App = () => {
   const dispatch = useAppDispatch()
+  const isMobile = useMediaQuery('(max-width:600px)')
   const [initialGuideAttempted, setInitialGuideAttempted] =
     useState<boolean>(false)
   const { isFetching, isError, data } =
@@ -47,6 +50,11 @@ export const App = () => {
   const showTourFinishedDialog = useAppSelector(showGuidedTourFinishedDialog)
   const [updateUserSetting] = useUpdateUserSettingMutation()
   const appGuideTour = useAppSelector(getRunGuidedTour)
+
+  useEffect(() => {
+    if (isMobile == true) dispatch(setSideBarPreference('mobile'))
+    else dispatch(setSideBarPreference('web'))
+  }, [isMobile])
 
   useEffect(() => {
     dispatch(getUserConversations())

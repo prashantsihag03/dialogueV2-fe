@@ -9,6 +9,30 @@ export const containerStyles: SxProps<Theme> = {
   alignItems: 'center',
 }
 
+export const sideBarContainerStyles: SxProps<Theme> = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  padding: '4%',
+}
+
+export const sideBarListStyles: SxProps<Theme> = {
+  width: '100%',
+  height: '100%',
+  padding: '3% 0%',
+  overflowX: 'auto',
+}
+
+export const sideBarActionStyles: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+}
+
 export const iconContainerStyles: SxProps<Theme> = {
   marginRight: '20px',
   display: 'flex',
