@@ -12,6 +12,7 @@ import {
   removeAttachment,
 } from '../../../store/inputMessages/slice'
 import ImageRenderer from '../ImageRenderer'
+import { getSideBarPreference } from '../../../store/sidebar/selector'
 
 interface AttachmentPreviewProps {
   conversationId: string
@@ -30,6 +31,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   title,
 }: AttachmentPreviewProps) => {
   const dispatch = useAppDispatch()
+  const browser = useAppSelector(getSideBarPreference)
   const [attachCarouselIndex, setAttachCarouselIndex] = useState<number>(0)
   const [minimizedPreview, setMinimizedPreview] = useState<boolean>(false)
   const attachments = useAppSelector(
@@ -88,19 +90,21 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
         top="0%"
         right="0%"
       >
-        {minimizedPreview ? (
-          <ExpandLessIcon
-            onClick={() => {
-              setMinimizedPreview(false)
-            }}
-          />
-        ) : (
-          <ExpandMoreIcon
-            onClick={() => {
-              setMinimizedPreview(true)
-            }}
-          />
-        )}
+        {browser === 'web' ? (
+          minimizedPreview ? (
+            <ExpandLessIcon
+              onClick={() => {
+                setMinimizedPreview(false)
+              }}
+            />
+          ) : (
+            <ExpandMoreIcon
+              onClick={() => {
+                setMinimizedPreview(true)
+              }}
+            />
+          )
+        ) : null}
         {!minimizedPreview ? (
           <Typography
             variant="h2"

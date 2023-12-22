@@ -1,10 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type SIDEBAR_TYPE = 'profile' | 'chats' | 'setting' | 'menu'
+export type SIDEBAR_TYPE = 'profile' | 'chats' | 'setting' | 'none'
 export type SIDEBAR_PREFERENCE = 'mobile' | 'web'
 
 interface ISideBarState {
+  /**
+   * Determines which sidebar to show in the sidebar content box
+   */
   activeSideBar: SIDEBAR_TYPE
+  /**
+   * Determines whether to open the side drawer or not. Used in mobile browser to show main menu options
+   */
   showSideDrawer: boolean
   sideBarPreference: SIDEBAR_PREFERENCE
 }

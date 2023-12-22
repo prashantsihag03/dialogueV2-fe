@@ -14,6 +14,8 @@ import { useGetProfileQuery } from '../../store/api/slice'
 import cleanTimeUTCInstant from '../../utils/date-time-utils'
 import { getMyProfileData } from '../../store/profile/selector'
 import { getActiveConversation } from '../../store/chats/selector'
+import { getSideBarPreference } from '../../store/sidebar/selector'
+import { setActiveSideBar } from '../../store/sidebar/slice'
 
 interface ChatQuickViewProps extends IChatQuickView {
   className?: string
@@ -32,6 +34,7 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
   onClick,
 }: ChatQuickViewProps) => {
   const AppDispatch = useAppDispatch()
+  const browser = useAppSelector(getSideBarPreference)
   const myProfile = useAppSelector(getMyProfileData)
   const activeConversation = useAppSelector(getActiveConversation)
   const { isFetching: isFetchingOtherUser, data: otherUserData } =
@@ -65,6 +68,9 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
         profileId: isGroup ? conversationId : conversationName,
       })
     )
+    if (browser === 'mobile') {
+      AppDispatch(setActiveSideBar('none'))
+    }
     if (onClick != null) onClick()
   }
 

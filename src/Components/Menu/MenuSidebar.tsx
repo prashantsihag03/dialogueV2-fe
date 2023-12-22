@@ -2,9 +2,10 @@ import { Box } from '@mui/system'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
+import LogoutIcon from '@mui/icons-material/Logout'
 import { sideBarActionStyles, sideBarContainerStyles } from './styles'
 import { useAppDispatch } from '../../store/hooks'
-import ForumIcon from '@mui/icons-material/Forum'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   Avatar,
   Grow,
@@ -16,7 +17,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { setActiveSideBar } from '../../store/sidebar/slice'
+import { setActiveSideBar, setShowSideDrawer } from '../../store/sidebar/slice'
 import { useGetProfileQuery } from '../../store/api/slice'
 import { setActiveProfileUserId } from '../../store/profile/slice'
 
@@ -34,18 +35,18 @@ export const MenuSideBar: React.FC = () => {
         alignItems="center"
         margin="0.5rem"
       >
-        <Typography variant="h2">Main Menu</Typography>
+        <Typography variant="h2">Menu</Typography>
         <Box sx={sideBarActionStyles}>
-          {/* <CloseIcon
+          <CloseIcon
             titleAccess="Close menu sidebar"
             onClick={() => {
               appDispatch(setShowSideDrawer(false))
             }}
-          /> */}
+          />
         </Box>
       </Stack>
       <List sx={{ width: '100%', flex: 1000 }}>
-        <ListItem>
+        <ListItem disableGutters>
           <ListItemButton
             disabled={data?.id && data?.fullname ? false : true}
             onClick={() => {
@@ -59,6 +60,7 @@ export const MenuSideBar: React.FC = () => {
                 )
                 appDispatch(setActiveSideBar('profile'))
               }
+              appDispatch(setShowSideDrawer(false))
             }}
           >
             <ListItemIcon>
@@ -101,18 +103,9 @@ export const MenuSideBar: React.FC = () => {
         <ListItem>
           <ListItemButton
             onClick={() => {
-              appDispatch(setActiveSideBar('chats'))
+              appDispatch(setShowSideDrawer(false))
             }}
           >
-            <ListItemIcon>
-              <ForumIcon titleAccess="conversations" />
-            </ListItemIcon>
-            <ListItemText>Conversations</ListItemText>
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem>
-          <ListItemButton>
             <ListItemIcon>
               <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
                 <NotificationsOutlinedIcon titleAccess="Notifications" />
@@ -125,6 +118,7 @@ export const MenuSideBar: React.FC = () => {
           <ListItemButton
             onClick={() => {
               appDispatch(setActiveSideBar('setting'))
+              appDispatch(setShowSideDrawer(false))
             }}
           >
             <ListItemIcon>
@@ -136,26 +130,15 @@ export const MenuSideBar: React.FC = () => {
             <ListItemText>Settings</ListItemText>
           </ListItemButton>
         </ListItem>
+        <ListItem>
+          <ListItemButton href="/logout">
+            <ListItemIcon>
+              <LogoutIcon titleAccess="logout" className="logout-joyride" />
+            </ListItemIcon>
+            <ListItemText>Logout</ListItemText>
+          </ListItemButton>
+        </ListItem>
       </List>
-
-      {/* <Stack direction="column" width="100%" height="100%" flex={100}>
-        <Stack
-          direction="row"
-          width="100%"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography variant="body1">Conversations</Typography>
-        </Stack>
-        <Stack
-          direction="row"
-          width="100%"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography variant="body1">Notifications</Typography>
-        </Stack>
-      </Stack> */}
     </Box>
   )
 }

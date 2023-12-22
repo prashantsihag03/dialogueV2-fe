@@ -2,6 +2,7 @@ import { Box } from '@mui/system'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import MenuIcon from '@mui/icons-material/Menu'
+import ForumIcon from '@mui/icons-material/Forum'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
@@ -14,6 +15,7 @@ import { setActiveSideBar, setShowSideDrawer } from '../../store/sidebar/slice'
 import { useGetProfileQuery } from '../../store/api/slice'
 import { setActiveProfileUserId } from '../../store/profile/slice'
 import { getSideBarPreference } from '../../store/sidebar/selector'
+import { setActiveConversation } from '../../store/chats/slice'
 
 interface IMenu {
   displayMode: DisplayMode
@@ -31,6 +33,20 @@ export const Menu: React.FC<IMenu> = ({
 
   return (
     <Box sx={containerStyles}>
+      <Box sx={iconContainerStyles}>
+        <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
+          <ForumIcon
+            titleAccess="open conversation lists"
+            className="main-menu-conversations-joyride"
+            onClick={() => {
+              if (sideBarPreference === 'mobile')
+                appDispatch(setActiveConversation(undefined))
+              appDispatch(setActiveSideBar('chats'))
+            }}
+          />
+        </Grow>
+      </Box>
+
       {sideBarPreference === 'mobile' ? (
         <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
           <Box sx={iconContainerStyles}>
@@ -38,7 +54,6 @@ export const Menu: React.FC<IMenu> = ({
               titleAccess="Menu"
               className="menu-joyride"
               onClick={() => {
-                appDispatch(setActiveSideBar('menu'))
                 appDispatch(setShowSideDrawer(true))
               }}
             />
@@ -46,22 +61,6 @@ export const Menu: React.FC<IMenu> = ({
         </Grow>
       ) : (
         <>
-          <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
-            <Box
-              sx={iconContainerStyles}
-              onClick={() => {
-                appDispatch(setActiveSideBar('chats'))
-              }}
-            >
-              <Typography
-                variant="subtitle2"
-                sx={textItemStyles}
-                className="main-menu-conversations-joyride"
-              >
-                Conversations
-              </Typography>
-            </Box>
-          </Slide>
           <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
             <Box sx={iconContainerStyles}>
               <Typography variant="subtitle2" sx={textItemStyles}>

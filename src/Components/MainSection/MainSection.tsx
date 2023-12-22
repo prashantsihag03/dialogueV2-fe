@@ -1,13 +1,12 @@
 import { Box, Slide } from '@mui/material'
 import { ChatBox } from '../ChatBox/ChatBox'
-import CloseIcon from '@mui/icons-material/Close'
 import {
   chatBoxSectionStyles,
   containerStyles,
   sideBarSectionStyles,
 } from './styles'
 import { Profile } from '../Profile/Profile'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppSelector } from '../../store/hooks'
 import {
   getActiveSideBar,
   getShowSideDrawer,
@@ -16,23 +15,47 @@ import {
 import Chats from '../Chats'
 import Setting from '../Setting'
 import { MenuSideBar } from '../Menu/MenuSidebar'
-import { setShowSideDrawer } from '../../store/sidebar/slice'
+import { getActiveConversation } from '../../store/chats/selector'
 
 export const MainSection: React.FC = () => {
-  const appDispatch = useAppDispatch()
   const sideBarPreference = useAppSelector(getSideBarPreference)
   const activeSideBar = useAppSelector(getActiveSideBar)
+  const activeConversation = useAppSelector(getActiveConversation)
   const showSideDrawer = useAppSelector(getShowSideDrawer)
+
+  const showChatBox = () => {
+    if (sideBarPreference === 'web') return true
+    if (
+      sideBarPreference === 'mobile' &&
+      activeConversation != null &&
+      activeSideBar === 'none'
+    )
+      return true
+    return false
+  }
+
+  const showSideBar = () => {
+    if (sideBarPreference === 'web') return true
+    if (sideBarPreference === 'mobile' && activeSideBar != 'none') return true
+    if (
+      sideBarPreference === 'mobile' &&
+      activeSideBar === 'none' &&
+      activeConversation == null
+    )
+      return true
+  }
 
   return (
     <Box sx={containerStyles}>
-      <Box
-        sx={chatBoxSectionStyles}
-        borderRadius={1}
-        className="chatbox-joyride"
-      >
-        <ChatBox />
-      </Box>
+      {showChatBox() ? (
+        <Box
+          sx={chatBoxSectionStyles}
+          borderRadius={1}
+          className="chatbox-joyride"
+        >
+          <ChatBox />
+        </Box>
+      ) : null}
       {sideBarPreference === 'mobile' ? (
         <Slide direction="left" in={showSideDrawer} mountOnEnter>
           <Box
@@ -46,35 +69,27 @@ export const MainSection: React.FC = () => {
               zIndex: 1000000,
             }}
           >
-            <CloseIcon
-              titleAccess="Close menu sidebar"
-              sx={{
-                position: 'absolute',
-                right: '1rem',
-                top: '1rem',
-              }}
-              onClick={() => {
-                appDispatch(setShowSideDrawer(false))
-              }}
-            />
-
-            {activeSideBar === 'chats' ? <Chats /> : null}
-            {activeSideBar === 'profile' ? <Profile /> : null}
-            {activeSideBar === 'setting' ? <Setting /> : null}
-            {activeSideBar === 'menu' ? <MenuSideBar /> : null}
+            <MenuSideBar />
           </Box>
         </Slide>
-      ) : (
+      ) : null}
+      {showSideBar() ? (
         <Box
-          sx={sideBarSectionStyles}
+          sx={{
+            ...sideBarSectionStyles,
+            maxWidth: sideBarPreference === 'mobile' ? '600px' : '350px',
+          }}
           borderRadius={1}
           className="sidebar-joyride"
         >
-          {activeSideBar === 'chats' ? <Chats /> : null}
+          {activeSideBar === 'chats' ||
+          (activeSideBar === 'none' && activeConversation == null) ? (
+            <Chats />
+          ) : null}
           {activeSideBar === 'profile' ? <Profile /> : null}
           {activeSideBar === 'setting' ? <Setting /> : null}
         </Box>
-      )}
+      ) : null}
     </Box>
   )
 }

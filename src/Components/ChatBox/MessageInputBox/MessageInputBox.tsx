@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material'
+import { Box, MenuItem, TextField } from '@mui/material'
 import { v4 as uuidv4 } from 'uuid'
 import NorthIcon from '@mui/icons-material/North'
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded'
@@ -10,14 +10,16 @@ import {
   useGetProfileQuery,
   useGetUserSettingsQuery,
 } from '../../../store/api/slice'
-import { useAppDispatch } from '../../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import {
   OngoingMessageValue,
   addOngoingMessage,
 } from '../../../store/onGoingMessages/slice'
-import CustomEmojiPicker from './CustomEmojiPicker'
+// import CustomEmojiPicker from './CustomEmojiPicker'
 import { setShowLatestMsgInView } from '../../../store/chats/slice'
 import isTrue from '../../../utils/common-utils'
+import { getSideBarPreference } from '../../../store/sidebar/selector'
+import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
 // import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
 
 interface MessageInputBoxProps {
@@ -27,17 +29,20 @@ interface MessageInputBoxProps {
 }
 
 export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAttachClick,
   conversationId,
   receiver,
 }: MessageInputBoxProps) => {
   const appDispatch = useAppDispatch()
+  const browser = useAppSelector(getSideBarPreference)
   // const attachments = useAppSelector(
   //   getInputMessageAttachmentsByConvoId(conversationId)
   // )
   const { data: settingsData } = useGetUserSettingsQuery('enterSendsMessage')
   const { data } = useGetProfileQuery(undefined)
   const [message, setMessage] = useState<string>('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addEmojiToInput = (emojiObject: EmojiClickData) => {
     setMessage(
       message + String.fromCodePoint(Number(`0x${emojiObject.unified}`))
@@ -81,11 +86,11 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
   return (
     <Box sx={messageOptions} className="message-input-box">
       <Box sx={messageBox}>
-        <CustomEmojiPicker addEmojiToInput={addEmojiToInput} />
+        {/* <CustomEmojiPicker addEmojiToInput={addEmojiToInput} /> */}
         <TextField
           id="standard-textarea"
           variant="standard"
-          placeholder="Type your message here"
+          placeholder="Type here"
           multiline
           fullWidth
           maxRows={6}
@@ -111,15 +116,32 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
           InputProps={{ disableUnderline: true }}
           sx={{ marginLeft: '0.5rem' }}
         />
-        <MicNoneOutlinedIcon
-          sx={iconStyles}
-          titleAccess="record audio message"
-        />
-        <AttachFileRoundedIcon
-          sx={iconStyles}
-          titleAccess="attach file/files"
-          onClick={onAttachClick}
-        />
+        {browser ? (
+          <>
+            <VerticalDotMenu>
+              <MenuItem>Record audio notes</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onAttachClick()
+                }}
+              >
+                Add attachment
+              </MenuItem>
+            </VerticalDotMenu>
+          </>
+        ) : (
+          <>
+            <MicNoneOutlinedIcon
+              sx={iconStyles}
+              titleAccess="record audio message"
+            />
+            <AttachFileRoundedIcon
+              sx={iconStyles}
+              titleAccess="attach file/files"
+              onClick={onAttachClick}
+            />
+          </>
+        )}
       </Box>
       <NorthIcon
         fontSize="large"

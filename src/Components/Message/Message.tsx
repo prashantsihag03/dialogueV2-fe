@@ -13,6 +13,10 @@ export interface IMessage {
   file?: string
 }
 
+export interface MessageProps extends IMessage {
+  showProfilePic: boolean
+}
+
 const getBackgroundColor = (
   status: 'sent' | 'pending' | 'failed',
   source: 'outgoing' | 'incoming'
@@ -26,7 +30,7 @@ const getBackgroundColor = (
   return source === 'outgoing' ? secondary.light : 'background.default'
 }
 
-export const Message: React.FC<IMessage> = ({
+export const Message: React.FC<MessageProps> = ({
   name,
   timeStamp,
   text,
@@ -34,7 +38,8 @@ export const Message: React.FC<IMessage> = ({
   status,
   id,
   file,
-}: IMessage) => {
+  showProfilePic,
+}: MessageProps) => {
   const { data: profileData } = useGetProfileQuery(name)
 
   return (
@@ -45,24 +50,26 @@ export const Message: React.FC<IMessage> = ({
         flexDirection: source === 'incoming' ? 'row' : 'row-reverse',
       }}
     >
-      <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
-        <Box
-          sx={{
-            ...profileContainer,
-            width: '2rem',
-            height: '2rem',
-            marginLeft: '0.5rem',
-            marginRight: '0.5rem',
-          }}
-        >
-          <img
-            style={{ width: '100%' }}
-            src={`data:image;base64,${profileData?.profileImg}`}
-            alt={`${name}'s profile`}
-          />
+      {showProfilePic ? (
+        <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
+          <Box
+            sx={{
+              ...profileContainer,
+              width: '2rem',
+              height: '2rem',
+              marginLeft: '0.5rem',
+              marginRight: '0.5rem',
+            }}
+          >
+            <img
+              style={{ width: '100%' }}
+              src={`data:image;base64,${profileData?.profileImg}`}
+              alt={`${name}'s profile`}
+            />
+          </Box>
+          <Typography variant="subtitle1">{timeStamp}</Typography>
         </Box>
-        <Typography variant="subtitle1">{timeStamp}</Typography>
-      </Box>
+      ) : null}
       <Box
         sx={{
           ...subContainer,

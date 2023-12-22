@@ -13,7 +13,7 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import useDisplayMode from '../../hooks/useDisplayMode'
+import useCreateTheme from '../../hooks/useDisplayMode'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import Header from '../Header'
 import MainSection from '../MainSection'
@@ -45,7 +45,7 @@ export const App = () => {
     useState<boolean>(false)
   const { isFetching, isError, data } =
     useGetUserSettingsQuery('greetMeEverytime')
-  const { theme, displayMode, toggleDisplayMode } = useDisplayMode()
+  const { theme, displayMode, toggleDisplayMode } = useCreateTheme()
   const greet = useAppSelector(getGreet)
   const showTourFinishedDialog = useAppSelector(showGuidedTourFinishedDialog)
   const [updateUserSetting] = useUpdateUserSettingMutation()
