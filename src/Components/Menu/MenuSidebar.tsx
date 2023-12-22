@@ -45,7 +45,7 @@ export const MenuSideBar: React.FC = () => {
           />
         </Box>
       </Stack>
-      <List sx={{ width: '100%', flex: 1000 }}>
+      <List sx={{ width: '100%', flex: 1000 }} disablePadding>
         <ListItem disableGutters>
           <ListItemButton
             disabled={data?.id && data?.fullname ? false : true}
@@ -100,7 +100,7 @@ export const MenuSideBar: React.FC = () => {
             <ListItemText>Profile</ListItemText>
           </ListItemButton>
         </ListItem>
-        <ListItem>
+        <ListItem disableGutters>
           <ListItemButton
             onClick={() => {
               appDispatch(setShowSideDrawer(false))
@@ -114,7 +114,7 @@ export const MenuSideBar: React.FC = () => {
             <ListItemText>Notifications</ListItemText>
           </ListItemButton>
         </ListItem>
-        <ListItem>
+        <ListItem disableGutters>
           <ListItemButton
             onClick={() => {
               appDispatch(setActiveSideBar('setting'))
@@ -130,7 +130,7 @@ export const MenuSideBar: React.FC = () => {
             <ListItemText>Settings</ListItemText>
           </ListItemButton>
         </ListItem>
-        <ListItem>
+        <ListItem disableGutters>
           <ListItemButton href="/logout">
             <ListItemIcon>
               <LogoutIcon titleAccess="logout" className="logout-joyride" />

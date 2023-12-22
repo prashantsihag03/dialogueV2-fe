@@ -117,30 +117,35 @@ export const App = () => {
                   showcase my proficiency in a variety of tools and
                   technologies.
                 </Typography>
-                <br />
-                <Typography variant="body2" component="p">
-                  Would you be interested in a brief tour of the application?
-                  It&apos;s an opportunity to witness firsthand the dedication
-                  and innovation behind this self-upskilling endeavor.
-                </Typography>
+                {!isMobile ? (
+                  <>
+                    <br />
+                    <Typography variant="body2" component="p">
+                      Would you be interested in a brief tour of the
+                      application? It&apos;s an opportunity to witness firsthand
+                      the dedication and innovation behind this self-upskilling
+                      endeavor.
+                    </Typography>
+                  </>
+                ) : null}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{ padding: '0.2em 1em' }}
-                onClick={() => {
-                  dispatch(setGreet(false))
-                  dispatch(setRunGuidedTour(true))
-                }}
-              >
-                Start Tour
-              </Button>
+              {!isMobile ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    dispatch(setGreet(false))
+                    dispatch(setRunGuidedTour(true))
+                  }}
+                >
+                  Start Tour
+                </Button>
+              ) : null}
               <Button
                 variant="outlined"
                 color="secondary"
-                sx={{ padding: '0.2em 1em', fontSize: '0.9rem' }}
                 onClick={() => {
                   dispatch(setGreet(false))
                   dispatch(setRunGuidedTour(false))

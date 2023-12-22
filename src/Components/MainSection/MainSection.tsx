@@ -57,7 +57,7 @@ export const MainSection: React.FC = () => {
         </Box>
       ) : null}
       {sideBarPreference === 'mobile' ? (
-        <Slide direction="left" in={showSideDrawer} mountOnEnter>
+        <Slide direction="left" in={showSideDrawer} mountOnEnter unmountOnExit>
           <Box
             sx={{
               width: '100%',
