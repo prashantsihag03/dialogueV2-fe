@@ -1,5 +1,7 @@
 import { FilledInputProps, TextField } from '@mui/material'
 import { ChangeEvent } from 'react'
+import { useAppSelector } from '../../store/hooks'
+import { getSideBarPreference } from '../../store/sidebar/selector'
 
 interface ProfileTextFieldProps {
   id?: string
@@ -32,6 +34,7 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
   id,
   multiline,
 }: ProfileTextFieldProps) => {
+  const browser = useAppSelector(getSideBarPreference)
   return (
     <TextField
       className={id ? `${id}-textfield` : undefined}
@@ -43,7 +46,11 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
         {
           disableUnderline: true,
           sx: {
-            fontSize: inputFontSize ?? '0.8rem',
+            fontSize: inputFontSize
+              ? inputFontSize
+              : browser === 'mobile'
+              ? '0.7rem'
+              : '0.8rem',
           },
         } as Partial<FilledInputProps>
       }
@@ -56,7 +63,7 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
       }}
       InputLabelProps={{
         style: {
-          fontSize: '0.9rem',
+          fontSize: browser === 'mobile' ? '0.8rem' : '0.9rem',
           color: '#838383',
         },
       }}

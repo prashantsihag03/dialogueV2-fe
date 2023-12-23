@@ -60,6 +60,11 @@ export const textItemStyles: SxProps<Theme> = {
     color: 'secondary.main',
     cursor: 'pointer',
   },
+
+  '&:active': {
+    color: 'secondary.main',
+    cursor: 'pointer',
+  },
 }
 
 export const connectivityStatusStyles: SxProps<Theme> = {

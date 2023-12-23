@@ -39,6 +39,11 @@ export const userDetailContainer: SxProps<Theme> = {
     backgroundColor: 'action.hover',
     color: 'secondary.main',
   },
+  '&:active': {
+    cursor: 'pointer',
+    backgroundColor: 'action.hover',
+    color: 'secondary.main',
+  },
 }
 
 export const optionContainer: SxProps<Theme> = {

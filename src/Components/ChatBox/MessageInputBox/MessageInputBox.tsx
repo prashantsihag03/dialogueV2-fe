@@ -153,6 +153,10 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
             color: 'white',
             backgroundColor: 'secondary.light',
           },
+          '&:active': {
+            color: 'white',
+            backgroundColor: 'secondary.light',
+          },
         }}
         titleAccess="send message"
         onClick={sendBtnClickHandler}

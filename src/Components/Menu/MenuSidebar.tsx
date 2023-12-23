@@ -77,6 +77,10 @@ export const MenuSideBar: React.FC = () => {
                     backgroundColor: 'action.hover',
                     cursor: 'pointer',
                   },
+                  '&:active': {
+                    backgroundColor: 'action.hover',
+                    cursor: 'pointer',
+                  },
                 }}
               >
                 {isFetching || !data ? (

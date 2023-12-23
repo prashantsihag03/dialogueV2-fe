@@ -21,6 +21,11 @@ export const getComponentsTheme = (
             backgroundColor:
               mode === 'light' ? action.hover.light : action.hover.dark,
           },
+          '&:active': {
+            color: mode === 'light' ? secondary.light : secondary.dark,
+            backgroundColor:
+              mode === 'light' ? action.hover.light : action.hover.dark,
+          },
         },
       },
       defaultProps: {
@@ -61,8 +66,11 @@ export const getComponentsTheme = (
             '&:hover': {
               background: 'none',
             },
+            '&:active': {
+              background: 'none',
+            },
             ['@media only screen and (max-width: 600px)']: {
-              fontSize: '1rem',
+              fontSize: '0.9rem',
               padding: '0.6rem 0.8rem',
             },
           },

@@ -124,6 +124,10 @@ export const Menu: React.FC<IMenu> = ({
                     backgroundColor: 'action.hover',
                     cursor: 'pointer',
                   },
+                  '&:active': {
+                    backgroundColor: 'action.hover',
+                    cursor: 'pointer',
+                  },
                 }}
               >
                 {isFetching || !data ? (
