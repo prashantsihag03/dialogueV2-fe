@@ -116,7 +116,7 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
           InputProps={{ disableUnderline: true }}
           sx={{ marginLeft: '0.5rem' }}
         />
-        {browser ? (
+        {browser === 'mobile' ? (
           <>
             <VerticalDotMenu>
               <MenuItem>Record audio notes</MenuItem>

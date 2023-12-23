@@ -115,7 +115,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
         </Box>
       </Box>
       <Box sx={optionContainer} className="conversation-box-header-options">
-        {browser ? (
+        {browser === 'mobile' ? (
           <>
             <VerticalDotMenu>
               <MenuItem>Shared Media</MenuItem>
