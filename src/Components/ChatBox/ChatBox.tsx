@@ -135,6 +135,7 @@ export const ChatBox: React.FC = () => {
       <Stack
         direction="column"
         width="100%"
+        maxHeight={'75%'}
         flex={1000}
         justifyContent="center"
         alignItems="center"
