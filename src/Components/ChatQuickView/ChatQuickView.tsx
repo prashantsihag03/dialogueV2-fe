@@ -128,7 +128,10 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
             {isConversationNameLoading() ? (
               <Skeleton variant="rectangular" width="100%" />
             ) : (
-              <Typography variant="body2" sx={{ width: '100%' }}>
+              <Typography
+                variant="body2"
+                sx={{ width: '100%', fontWeight: 'bold' }}
+              >
                 {getConversationName()}
               </Typography>
             )}

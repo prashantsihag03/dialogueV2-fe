@@ -1,4 +1,4 @@
-import { Box, MenuItem, Typography } from '@mui/material'
+import { Box, MenuItem, Stack, Typography } from '@mui/material'
 import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined'
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined'
@@ -6,7 +6,6 @@ import {
   iconStyles,
   containerStyle,
   optionContainer,
-  pictureContainer,
   profileContainer,
   userDetailContainer,
 } from './styles'
@@ -77,13 +76,20 @@ export const Header: React.FC<IActiveChatHeader> = ({
             alignItems: 'center',
           }}
         >
-          <Box sx={pictureContainer}>
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            overflow="hidden"
+            borderRadius={100}
+            width={browser === 'mobile' ? '2rem' : '3rem'}
+            height={browser === 'mobile' ? '2rem' : '3rem'}
+          >
             <img
               style={{ width: '100%' }}
               src={getConversationPicture()}
               alt={`${fullName}'s profile`}
             />
-          </Box>
+          </Stack>
           <Box
             sx={userDetailContainer}
             className="conversation-box-conversation-profile-box"

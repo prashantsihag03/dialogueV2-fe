@@ -17,9 +17,6 @@ export const profileContainer: SxProps<Theme> = {
 }
 
 export const pictureContainer: SxProps<Theme> = {
-  width: '3rem',
-  height: '3rem',
-  borderRadius: '50%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
