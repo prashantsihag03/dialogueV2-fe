@@ -155,7 +155,7 @@ export const ChatBox: React.FC = () => {
           noClick={true}
           multiple={true}
           accept={{ 'image/jpeg': ['.jpeg'], 'image/png': ['.png'] }}
-          maxSize={409600}
+          maxSize={8388608}
         >
           {({ getRootProps, getInputProps }) => (
             <Box
@@ -219,9 +219,14 @@ export const ChatBox: React.FC = () => {
                     <>
                       <Message
                         key={msg.messageId}
+                        autoDownloadAttachment={
+                          msg.localMessageId ? true : false
+                        }
+                        msgId={msg.messageId}
                         showProfilePic={browser === 'mobile' ? false : true}
                         id="latest"
                         name={msg.senderId}
+                        fileContent={msg.fileContent}
                         timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
                         source={
                           msg.senderId === loggedProfileData.id
@@ -243,6 +248,9 @@ export const ChatBox: React.FC = () => {
                 return (
                   <Message
                     key={msg.messageId}
+                    autoDownloadAttachment={msg.localMessageId ? true : false}
+                    msgId={msg.messageId}
+                    fileContent={msg.fileContent}
                     showProfilePic={browser === 'mobile' ? false : true}
                     name={msg.senderId}
                     timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
@@ -253,6 +261,7 @@ export const ChatBox: React.FC = () => {
                     }
                     text={msg.message}
                     status={msg.status}
+                    file={msg.file}
                   />
                 )
               })

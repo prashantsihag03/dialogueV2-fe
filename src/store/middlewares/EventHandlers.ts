@@ -90,6 +90,7 @@ const assignSocketEventHandlers = (
           timeStamp: data.timeStamp,
           status: 'sent',
           localMessageId: data.localMessageId,
+          file: data.file,
         })
       )
     }

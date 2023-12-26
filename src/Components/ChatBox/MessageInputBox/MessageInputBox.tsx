@@ -20,7 +20,8 @@ import { setShowLatestMsgInView } from '../../../store/chats/slice'
 import isTrue from '../../../utils/common-utils'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
 import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
-// import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
+import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
+import { setAttachmentByConvoId } from '../../../store/inputMessages/slice'
 
 interface MessageInputBoxProps {
   onAttachClick: () => void
@@ -36,9 +37,9 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
 }: MessageInputBoxProps) => {
   const appDispatch = useAppDispatch()
   const browser = useAppSelector(getSideBarPreference)
-  // const attachments = useAppSelector(
-  //   getInputMessageAttachmentsByConvoId(conversationId)
-  // )
+  const attachments = useAppSelector(
+    getInputMessageAttachmentsByConvoId(conversationId)
+  )
   const { data: settingsData } = useGetUserSettingsQuery('enterSendsMessage')
   const { data } = useGetProfileQuery(undefined)
   const [message, setMessage] = useState<string>('')
@@ -50,7 +51,7 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
   }
 
   const sendBtnClickHandler = () => {
-    if (message.length < 1) {
+    if (message.length < 1 && attachments.length < 1) {
       return
     }
 
@@ -78,8 +79,15 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
         receiver: receiver,
         localMessageId: localMessage.localMessageId,
         conversationId: localMessage.conversationId,
+        file: attachments[0],
       },
     })
+    appDispatch(
+      setAttachmentByConvoId({
+        convoId: localMessage.conversationId,
+        attachments: attachments.slice(1),
+      })
+    )
     appDispatch(setShowLatestMsgInView(true))
   }
 

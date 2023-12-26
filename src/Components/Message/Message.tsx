@@ -1,7 +1,15 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import { secondary } from '../../Theme/colors'
 import { container, message, profileContainer, subContainer } from './styles'
-import { useGetProfileQuery } from '../../store/api/slice'
+import {
+  GetMsgAttachmentQueryParams,
+  useGetMessageAttachmentQuery,
+  useGetProfileQuery,
+} from '../../store/api/slice'
+import { useAppSelector } from '../../store/hooks'
+import { getActiveConversation } from '../../store/chats/selector'
+import { useEffect, useState } from 'react'
+import { getSideBarPreference } from '../../store/sidebar/selector'
 
 export interface IMessage {
   name: string
@@ -14,7 +22,10 @@ export interface IMessage {
 }
 
 export interface MessageProps extends IMessage {
+  msgId?: string
   showProfilePic: boolean
+  fileContent?: File
+  autoDownloadAttachment?: boolean
 }
 
 const getBackgroundColor = (
@@ -39,8 +50,42 @@ export const Message: React.FC<MessageProps> = ({
   id,
   file,
   showProfilePic,
+  fileContent,
+  msgId,
+  autoDownloadAttachment,
 }: MessageProps) => {
+  const browser = useAppSelector(getSideBarPreference)
   const { data: profileData } = useGetProfileQuery(name)
+  const activeConversation = useAppSelector(getActiveConversation)
+  const [attachmentQuery, setAttachmentQuery] =
+    useState<GetMsgAttachmentQueryParams>({
+      attachmentId: file ?? '',
+      conversationId: activeConversation?.conversationId ?? '',
+      messageId: msgId ?? '',
+    })
+  const [fetchAttachment, setFetchAttachment] = useState<boolean>(false)
+  const { data: attachmentData } = useGetMessageAttachmentQuery(
+    {
+      attachmentId: attachmentQuery.attachmentId,
+      conversationId: attachmentQuery.conversationId,
+      messageId: attachmentQuery.messageId,
+    },
+    {
+      skip:
+        (fetchAttachment === false && autoDownloadAttachment === false) ||
+        status !== 'sent',
+    }
+  )
+
+  const getAttachmentDataToRender = () => {
+    if (fileContent) return fileContent.toString()
+    if (attachmentData) return `data:image;base64,${attachmentData}`
+    return undefined
+  }
+
+  useEffect(() => {
+    setFetchAttachment(false)
+  }, [attachmentData])
 
   return (
     <Box
@@ -88,20 +133,46 @@ export const Message: React.FC<MessageProps> = ({
             backgroundColor: getBackgroundColor(status, source),
           }}
         >
-          {file ? (
+          {file != null || fileContent != null ? (
             <Stack
               direction="row"
               justifyContent="center"
               alignItems="center"
-              maxWidth="15rem"
-              maxHeight="15rem"
+              width={browser === 'mobile' ? '6rem' : '15rem'}
+              marginBottom="1rem"
             >
-              <img
-                src={`data:image;base64,${file}`}
-                alt="img"
-                width="100%"
-                height="100%"
-              />
+              {attachmentData == null && file != null && fileContent == null ? (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    if (
+                      activeConversation?.conversationId == null ||
+                      msgId == null
+                    ) {
+                      return
+                    }
+                    setAttachmentQuery({
+                      attachmentId: file,
+                      conversationId: activeConversation?.conversationId,
+                      messageId: msgId,
+                    })
+                    setFetchAttachment(true)
+                  }}
+                >
+                  Download Attachment
+                </Button>
+              ) : null}
+              {attachmentData != null || fileContent != null ? (
+                <img
+                  src={getAttachmentDataToRender()}
+                  alt="img"
+                  width="100%"
+                  height="100%"
+                  style={{
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : null}
             </Stack>
           ) : null}
           {text}

@@ -134,6 +134,9 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           alignItems="center"
           width="80%"
           height="70%"
+          sx={{
+            overflowX: minimizedPreview ? 'scroll' : 'hidden',
+          }}
         >
           {minimizedPreview ? (
             attachments.map((attachment, index) => (
@@ -157,7 +160,9 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
             <ImageRenderer
               file={attachments[attachCarouselIndex]}
               width="70%"
+              height="100%"
               showRemoveIcon={true}
+              showBackLight={true}
               onRemove={() => {
                 dispatch(
                   removeAttachment({

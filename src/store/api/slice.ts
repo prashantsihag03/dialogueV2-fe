@@ -30,6 +30,7 @@ export interface MessagePostResult {
   senderId: string
   localMessageId: string
   file?: string
+  fileContent?: File
 }
 
 export interface IMessagePostBody extends IMessageData {
@@ -66,6 +67,12 @@ export interface UpdateProfileBody extends Omit<MyProfileData, 'profileImg'> {
   profileImg?: File
 }
 
+export interface GetMsgAttachmentQueryParams {
+  conversationId: string
+  messageId: string
+  attachmentId: string
+}
+
 // Define our single API slice object
 export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
@@ -74,6 +81,12 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
+    getMessageAttachment: builder.query<string, GetMsgAttachmentQueryParams>({
+      query: (params: GetMsgAttachmentQueryParams) => {
+        console.log('generating query')
+        return `/conversations/${params.conversationId}/messages/${params.messageId}/attachment/${params.attachmentId}`
+      },
+    }),
     createConversation: builder.mutation<void, ConversationAttributes>({
       query: (body) => ({
         url: `/conversations`,
@@ -185,4 +198,5 @@ export const {
   useDeleteConversationMutation,
   useGetUserSettingsQuery,
   useUpdateUserSettingMutation,
+  useGetMessageAttachmentQuery,
 } = apiSlice
