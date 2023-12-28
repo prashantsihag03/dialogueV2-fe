@@ -6,8 +6,8 @@ import ForumIcon from '@mui/icons-material/Forum'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
-import { containerStyles, iconContainerStyles, textItemStyles } from './styles'
-import { Avatar, Badge, Grow, Slide, Typography } from '@mui/material'
+import { containerStyles, iconContainerStyles } from './styles'
+import { Avatar, Badge, Grow } from '@mui/material'
 import { DisplayMode } from '../../Theme/types'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { isConnected } from '../../store/connection/selector'
@@ -61,13 +61,6 @@ export const Menu: React.FC<IMenu> = ({
         </Grow>
       ) : (
         <>
-          <Slide direction="left" in mountOnEnter unmountOnExit timeout={500}>
-            <Box sx={iconContainerStyles}>
-              <Typography variant="subtitle2" sx={textItemStyles}>
-                Terms of Use
-              </Typography>
-            </Box>
-          </Slide>
           <Box sx={iconContainerStyles}>
             {displayMode === 'dark' ? (
               <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
