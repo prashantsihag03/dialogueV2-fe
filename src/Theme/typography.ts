@@ -17,12 +17,12 @@ export const getTypographyTheme = (
     },
     h2: {
       letterSpacing: '0.7pt',
-      fontSize: isMobile ? '1rem' : '1.2rem',
+      fontSize: isMobile ? '1.5rem' : '1.2rem',
       fontWeight: 'bold',
     },
     h3: {
       letterSpacing: '0.7pt',
-      fontSize: isMobile ? '0.8rem' : '1rem',
+      fontSize: '1rem',
       fontWeight: 'bold',
     },
     body1: {
@@ -31,15 +31,15 @@ export const getTypographyTheme = (
     },
     body2: {
       color: palette.text.primary,
-      fontSize: isMobile ? '0.7rem' : '0.9rem',
+      fontSize: isMobile ? '1rem' : '0.9rem',
     },
     subtitle1: {
       color: palette.text.secondary,
-      fontSize: isMobile ? '0.5rem' : '0.6rem',
+      fontSize: isMobile ? '0.7rem' : '0.6rem',
     },
     subtitle2: {
       color: palette.text.secondary,
-      fontSize: isMobile ? '0.6rem' : '0.7rem',
+      fontSize: isMobile ? '0.8rem' : '0.7rem',
       lineHeight: '1.2rem',
     },
   }

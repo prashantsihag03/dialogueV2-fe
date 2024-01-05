@@ -111,7 +111,7 @@ export const ChatBox: React.FC = () => {
       direction="column"
       justifyContent="space-between"
       alignItems="center"
-      padding="0.3rem"
+      padding={browser === 'mobile' ? '0rem' : '0.3rem'}
       width="100%"
       height="100%"
       onDragEnter={() => {

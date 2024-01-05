@@ -15,6 +15,8 @@ import { setActiveProfileUserId } from '../../../store/profile/slice'
 import { useGetProfileQuery } from '../../../store/api/slice'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
 import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
+import { setActiveConversation } from '../../../store/chats/slice'
 
 export interface IActiveChatHeader {
   userId: string
@@ -76,6 +78,20 @@ export const Header: React.FC<IActiveChatHeader> = ({
             alignItems: 'center',
           }}
         >
+          {browser === 'mobile' ? (
+            <ArrowBackIosIcon
+              sx={{ marginRight: '0.5rem' }}
+              onClick={
+                browser === 'mobile'
+                  ? () => {
+                      appDispatch(setActiveConversation(undefined))
+                      appDispatch(setActiveSideBar('chats'))
+                    }
+                  : undefined
+              }
+            />
+          ) : null}
+
           <Stack
             justifyContent="center"
             alignItems="center"
@@ -110,7 +126,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
             </Typography>
             <Typography
               variant="subtitle1"
-              fontWeight={'bold'}
+              fontWeight="bold"
               sx={{
                 color: online ? 'success.main' : 'gray',
               }}

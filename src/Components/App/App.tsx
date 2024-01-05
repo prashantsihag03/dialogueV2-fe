@@ -202,10 +202,12 @@ export const App = () => {
             </Dialog>
           ) : null}
           <Box>{appGuideTour ? <GuidedTour /> : null}</Box>
-          <Header
-            displayMode={displayMode}
-            toggleDisplayMode={toggleDisplayMode}
-          />
+          {isMobile == false ? (
+            <Header
+              displayMode={displayMode}
+              toggleDisplayMode={toggleDisplayMode}
+            />
+          ) : null}
           <MainSection />
         </Box>
       </ThemeProvider>

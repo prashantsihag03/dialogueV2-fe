@@ -46,7 +46,12 @@ export const MainSection: React.FC = () => {
   }
 
   return (
-    <Box sx={containerStyles}>
+    <Box
+      sx={{
+        ...containerStyles,
+        height: sideBarPreference === 'mobile' ? '100%' : '90%',
+      }}
+    >
       {showChatBox() ? (
         <Box
           sx={chatBoxSectionStyles}
