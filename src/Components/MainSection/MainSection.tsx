@@ -1,10 +1,6 @@
-import { Box, Slide } from '@mui/material'
+import { Box, Slide, Stack } from '@mui/material'
 import { ChatBox } from '../ChatBox/ChatBox'
-import {
-  chatBoxSectionStyles,
-  containerStyles,
-  sideBarSectionStyles,
-} from './styles'
+import { chatBoxSectionStyles, sideBarSectionStyles } from './styles'
 import { Profile } from '../Profile/Profile'
 import { useAppSelector } from '../../store/hooks'
 import {
@@ -46,15 +42,22 @@ export const MainSection: React.FC = () => {
   }
 
   return (
-    <Box
-      sx={{
-        ...containerStyles,
-        height: sideBarPreference === 'mobile' ? '100%' : '90%',
-      }}
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      overflow="hidden"
+      width="100%"
+      padding={sideBarPreference === 'mobile' ? '0' : '0% 1%'}
+      height={sideBarPreference === 'mobile' ? '100%' : '90%'}
+      sx={{ backgroundColor: 'transparent' }}
     >
       {showChatBox() ? (
         <Box
-          sx={chatBoxSectionStyles}
+          sx={{
+            ...chatBoxSectionStyles,
+            margin: sideBarPreference === 'mobile' ? '0' : '0% 0.5%',
+          }}
           borderRadius={1}
           className="chatbox-joyride"
         >
@@ -95,6 +98,6 @@ export const MainSection: React.FC = () => {
           {activeSideBar === 'setting' ? <Setting /> : null}
         </Box>
       ) : null}
-    </Box>
+    </Stack>
   )
 }

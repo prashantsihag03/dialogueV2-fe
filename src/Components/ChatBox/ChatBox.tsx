@@ -129,7 +129,7 @@ export const ChatBox: React.FC = () => {
           fullName={activeConversation.conversationName}
           online={true}
         />
-        <Divider color="primary" sx={{ width: '100%' }} />
+        <Divider sx={{ width: '100%', color: 'primary.main' }} />
       </Stack>
       <Stack
         direction="column"

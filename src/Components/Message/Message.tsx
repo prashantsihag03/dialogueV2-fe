@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from '@mui/material'
+import { Box, CircularProgress, Stack, Typography } from '@mui/material'
 import { secondary } from '../../Theme/colors'
 import { container, message, profileContainer, subContainer } from './styles'
 import {
@@ -10,6 +10,9 @@ import { useAppSelector } from '../../store/hooks'
 import { getActiveConversation } from '../../store/chats/selector'
 import { useEffect, useState } from 'react'
 import { getSideBarPreference } from '../../store/sidebar/selector'
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
+import ErrorIcon from '@mui/icons-material/Error'
 
 export interface IMessage {
   name: string
@@ -64,7 +67,11 @@ export const Message: React.FC<MessageProps> = ({
       messageId: msgId ?? '',
     })
   const [fetchAttachment, setFetchAttachment] = useState<boolean>(false)
-  const { data: attachmentData } = useGetMessageAttachmentQuery(
+  const {
+    data: attachmentData,
+    isLoading,
+    isError,
+  } = useGetMessageAttachmentQuery(
     {
       attachmentId: attachmentQuery.attachmentId,
       conversationId: attachmentQuery.conversationId,
@@ -130,6 +137,8 @@ export const Message: React.FC<MessageProps> = ({
           sx={{
             ...message,
             color: source === 'outgoing' ? 'white' : 'palette.text.primary',
+            borderTopRightRadius: source === 'outgoing' ? '0' : '0.5rem',
+            borderTopLeftRadius: source === 'incoming' ? '0' : '0.5rem',
             backgroundColor: getBackgroundColor(status, source),
           }}
         >
@@ -138,29 +147,61 @@ export const Message: React.FC<MessageProps> = ({
               direction="row"
               justifyContent="center"
               alignItems="center"
-              width={browser === 'mobile' ? '6rem' : '15rem'}
-              marginBottom="1rem"
+              width={browser === 'mobile' ? '10rem' : '10rem'}
+              marginBottom={text && text.length > 0 ? '0.5rem' : '0rem'}
             >
               {attachmentData == null && file != null && fileContent == null ? (
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    if (
-                      activeConversation?.conversationId == null ||
-                      msgId == null
-                    ) {
-                      return
-                    }
-                    setAttachmentQuery({
-                      attachmentId: file,
-                      conversationId: activeConversation?.conversationId,
-                      messageId: msgId,
-                    })
-                    setFetchAttachment(true)
-                  }}
+                <Stack
+                  width={'10rem'}
+                  height={'10rem'}
+                  sx={{ position: 'relative' }}
                 >
-                  Download Attachment
-                </Button>
+                  <ImageOutlinedIcon
+                    sx={{ width: '100%', height: '100%', opacity: '0.3' }}
+                  />
+                  <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    width="100%"
+                    height="100%"
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    sx={{ backgroundColor: 'transparent' }}
+                  >
+                    {!isLoading && !isError ? (
+                      <FileDownloadOutlinedIcon
+                        sx={{ width: '4rem', height: '4rem' }}
+                        onClick={() => {
+                          if (
+                            activeConversation?.conversationId == null ||
+                            msgId == null
+                          ) {
+                            return
+                          }
+                          setAttachmentQuery({
+                            attachmentId: file,
+                            conversationId: activeConversation?.conversationId,
+                            messageId: msgId,
+                          })
+                          setFetchAttachment(true)
+                        }}
+                      />
+                    ) : null}
+                    {isLoading ? (
+                      <CircularProgress
+                        sx={{ width: '4rem', height: '4rem' }}
+                      />
+                    ) : null}
+                    {isError ? (
+                      <ErrorIcon
+                        color="error"
+                        sx={{ width: '4rem', height: '4rem' }}
+                      />
+                    ) : null}
+                  </Stack>
+                </Stack>
               ) : null}
               {attachmentData != null || fileContent != null ? (
                 <img

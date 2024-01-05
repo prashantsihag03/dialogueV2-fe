@@ -77,9 +77,9 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
   const getLastMsgDisplayValue = () => {
     if (lastMessage != null && lastMessage.length > 0) {
       if (myProfile.id === lastMessageSenderId) {
-        return `You: ${lastMessage}`
+        return `${lastMessage}`
       }
-      return `${lastMessageSenderId}: ${lastMessage}`
+      return `${lastMessage}`
     }
     return ''
   }
@@ -130,7 +130,10 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
             ) : (
               <Typography
                 variant="body2"
-                sx={{ width: '100%', fontWeight: 'bold' }}
+                sx={{
+                  width: '100%',
+                  fontWeight: browser === 'mobile' ? 'normal' : 'bold',
+                }}
               >
                 {getConversationName()}
               </Typography>
