@@ -157,7 +157,7 @@ export const Message: React.FC<MessageProps> = ({
                   sx={{ position: 'relative' }}
                 >
                   <ImageOutlinedIcon
-                    sx={{ width: '100%', height: '100%', opacity: '0.3' }}
+                    sx={{ width: '100%', height: '100%', opacity: '0.1' }}
                   />
                   <Stack
                     direction="row"
@@ -196,8 +196,11 @@ export const Message: React.FC<MessageProps> = ({
                     ) : null}
                     {isError ? (
                       <ErrorIcon
-                        color="error"
-                        sx={{ width: '4rem', height: '4rem' }}
+                        sx={{
+                          width: '4rem',
+                          height: '4rem',
+                          color: 'error.main',
+                        }}
                       />
                     ) : null}
                   </Stack>

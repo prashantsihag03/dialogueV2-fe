@@ -21,11 +21,6 @@ export const getComponentsTheme = (
             backgroundColor:
               mode === 'light' ? action.hover.light : action.hover.dark,
           },
-          '&:active': {
-            color: mode === 'light' ? secondary.light : secondary.dark,
-            backgroundColor:
-              mode === 'light' ? action.hover.light : action.hover.dark,
-          },
         },
       },
       defaultProps: {

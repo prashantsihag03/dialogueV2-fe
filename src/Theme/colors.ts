@@ -15,7 +15,7 @@ export const error = {
 
 export const success = {
   light: '#00a005',
-  dark: '#04ff00',
+  dark: '#26cb23df',
 }
 
 export const highlight = {

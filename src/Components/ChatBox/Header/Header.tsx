@@ -97,8 +97,8 @@ export const Header: React.FC<IActiveChatHeader> = ({
             alignItems="center"
             overflow="hidden"
             borderRadius={100}
-            width={browser === 'mobile' ? '2rem' : '3rem'}
-            height={browser === 'mobile' ? '2rem' : '3rem'}
+            width={browser === 'mobile' ? '2.5rem' : '3rem'}
+            height={browser === 'mobile' ? '2.5rem' : '3rem'}
           >
             <img
               style={{ width: '100%' }}
@@ -121,7 +121,13 @@ export const Header: React.FC<IActiveChatHeader> = ({
               appDispatch(setActiveSideBar('profile'))
             }}
           >
-            <Typography variant="h3" sx={{ color: 'inherit' }}>
+            <Typography
+              variant="h3"
+              sx={{
+                color: 'inherit',
+                fontWeight: browser === 'mobile' ? 'normal' : 'bold',
+              }}
+            >
               {fullName}
             </Typography>
             <Typography

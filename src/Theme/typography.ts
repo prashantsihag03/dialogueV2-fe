@@ -31,7 +31,7 @@ export const getTypographyTheme = (
     },
     body2: {
       color: palette.text.primary,
-      fontSize: isMobile ? '1rem' : '0.9rem',
+      fontSize: isMobile ? '0.9rem' : '0.9rem',
     },
     subtitle1: {
       color: palette.text.secondary,
@@ -39,7 +39,7 @@ export const getTypographyTheme = (
     },
     subtitle2: {
       color: palette.text.secondary,
-      fontSize: isMobile ? '0.8rem' : '0.7rem',
+      fontSize: isMobile ? '0.7rem' : '0.7rem',
       lineHeight: '1.2rem',
     },
   }

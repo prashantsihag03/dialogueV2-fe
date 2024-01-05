@@ -83,7 +83,13 @@ export const App = () => {
   return (
     <CssBaseline>
       <ThemeProvider theme={theme}>
-        <Box sx={containerStyles}>
+        <Box
+          sx={{
+            ...containerStyles,
+            backgroundColor:
+              isMobile === true ? 'background.paper' : 'background.default',
+          }}
+        >
           <Dialog
             open={
               isTrue(data.greetMeEverytime) && !initialGuideAttempted && greet
