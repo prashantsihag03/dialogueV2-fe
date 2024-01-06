@@ -166,7 +166,7 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
           </Box>
         </Box>
       </Stack>
-      <Divider sx={{ width: '100%', color: 'primary.main' }} />
+      <Divider sx={{ width: '100%', color: 'primary.main', opacity: '0.5' }} />
     </Box>
   )
 }
