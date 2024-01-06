@@ -121,7 +121,7 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
                 }
               : undefined
           }
-          InputProps={{ disableUnderline: true }}
+          InputProps={{ disableUnderline: true, sx: { fontSize: '1rem' } }}
           sx={{ marginLeft: '0.5rem' }}
         />
         {browser === 'mobile' ? (

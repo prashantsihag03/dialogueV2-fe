@@ -219,6 +219,7 @@ export const ChatBox: React.FC = () => {
                     <>
                       <Message
                         key={msg.messageId}
+                        conversationId={activeConversation.conversationId}
                         autoDownloadAttachment={
                           msg.localMessageId ? true : false
                         }
@@ -254,6 +255,7 @@ export const ChatBox: React.FC = () => {
                     showProfilePic={browser === 'mobile' ? false : true}
                     name={msg.senderId}
                     timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                    conversationId={activeConversation.conversationId}
                     source={
                       msg.senderId === loggedProfileData.id
                         ? 'outgoing'
