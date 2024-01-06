@@ -8,6 +8,7 @@ import {
   secondary,
   success,
   text,
+  warning,
 } from './colors'
 import { DisplayMode } from './types'
 
@@ -55,6 +56,11 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       main: mode === 'light' ? error.light : error.dark,
       light: error.light,
       dark: error.dark,
+    },
+    warning: {
+      main: mode === 'light' ? warning.light : warning.dark,
+      light: warning.light,
+      dark: warning.dark,
     },
     success: {
       main: mode === 'light' ? success.light : success.dark,
