@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Typography } from '@mui/material'
+import { Divider, Skeleton, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { IChatQuickView } from './types'
 import {
@@ -166,6 +166,7 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
           </Box>
         </Box>
       </Stack>
+      <Divider sx={{ width: '100%', color: 'primary.main' }} />
     </Box>
   )
 }
