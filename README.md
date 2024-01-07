@@ -8,6 +8,12 @@ This repository holds Frontend codebase for the overall project.
 
 More details about the project can be found on this <a href="https://github.com/prashantsihag03/dialogueV2">link</a> along with Backend code base.
 
+## Demo Videos
+
+https://github.com/prashantsihag03/dialogueV2-fe/assets/23043779/a50273f5-48b2-493f-880f-745033045ebf
+
+
+
 ## Start Just this App Locally
 
 Note: Websocket based features will not be available when running this app without backend service. You can test the whole app through the backend repo and isntructions to do so are available .
