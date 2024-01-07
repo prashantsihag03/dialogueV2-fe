@@ -9,10 +9,12 @@ This repository holds Frontend codebase for the overall project.
 More details about the project can be found on this <a href="https://github.com/prashantsihag03/dialogueV2">link</a> along with Backend code base.
 
 ## Demo Videos
-
-https://github.com/prashantsihag03/dialogueV2-fe/assets/23043779/a50273f5-48b2-493f-880f-745033045ebf
-
-
+NOTE: Collapse video by clicking on video title
+<details>
+  <summary><h3> 🎥 - Guided Tour </h3></summary>
+  <video src="https://github.com/prashantsihag03/dialogueV2-fe/assets/23043779/a50273f5-48b2-493f-880f-745033045ebf" controls="controls" style="max-width: 730px;"></video>
+  <video src="https://github.com/prashantsihag03/dialogueV2-fe/assets/23043779/662b972f-bba0-46e0-ade1-26f8dbe8dfdb" controls="controls" style="max-width: 730px;"></video>
+</details>
 
 ## Start Just this App Locally
 
