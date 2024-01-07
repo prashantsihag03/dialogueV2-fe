@@ -98,7 +98,10 @@ const assignSocketEventHandlers = (
     dispatch(
       updateConversationLastMessage({
         conversationId: data.conversationId,
-        lastMessage: data.message,
+        lastMessage:
+          data.message == null || (data.message.length < 1 && data.file != null)
+            ? '[attachment]'
+            : data.message,
         lastMessageTime: data.timeStamp,
         lastMessageSenderId: data.senderId,
       })

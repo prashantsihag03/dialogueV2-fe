@@ -21,7 +21,7 @@ interface AttachmentPreviewProps {
 
 const IconStyle: SxProps<Theme> = {
   position: 'absolute',
-  top: '45%',
+  top: '49%',
   fontSize: '3rem',
   backgroundColor: 'background.paper',
 }
@@ -33,7 +33,9 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   const dispatch = useAppDispatch()
   const browser = useAppSelector(getSideBarPreference)
   const [attachCarouselIndex, setAttachCarouselIndex] = useState<number>(0)
-  const [minimizedPreview, setMinimizedPreview] = useState<boolean>(false)
+  const [minimizedPreview, setMinimizedPreview] = useState<boolean>(
+    browser === 'mobile' ? true : false
+  )
   const attachments = useAppSelector(
     getInputMessageAttachmentsByConvoId(conversationId)
   )
@@ -132,9 +134,10 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           direction="row"
           justifyContent="center"
           alignItems="center"
-          width="80%"
+          width="100%"
           height="70%"
           sx={{
+            backgroundColor: 'background.default',
             overflowX: minimizedPreview ? 'scroll' : 'hidden',
           }}
         >
@@ -159,7 +162,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           ) : (
             <ImageRenderer
               file={attachments[attachCarouselIndex]}
-              width="70%"
+              width="90%"
               height="100%"
               showRemoveIcon={true}
               showBackLight={true}
@@ -186,35 +189,6 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           right: '0%',
         }}
       >
-        {/* <SendIcon
-          onClick={() => {
-            if (loggedProfileData == null) return
-
-            const localMessage: OngoingMessageValue = {
-              conversationId: activeConversation.conversationId,
-              message: '',
-              messageId: '',
-              senderId: loggedProfileData?.id,
-              timeStamp: 0,
-              localMessageId: uuidv4(),
-              status: 'pending',
-            }
-
-            appDispatch(addOngoingMessage(localMessage))
-            sendMessage({
-              conversationId: localMessage.conversationId,
-              localMessageId: localMessage.localMessageId,
-              messageId: localMessage.messageId,
-              senderUserId: localMessage.senderId,
-              source: 'outgoing',
-              text: localMessage.message,
-              timestamp: localMessage.timeStamp + '',
-              img: attachments[attachCarouselIndex],
-            })
-            appDispatch(setShowLatestMsgInView(true))
-          }}
-          titleAccess="Send this attachment only"
-        /> */}
         {!minimizedPreview ? (
           <Typography
             variant="body1"

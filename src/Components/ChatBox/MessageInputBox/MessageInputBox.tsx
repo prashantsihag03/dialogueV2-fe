@@ -1,4 +1,4 @@
-import { Box, MenuItem, TextField } from '@mui/material'
+import { Badge, Box, MenuItem, TextField } from '@mui/material'
 import { v4 as uuidv4 } from 'uuid'
 import NorthIcon from '@mui/icons-material/North'
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded'
@@ -125,7 +125,41 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
           sx={{ marginLeft: '0.5rem' }}
         />
         {browser === 'mobile' ? (
-          <>
+          attachments.length > 0 ? (
+            <Badge
+              badgeContent={attachments.length}
+              overlap="circular"
+              color={'secondary'}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              variant="standard"
+            >
+              <VerticalDotMenu>
+                <MenuItem>Record audio notes</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    onAttachClick()
+                  }}
+                >
+                  <Badge
+                    badgeContent={attachments.length}
+                    overlap="circular"
+                    color={'secondary'}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    variant="standard"
+                  >
+                    <span
+                      style={{
+                        width: '0rem',
+                        height: '0rem',
+                        marginRight: '1rem',
+                      }}
+                    ></span>
+                  </Badge>
+                  Add attachment
+                </MenuItem>
+              </VerticalDotMenu>
+            </Badge>
+          ) : (
             <VerticalDotMenu>
               <MenuItem>Record audio notes</MenuItem>
               <MenuItem
@@ -136,18 +170,34 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
                 Add attachment
               </MenuItem>
             </VerticalDotMenu>
-          </>
+          )
         ) : (
           <>
             <MicNoneOutlinedIcon
               sx={iconStyles}
               titleAccess="record audio message"
             />
-            <AttachFileRoundedIcon
-              sx={iconStyles}
-              titleAccess="attach file/files"
-              onClick={onAttachClick}
-            />
+            {attachments.length > 0 ? (
+              <Badge
+                badgeContent={attachments.length}
+                overlap="circular"
+                color={'secondary'}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                variant="standard"
+              >
+                <AttachFileRoundedIcon
+                  sx={iconStyles}
+                  titleAccess="attach file/files"
+                  onClick={onAttachClick}
+                />
+              </Badge>
+            ) : (
+              <AttachFileRoundedIcon
+                sx={iconStyles}
+                titleAccess="attach file/files"
+                onClick={onAttachClick}
+              />
+            )}
           </>
         )}
       </Box>
