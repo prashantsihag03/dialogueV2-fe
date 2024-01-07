@@ -17,13 +17,9 @@ NOTE: Collapse video by clicking on video title
 </details>
 
 ## Start Just this App Locally
-
-Note: Websocket based features will not be available when running this app without backend service. You can test the whole app through the backend repo and isntructions to do so are available .
-
-- Start the json-server
-  > npm run sjs
-- In a different terminal, start the app
-  > npm install; npm run start;
+_Note: Websocket based features will not be available when running this app without backend service. You can test the whole app through the backend repo and isntructions to do so are available._
+- Start the json-server <code>npm run sjs</code>
+- In a different terminal, start the app <code>npm install; npm run start;</code>
 - Visit http://localhost:8080
 
 ## Build just this app
@@ -38,17 +34,3 @@ Note: Websocket based features will not be available when running this app witho
 - Update the full absolute path to `build` directory for the frontend repository as well inside the `/script/copuBuildFilesToBackend.sh` file inside frontend repository.
 - Now running below command will build frontend distribution and copy-paste these into backend services public directory from where backend services will be able to serve it locally.
   > npm run devBuild;
-
-## Testing
-
-NOTE: tests aren't included yet.
-
-> npm run test;
-
-## Local Storybook
-
-> npm run storybook;
-
-## Build Storybook
-
-> npm run build-storybook;
