@@ -184,7 +184,9 @@ export const App = () => {
               <DialogContent>
                 <DialogContentText>
                   <Typography variant="body1" component="p">
-                    Thank you for finishing the tour. I hope you liked it.
+                    Thank you for finishing the tour. I hope you liked it. You
+                    can go through the guided tour again by enabling the
+                    &quot;Greet Me&quot; setting.
                   </Typography>
                   <br />
                   <Typography variant="body1" component="p">
