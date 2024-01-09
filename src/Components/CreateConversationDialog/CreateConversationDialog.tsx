@@ -37,6 +37,8 @@ import {
   setShowCreateConvoSearchResult,
 } from '../../store/chats/slice'
 import isTrue from '../../utils/common-utils'
+import { getSideBarPreference } from '../../store/sidebar/selector'
+import { setActiveSideBar } from '../../store/sidebar/slice'
 
 interface ICreateConversationDialog {
   onBackdropClick: () => void
@@ -46,7 +48,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
   onBackdropClick,
 }: ICreateConversationDialog) => {
   const appDispatch = useAppDispatch()
-
+  const browser = useAppSelector(getSideBarPreference)
   const [searchUserId, setSearchUserId] = useState<string>('')
   const [allowInput, setAllowInput] = useState<boolean>(true)
 
@@ -113,6 +115,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           appDispatch(
             setActiveConversationByName(result.originalArgs?.conversationUserId)
           )
+          if (browser === 'mobile') appDispatch(setActiveSideBar('none'))
           cleanState()
           onBackdropClick()
         }
@@ -179,6 +182,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
           label="Search user by userid"
           type="search"
           variant="standard"
+          InputProps={{ sx: { fontSize: '1rem' } }}
           onKeyDown={(e) => {
             if (e.code.toString() === 'Enter') {
               setSearch(true)

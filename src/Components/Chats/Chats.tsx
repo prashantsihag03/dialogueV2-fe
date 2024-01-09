@@ -104,7 +104,7 @@ export const Chats: React.FC = () => {
                 {
                   disableUnderline: true,
                   sx: {
-                    fontSize: '0.8rem',
+                    fontSize: '1rem',
                   },
                 } as Partial<FilledInputProps>
               }
