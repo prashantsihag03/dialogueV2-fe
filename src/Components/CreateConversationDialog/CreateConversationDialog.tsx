@@ -132,6 +132,7 @@ const CreateConversationDialog: React.FC<ICreateConversationDialog> = ({
       refreshConversation
     ) {
       setRefreshConversation(false)
+      cleanState()
       onBackdropClick()
     }
   }, [isConversationsFetching])
