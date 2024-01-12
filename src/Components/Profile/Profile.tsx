@@ -106,7 +106,9 @@ export const Profile: React.FC = () => {
       onBack={() => {
         if (activeConversation != null && browser === 'mobile') {
           appDispatch(setActiveSideBar('none'))
+          return
         }
+        appDispatch(setActiveSideBar('chats'))
       }}
       headerActions={
         Boolean(activeProfileUser?.isLoggedInUser) ? (

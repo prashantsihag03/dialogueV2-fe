@@ -27,7 +27,7 @@ export const getTypographyTheme = (
     },
     body1: {
       color: palette.text.primary,
-      fontSize: isMobile ? '0.8rem' : '1rem',
+      fontSize: isMobile ? '1rem' : '1rem',
     },
     body2: {
       color: palette.text.primary,

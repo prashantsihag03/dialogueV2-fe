@@ -1,8 +1,9 @@
-import { Box, Slide, Stack } from '@mui/material'
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { Box, Stack, SwipeableDrawer } from '@mui/material'
 import { ChatBox } from '../ChatBox/ChatBox'
 import { chatBoxSectionStyles, sideBarSectionStyles } from './styles'
 import { Profile } from '../Profile/Profile'
-import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   getActiveSideBar,
   getShowSideDrawer,
@@ -12,8 +13,10 @@ import Chats from '../Chats'
 import Setting from '../Setting'
 import { MenuSideBar } from '../Menu/MenuSidebar'
 import { getActiveConversation } from '../../store/chats/selector'
+import { setShowSideDrawer } from '../../store/sidebar/slice'
 
 export const MainSection: React.FC = () => {
+  const AppDispatch = useAppDispatch()
   const sideBarPreference = useAppSelector(getSideBarPreference)
   const activeSideBar = useAppSelector(getActiveSideBar)
   const activeConversation = useAppSelector(getActiveConversation)
@@ -65,21 +68,26 @@ export const MainSection: React.FC = () => {
         </Box>
       ) : null}
       {sideBarPreference === 'mobile' ? (
-        <Slide direction="left" in={showSideDrawer} mountOnEnter unmountOnExit>
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
+        <SwipeableDrawer
+          variant="temporary"
+          anchor="right"
+          PaperProps={{
+            sx: {
+              width: '90%',
               backgroundColor: 'background.default',
-              position: 'absolute',
-              top: '0',
-              right: '0',
-              zIndex: 1000000,
-            }}
-          >
-            <MenuSideBar />
-          </Box>
-        </Slide>
+            },
+          }}
+          open={showSideDrawer}
+          disableSwipeToOpen={false}
+          onClose={() => {
+            AppDispatch(setShowSideDrawer(false))
+          }}
+          onOpen={() => {
+            AppDispatch(setShowSideDrawer(true))
+          }}
+        >
+          <MenuSideBar />
+        </SwipeableDrawer>
       ) : null}
       {showSideBar() ? (
         <Box

@@ -10,6 +10,7 @@ interface SidebarProps {
   footerActions?: React.ReactNode
   onBack?: () => void
   showBackbtn?: boolean
+  className?: string
 }
 
 export const SideBar: React.FC<SidebarProps> = ({
@@ -19,6 +20,7 @@ export const SideBar: React.FC<SidebarProps> = ({
   footerActions,
   onBack,
   showBackbtn,
+  className,
 }: SidebarProps) => {
   const browser = useAppSelector(getSideBarPreference)
 
@@ -30,6 +32,7 @@ export const SideBar: React.FC<SidebarProps> = ({
       justifyContent="flex-start"
       alignItems="center"
       padding="4%"
+      className={`sidebar ${className ?? ''}`}
     >
       <Stack
         width="100%"

@@ -11,7 +11,7 @@ const getIconByStatus = (status: 'error' | 'loading' | 'warn' | undefined) => {
     return <ErrorIcon sx={{ fontSize: '4rem', color: 'error.main' }} />
   if (status === 'warn')
     return <ErrorIcon sx={{ fontSize: '4rem', color: 'warning.main' }} />
-  return <CircularProgress size={'4rem'} sx={{ color: 'primary.main' }} />
+  return <CircularProgress size={'4rem'} sx={{ color: 'secondary.main' }} />
 }
 
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({
@@ -28,7 +28,9 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
     >
       {getIconByStatus(status)}
       {message && message.length > 0 ? (
-        <Typography variant="body1">{message}</Typography>
+        <Typography variant="body1" marginTop={'0.5rem'}>
+          {message}
+        </Typography>
       ) : null}
     </Stack>
   )
