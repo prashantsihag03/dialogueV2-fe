@@ -67,6 +67,7 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       light: success.light,
       dark: success.dark,
     },
+    // sync text color values with home.html's styles
     text: {
       primary: mode === 'light' ? text.primary.light : text.primary.dark,
       secondary: mode === 'light' ? text.secondary.light : text.secondary.dark,

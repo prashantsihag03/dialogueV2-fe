@@ -76,7 +76,11 @@ const MessageImage: React.FC<MessageImageProps> = ({
       {attachmentData == null && file != null && fileContent == null ? (
         <Stack width={'10rem'} height={'10rem'} sx={{ position: 'relative' }}>
           <ImageOutlinedIcon
-            sx={{ width: '100%', height: '100%', opacity: '0.1' }}
+            sx={{
+              width: '100%',
+              height: '100%',
+              opacity: '0.1',
+            }}
           />
           <Stack
             direction="row"
@@ -91,7 +95,7 @@ const MessageImage: React.FC<MessageImageProps> = ({
           >
             {!isLoading && !isError ? (
               <FileDownloadOutlinedIcon
-                sx={{ width: '4rem', height: '4rem' }}
+                sx={{ width: '4rem', height: '4rem', color: 'primary.main' }}
                 onClick={() => {
                   if (msgId == null) {
                     return
@@ -105,7 +109,9 @@ const MessageImage: React.FC<MessageImageProps> = ({
                 }}
               />
             ) : null}
-            {isLoading ? <StatusIndicator status="loading" /> : null}
+            {isLoading ? (
+              <StatusIndicator status="loading" loaderColor="primary" />
+            ) : null}
             {isError ? <StatusIndicator status="error" /> : null}
           </Stack>
         </Stack>
