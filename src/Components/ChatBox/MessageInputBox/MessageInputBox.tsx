@@ -201,24 +201,36 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
           </>
         )}
       </Box>
-      <NorthIcon
-        fontSize="large"
-        sx={{
-          ...iconStyles,
-          color: 'white',
-          backgroundColor: 'secondary.light',
-          '&:hover': {
+      <Badge
+        badgeContent={attachments.length}
+        overlap="circular"
+        color={'secondary'}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        variant="standard"
+      >
+        <NorthIcon
+          fontSize="large"
+          sx={{
+            ...iconStyles,
             color: 'white',
             backgroundColor: 'secondary.light',
-          },
-          '&:active': {
-            color: 'white',
-            backgroundColor: 'secondary.light',
-          },
-        }}
-        titleAccess="send message"
-        onClick={sendBtnClickHandler}
-      />
+            '&:hover': {
+              color: 'white',
+              backgroundColor: 'secondary.light',
+            },
+            '&:active': {
+              color: 'white',
+              backgroundColor: 'secondary.light',
+            },
+          }}
+          titleAccess="send message"
+          onClick={
+            (message.length < 1 && attachments.length < 1) || data?.id == null
+              ? undefined
+              : sendBtnClickHandler
+          }
+        />
+      </Badge>
     </Box>
   )
 }

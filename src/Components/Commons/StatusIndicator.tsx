@@ -5,18 +5,20 @@ interface StatusIndicatorProps {
   status?: 'error' | 'loading' | 'warn'
   message?: string
   loaderColor?: 'primary' | 'secondary'
+  iconSize?: string
 }
 
 const getIconByStatus = (
   status: 'error' | 'loading' | 'warn' | undefined,
-  loaderColor: 'primary' | 'secondary'
+  loaderColor: 'primary' | 'secondary',
+  iconSize: string
 ) => {
   if (status === 'error')
-    return <ErrorIcon sx={{ fontSize: '4rem', color: 'error.main' }} />
+    return <ErrorIcon sx={{ fontSize: iconSize, color: 'error.main' }} />
   if (status === 'warn')
-    return <ErrorIcon sx={{ fontSize: '4rem', color: 'warning.main' }} />
+    return <ErrorIcon sx={{ fontSize: iconSize, color: 'warning.main' }} />
   return (
-    <CircularProgress size={'4rem'} sx={{ color: `${loaderColor}.main` }} />
+    <CircularProgress size={iconSize} sx={{ color: `${loaderColor}.main` }} />
   )
 }
 
@@ -24,6 +26,7 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   status,
   message,
   loaderColor,
+  iconSize,
 }: StatusIndicatorProps) => {
   return (
     <Stack
@@ -33,7 +36,11 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
       width={'100%'}
       height={'100%'}
     >
-      {getIconByStatus(status, loaderColor ? loaderColor : 'secondary')}
+      {getIconByStatus(
+        status,
+        loaderColor ? loaderColor : 'secondary',
+        iconSize ? iconSize : '4rem'
+      )}
       {message && message.length > 0 ? (
         <Typography variant="body1" marginTop={'0.5rem'}>
           {message}
