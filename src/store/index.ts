@@ -11,6 +11,7 @@ import { configReducer } from './config/slice'
 import { inputMessagesReducer } from './inputMessages/slice'
 import { rtcReducer } from './rtc/slice'
 import { webrtcMiddleware } from './middlewares/webrtc'
+import rtkQueryErrorMiddleware from './middlewares/rtkQueryErrorHandler'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
@@ -28,10 +29,9 @@ const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
+      .concat(rtkQueryErrorMiddleware)
       .concat(apiSlice.middleware)
-      .concat(
-        socketMiddleware(io('http://localhost:3000/', { autoConnect: false }))
-      )
+      .concat(socketMiddleware(io('/', { autoConnect: false })))
       .concat(webrtcMiddleware([])),
 })
 

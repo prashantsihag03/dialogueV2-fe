@@ -1,16 +1,31 @@
-import { Box, List, Typography } from '@mui/material'
-import { containerStyles, headingStyles } from './styles'
+import { List } from '@mui/material'
 import SwitchSetting from './SwitchSetting'
 import KeyboardIcon from '@mui/icons-material/Keyboard'
 import TourIcon from '@mui/icons-material/Tour'
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser'
+import SideBar from '../Sidebar'
+import { getSideBarPreference } from '../../store/sidebar/selector'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { getActiveConversation } from '../../store/chats/selector'
+import { setActiveSideBar } from '../../store/sidebar/slice'
 
 const Setting: React.FC = () => {
+  const appDispatch = useAppDispatch()
+  const browser = useAppSelector(getSideBarPreference)
+  const activeConversation = useAppSelector(getActiveConversation)
+
   return (
-    <Box sx={containerStyles} className="setting-sidebar">
-      <Box sx={headingStyles}>
-        <Typography variant="h2">Settings</Typography>
-      </Box>
+    <SideBar
+      className="setting-sidebar"
+      title="Settings"
+      onBack={() => {
+        if (activeConversation != null && browser === 'mobile') {
+          appDispatch(setActiveSideBar('none'))
+          return
+        }
+        appDispatch(setActiveSideBar('chats'))
+      }}
+    >
       <List sx={{ width: '100%', padding: '1rem 0' }} dense>
         <SwitchSetting
           settingKey="enterSendsMessage"
@@ -31,7 +46,7 @@ const Setting: React.FC = () => {
           note="When creating new conversations, if conversation already exists, open it. This only applies to one on one conversations."
         />
       </List>
-    </Box>
+    </SideBar>
   )
 }
 

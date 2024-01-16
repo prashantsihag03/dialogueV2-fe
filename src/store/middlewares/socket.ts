@@ -38,12 +38,19 @@ export const socketMiddleware =
                 timeStamp: ack.data.timeStamp,
                 status: 'sent',
                 localMessageId: ack.data.localMessageId,
+                file: ack.data.file,
               })
             )
+
+            let lastMsgQuickViewContent = ack.data.message
+            if (ack.data.message === '' && ack.data.file != null) {
+              lastMsgQuickViewContent = '[attachment]'
+            }
+
             dispatch(
               updateConversationLastMessage({
                 conversationId: ack.data.conversationId,
-                lastMessage: ack.data.message,
+                lastMessage: lastMsgQuickViewContent,
                 lastMessageTime: ack.data.timeStamp,
                 lastMessageSenderId: ack.data.senderId,
               })

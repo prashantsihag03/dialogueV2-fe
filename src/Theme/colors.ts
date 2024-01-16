@@ -13,9 +13,14 @@ export const error = {
   dark: '#c72525',
 }
 
+export const warning = {
+  light: '#ffd000e1',
+  dark: '#dab619e0',
+}
+
 export const success = {
   light: '#00a005',
-  dark: '#04ff00',
+  dark: '#26cb23df',
 }
 
 export const highlight = {

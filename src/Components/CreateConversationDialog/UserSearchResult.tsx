@@ -41,6 +41,10 @@ const UserSearchResult: React.FC<UserSearchResultProps> = ({
             cursor: 'pointer',
             backgroundColor: 'action.hover',
           },
+          '&:active': {
+            cursor: 'pointer',
+            backgroundColor: 'action.hover',
+          },
         }}
       >
         {name}

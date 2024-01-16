@@ -12,6 +12,7 @@ import {
   removeAttachment,
 } from '../../../store/inputMessages/slice'
 import ImageRenderer from '../ImageRenderer'
+import { getSideBarPreference } from '../../../store/sidebar/selector'
 
 interface AttachmentPreviewProps {
   conversationId: string
@@ -20,7 +21,7 @@ interface AttachmentPreviewProps {
 
 const IconStyle: SxProps<Theme> = {
   position: 'absolute',
-  top: '45%',
+  top: '49%',
   fontSize: '3rem',
   backgroundColor: 'background.paper',
 }
@@ -30,8 +31,11 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   title,
 }: AttachmentPreviewProps) => {
   const dispatch = useAppDispatch()
+  const browser = useAppSelector(getSideBarPreference)
   const [attachCarouselIndex, setAttachCarouselIndex] = useState<number>(0)
-  const [minimizedPreview, setMinimizedPreview] = useState<boolean>(false)
+  const [minimizedPreview, setMinimizedPreview] = useState<boolean>(
+    browser === 'mobile' ? true : false
+  )
   const attachments = useAppSelector(
     getInputMessageAttachmentsByConvoId(conversationId)
   )
@@ -88,19 +92,21 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
         top="0%"
         right="0%"
       >
-        {minimizedPreview ? (
-          <ExpandLessIcon
-            onClick={() => {
-              setMinimizedPreview(false)
-            }}
-          />
-        ) : (
-          <ExpandMoreIcon
-            onClick={() => {
-              setMinimizedPreview(true)
-            }}
-          />
-        )}
+        {browser === 'web' ? (
+          minimizedPreview ? (
+            <ExpandLessIcon
+              onClick={() => {
+                setMinimizedPreview(false)
+              }}
+            />
+          ) : (
+            <ExpandMoreIcon
+              onClick={() => {
+                setMinimizedPreview(true)
+              }}
+            />
+          )
+        ) : null}
         {!minimizedPreview ? (
           <Typography
             variant="h2"
@@ -128,8 +134,12 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           direction="row"
           justifyContent="center"
           alignItems="center"
-          width="80%"
+          width="100%"
           height="70%"
+          sx={{
+            backgroundColor: 'background.default',
+            overflowX: minimizedPreview ? 'scroll' : 'hidden',
+          }}
         >
           {minimizedPreview ? (
             attachments.map((attachment, index) => (
@@ -152,8 +162,10 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           ) : (
             <ImageRenderer
               file={attachments[attachCarouselIndex]}
-              width="70%"
+              width="90%"
+              height="100%"
               showRemoveIcon={true}
+              showBackLight={true}
               onRemove={() => {
                 dispatch(
                   removeAttachment({
@@ -177,35 +189,6 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           right: '0%',
         }}
       >
-        {/* <SendIcon
-          onClick={() => {
-            if (loggedProfileData == null) return
-
-            const localMessage: OngoingMessageValue = {
-              conversationId: activeConversation.conversationId,
-              message: '',
-              messageId: '',
-              senderId: loggedProfileData?.id,
-              timeStamp: 0,
-              localMessageId: uuidv4(),
-              status: 'pending',
-            }
-
-            appDispatch(addOngoingMessage(localMessage))
-            sendMessage({
-              conversationId: localMessage.conversationId,
-              localMessageId: localMessage.localMessageId,
-              messageId: localMessage.messageId,
-              senderUserId: localMessage.senderId,
-              source: 'outgoing',
-              text: localMessage.message,
-              timestamp: localMessage.timeStamp + '',
-              img: attachments[attachCarouselIndex],
-            })
-            appDispatch(setShowLatestMsgInView(true))
-          }}
-          titleAccess="Send this attachment only"
-        /> */}
         {!minimizedPreview ? (
           <Typography
             variant="body1"

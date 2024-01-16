@@ -1,16 +1,15 @@
-import { FilledInputProps, Popover, TextField, Typography } from '@mui/material'
-import { Box } from '@mui/system'
+import {
+  Box,
+  FilledInputProps,
+  Popover,
+  TextField,
+  Typography,
+} from '@mui/material'
+// import { Box } from '@mui/system'
 import SearchIcon from '@mui/icons-material/Search'
 import SortIcon from '@mui/icons-material/Sort'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
-import {
-  actionIconStyles,
-  actionStyles,
-  bottomMenuStyles,
-  chatsListStyles,
-  containerStyles,
-  headingStyles,
-} from './styles'
+import { actionIconStyles } from './styles'
 import { ChatQuickView } from '../ChatQuickView/ChatQuickView'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
@@ -30,6 +29,7 @@ import {
   setOpenCreateConvoDialog,
   sortConversations,
 } from '../../store/chats/slice'
+import SideBar from '../Sidebar'
 
 export const Chats: React.FC = () => {
   const chatsListEleRef = useRef<HTMLDivElement>()
@@ -56,10 +56,11 @@ export const Chats: React.FC = () => {
   )
 
   return (
-    <Box sx={containerStyles}>
-      <Box sx={headingStyles}>
-        <Typography variant="h2">Conversations</Typography>
-        <Box sx={actionStyles}>
+    <SideBar
+      title="Conversations"
+      showBackbtn={false}
+      headerActions={
+        <>
           <CreateConversationDialog
             onBackdropClick={() => {
               appDispatch(setOpenCreateConvoDialog(false))
@@ -103,7 +104,7 @@ export const Chats: React.FC = () => {
                 {
                   disableUnderline: true,
                   sx: {
-                    fontSize: '0.8rem',
+                    fontSize: '1rem',
                   },
                 } as Partial<FilledInputProps>
               }
@@ -141,9 +142,31 @@ export const Chats: React.FC = () => {
               transform: sort === 'asc' ? 'scaleX(-1) scaleY(-1)' : undefined,
             }}
           />
-        </Box>
-      </Box>
-      <Box sx={chatsListStyles} component="div" ref={chatsListEleRef}>
+        </>
+      }
+      footerActions={
+        <>
+          <KeyboardArrowDownIcon
+            onClick={() => {
+              scrollClickHandler(false)
+            }}
+          />
+          <KeyboardArrowUpIcon
+            onClick={() => {
+              scrollClickHandler(true)
+            }}
+          />
+        </>
+      }
+    >
+      <Box
+        width="100%"
+        height="100%"
+        padding="3% 0%"
+        sx={{ overflowX: 'auto' }}
+        component="div"
+        ref={chatsListEleRef}
+      >
         {isFetching ? <ChatsSkeleton /> : null}
         {error && !isFetching ? (
           <Typography
@@ -206,18 +229,6 @@ export const Chats: React.FC = () => {
           </Typography>
         ) : null}
       </Box>
-      <Box sx={bottomMenuStyles}>
-        <KeyboardArrowDownIcon
-          onClick={() => {
-            scrollClickHandler(false)
-          }}
-        />
-        <KeyboardArrowUpIcon
-          onClick={() => {
-            scrollClickHandler(true)
-          }}
-        />
-      </Box>
-    </Box>
+    </SideBar>
   )
 }

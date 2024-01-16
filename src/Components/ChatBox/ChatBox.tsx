@@ -32,11 +32,13 @@ import Dropzone from 'react-dropzone'
 import { setAttachmentByConvoId } from '../../store/inputMessages/slice'
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
 import CallView from './CallView/CallView'
+import { getSideBarPreference } from '../../store/sidebar/selector'
 
 export const ChatBox: React.FC = () => {
   const appDispatch = useAppDispatch()
   const dropzoneRef = useRef<HTMLInputElement | null>(null)
   const { data: loggedProfileData } = useGetProfileQuery(undefined)
+  const browser = useAppSelector(getSideBarPreference)
   const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
   const activeConversation = useAppSelector(getActiveConversation)
   const draggingFiles = useAppSelector(getDraggingFiles)
@@ -109,7 +111,7 @@ export const ChatBox: React.FC = () => {
       direction="column"
       justifyContent="space-between"
       alignItems="center"
-      padding="0.3rem"
+      padding={browser === 'mobile' ? '0rem' : '0.3rem'}
       width="100%"
       height="100%"
       onDragEnter={() => {
@@ -119,7 +121,6 @@ export const ChatBox: React.FC = () => {
       <Stack
         direction="column"
         width="100%"
-        height="10%"
         justifyContent="center"
         alignItems="center"
       >
@@ -128,12 +129,12 @@ export const ChatBox: React.FC = () => {
           fullName={activeConversation.conversationName}
           online={true}
         />
-        <Divider color="primary" sx={{ width: '100%' }} />
+        <Divider sx={{ width: '100%', color: 'primary.main' }} />
       </Stack>
       <Stack
         direction="column"
         width="100%"
-        height="80%"
+        height={'75%'}
         justifyContent="center"
         alignItems="center"
         position="relative"
@@ -153,8 +154,8 @@ export const ChatBox: React.FC = () => {
           }}
           noClick={true}
           multiple={true}
-          // accept={{ 'image/jpeg': ['.jpeg'] }}
-          // maxSize={409600}
+          accept={{ 'image/jpeg': ['.jpeg'], 'image/png': ['.png'] }}
+          maxSize={8388608}
         >
           {({ getRootProps, getInputProps }) => (
             <Box
@@ -218,8 +219,15 @@ export const ChatBox: React.FC = () => {
                     <>
                       <Message
                         key={msg.messageId}
+                        conversationId={activeConversation.conversationId}
+                        autoDownloadAttachment={
+                          msg.localMessageId ? true : false
+                        }
+                        msgId={msg.messageId}
+                        showProfilePic={browser === 'mobile' ? false : true}
                         id="latest"
                         name={msg.senderId}
+                        fileContent={msg.fileContent}
                         timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
                         source={
                           msg.senderId === loggedProfileData.id
@@ -241,8 +249,13 @@ export const ChatBox: React.FC = () => {
                 return (
                   <Message
                     key={msg.messageId}
+                    autoDownloadAttachment={msg.localMessageId ? true : false}
+                    msgId={msg.messageId}
+                    fileContent={msg.fileContent}
+                    showProfilePic={browser === 'mobile' ? false : true}
                     name={msg.senderId}
                     timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                    conversationId={activeConversation.conversationId}
                     source={
                       msg.senderId === loggedProfileData.id
                         ? 'outgoing'
@@ -250,6 +263,7 @@ export const ChatBox: React.FC = () => {
                     }
                     text={msg.message}
                     status={msg.status}
+                    file={msg.file}
                   />
                 )
               })

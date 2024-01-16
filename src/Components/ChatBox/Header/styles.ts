@@ -17,9 +17,6 @@ export const profileContainer: SxProps<Theme> = {
 }
 
 export const pictureContainer: SxProps<Theme> = {
-  width: '3rem',
-  height: '3rem',
-  borderRadius: '50%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -35,6 +32,11 @@ export const userDetailContainer: SxProps<Theme> = {
   alignItems: 'flex-start',
   color: 'primary.main',
   '&:hover': {
+    cursor: 'pointer',
+    backgroundColor: 'action.hover',
+    color: 'secondary.main',
+  },
+  '&:active': {
     cursor: 'pointer',
     backgroundColor: 'action.hover',
     color: 'secondary.main',

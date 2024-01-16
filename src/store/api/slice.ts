@@ -30,11 +30,22 @@ export interface MessagePostResult {
   senderId: string
   localMessageId: string
   file?: string
+  fileContent?: File
 }
 
 export interface IMessagePostBody extends IMessageData {
   conversationId: string
   localMessageId: string
+}
+
+export interface IAttachmentPostResult extends IMessageData {
+  fileName: string
+  attachmentId: string
+}
+
+export interface IAttachmentPostBody {
+  file: File
+  conversationId: string
 }
 
 export interface ConversationAttributes {
@@ -66,14 +77,26 @@ export interface UpdateProfileBody extends Omit<MyProfileData, 'profileImg'> {
   profileImg?: File
 }
 
+export interface GetMsgAttachmentQueryParams {
+  conversationId: string
+  messageId: string
+  attachmentId: string
+}
+
 // Define our single API slice object
 export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
   reducerPath: 'api',
   tagTypes: ['Profile', 'Conversation', 'Settings'],
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
+    getMessageAttachment: builder.query<string, GetMsgAttachmentQueryParams>({
+      query: (params: GetMsgAttachmentQueryParams) => {
+        console.log('generating query')
+        return `/conversations/${params.conversationId}/messages/${params.messageId}/attachment/${params.attachmentId}`
+      },
+    }),
     createConversation: builder.mutation<void, ConversationAttributes>({
       query: (body) => ({
         url: `/conversations`,
@@ -167,6 +190,20 @@ export const apiSlice = createApi({
         }
       },
     }),
+    sendAttachment: builder.mutation<
+      IAttachmentPostResult,
+      IAttachmentPostBody
+    >({
+      query: (body) => {
+        const formData = new FormData()
+        formData.append('img', body.file)
+        return {
+          url: `/conversations/${body.conversationId}/attachment`,
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
     searchUser: builder.query<ISearchUser[], string>({
       query: (userid: string) => `/user/search/${userid}`,
     }),
@@ -177,6 +214,7 @@ export const {
   useGetProfileQuery,
   useGetMessagesQuery,
   useSearchUserQuery,
+  useSendAttachmentMutation,
   useCreateConversationMutation,
   useGetMembersQuery,
   useSendMessageMutation,
@@ -185,4 +223,5 @@ export const {
   useDeleteConversationMutation,
   useGetUserSettingsQuery,
   useUpdateUserSettingMutation,
+  useGetMessageAttachmentQuery,
 } = apiSlice

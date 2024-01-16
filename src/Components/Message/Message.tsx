@@ -1,7 +1,9 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { secondary } from '../../Theme/colors'
 import { container, message, profileContainer, subContainer } from './styles'
 import { useGetProfileQuery } from '../../store/api/slice'
+import MessageImage from './MessageImage'
+import StatusIndicator from '../Commons/StatusIndicator'
 
 export interface IMessage {
   name: string
@@ -11,6 +13,14 @@ export interface IMessage {
   status: 'sent' | 'pending' | 'failed'
   id?: string
   file?: string
+}
+
+export interface MessageProps extends IMessage {
+  msgId?: string
+  showProfilePic: boolean
+  fileContent?: File
+  autoDownloadAttachment?: boolean
+  conversationId: string
 }
 
 const getBackgroundColor = (
@@ -26,7 +36,7 @@ const getBackgroundColor = (
   return source === 'outgoing' ? secondary.light : 'background.default'
 }
 
-export const Message: React.FC<IMessage> = ({
+export const Message: React.FC<MessageProps> = ({
   name,
   timeStamp,
   text,
@@ -34,7 +44,12 @@ export const Message: React.FC<IMessage> = ({
   status,
   id,
   file,
-}: IMessage) => {
+  showProfilePic,
+  fileContent,
+  msgId,
+  autoDownloadAttachment,
+  conversationId,
+}: MessageProps) => {
   const { data: profileData } = useGetProfileQuery(name)
 
   return (
@@ -45,24 +60,26 @@ export const Message: React.FC<IMessage> = ({
         flexDirection: source === 'incoming' ? 'row' : 'row-reverse',
       }}
     >
-      <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
-        <Box
-          sx={{
-            ...profileContainer,
-            width: '2rem',
-            height: '2rem',
-            marginLeft: '0.5rem',
-            marginRight: '0.5rem',
-          }}
-        >
-          <img
-            style={{ width: '100%' }}
-            src={`data:image;base64,${profileData?.profileImg}`}
-            alt={`${name}'s profile`}
-          />
+      {showProfilePic ? (
+        <Box sx={{ ...subContainer, maxWidth: '50px', minWidth: '30px' }}>
+          <Box
+            sx={{
+              ...profileContainer,
+              width: '2rem',
+              height: '2rem',
+              marginLeft: '0.5rem',
+              marginRight: '0.5rem',
+            }}
+          >
+            <img
+              style={{ width: '100%' }}
+              src={`data:image;base64,${profileData?.profileImg}`}
+              alt={`${name}'s profile`}
+            />
+          </Box>
+          <Typography variant="subtitle1">{timeStamp}</Typography>
         </Box>
-        <Typography variant="subtitle1">{timeStamp}</Typography>
-      </Box>
+      ) : null}
       <Box
         sx={{
           ...subContainer,
@@ -78,26 +95,29 @@ export const Message: React.FC<IMessage> = ({
           sx={{
             ...message,
             color: source === 'outgoing' ? 'white' : 'palette.text.primary',
+            borderTopRightRadius: source === 'outgoing' ? '0' : '0.5rem',
+            borderTopLeftRadius: source === 'incoming' ? '0' : '0.5rem',
             backgroundColor: getBackgroundColor(status, source),
           }}
         >
-          {file ? (
-            <Stack
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              maxWidth="15rem"
-              maxHeight="15rem"
-            >
-              <img
-                src={`data:image;base64,${file}`}
-                alt="img"
-                width="100%"
-                height="100%"
-              />
-            </Stack>
-          ) : null}
-          {text}
+          {status === 'pending' ? (
+            <StatusIndicator status="loading" />
+          ) : (
+            <>
+              {file || fileContent ? (
+                <MessageImage
+                  conversationId={conversationId}
+                  msgId={msgId}
+                  autoDownloadAttachment={autoDownloadAttachment}
+                  status={status}
+                  file={file}
+                  fileContent={fileContent}
+                  bottomPadding={text && text.length > 0 ? '0.5rem' : undefined}
+                />
+              ) : null}
+              {text}
+            </>
+          )}
         </Typography>
       </Box>
       <Box sx={{ width: '3rem' }}></Box>

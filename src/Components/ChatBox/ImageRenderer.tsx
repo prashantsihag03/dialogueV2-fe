@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from '@mui/material'
+import { Box, CircularProgress, Stack } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 
@@ -9,6 +9,7 @@ interface ImageRendererProps {
   marginRight?: string
   showRemoveIcon?: boolean
   onRemove?: () => void
+  showBackLight?: boolean
 }
 
 const ImageRenderer: React.FC<ImageRendererProps> = ({
@@ -18,6 +19,7 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
   marginRight,
   showRemoveIcon,
   onRemove,
+  showBackLight,
 }: ImageRendererProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
@@ -47,6 +49,33 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
     >
       {imageUrl ? (
         <>
+          {showBackLight === true ? (
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+              height="100%"
+              position="absolute"
+              borderRadius={100}
+              top="0"
+              sx={{
+                backgroundColor: 'transparent',
+                zIndex: 1,
+              }}
+            >
+              <Box
+                width="30px"
+                height="30px"
+                borderRadius={100}
+                sx={{
+                  boxShadow: 'rgba(211, 211, 211, 0.61) 0px 0px 900px 100px',
+                  backgroundColor: 'transparent',
+                  zIndex: 1,
+                }}
+              ></Box>
+            </Stack>
+          ) : null}
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -90,10 +119,10 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
             alt="Uploaded"
             style={{
               borderRadius: '12px',
-              boxShadow: '0 0 9px 1px #545454',
               width: '100%',
               height: '100%',
               zIndex: 1,
+              objectFit: 'contain',
             }}
           />
         </>

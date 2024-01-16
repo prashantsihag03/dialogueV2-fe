@@ -26,6 +26,8 @@ import {
 } from '../../store/config/slice'
 import { getRunGuidedTour } from '../../store/config/selector'
 import { getActiveSideBar } from '../../store/sidebar/selector'
+import { setActiveConversation } from '../../store/chats/slice'
+import { getOngoingMessagesByConversationId } from '../../store/onGoingMessages/selector'
 
 const GuidedTour: React.FC = () => {
   const theme = useTheme()
@@ -38,6 +40,9 @@ const GuidedTour: React.FC = () => {
   const activeProfile = useAppSelector(getActiveProfileUser)
   const activeSideBar = useAppSelector(getActiveSideBar)
   const createConvoEnabled = useAppSelector(isCreateConvoEnabled)
+  const ongoingMessage = useAppSelector(
+    getOngoingMessagesByConversationId(activeConversation?.conversationId ?? '')
+  )
   const firstUserSearchResultMounted = useAppSelector(
     isFirstUserSearchResultMounted
   )
@@ -50,7 +55,8 @@ const GuidedTour: React.FC = () => {
   const [helpers, setHelpers] = useState<Joyride.StoreHelpers | null>(null)
 
   const userActionBasedNextHandler = useCallback(
-    (target: string, when: boolean) => {
+    (target: string, when: boolean, beforeNextAction?: () => void) => {
+      console.log('Called userActionBasedNextHandler with condition: ', when)
       const index = joyRideSteps.findIndex((step) => step.target === target)
       if (index === -1) return
 
@@ -61,6 +67,7 @@ const GuidedTour: React.FC = () => {
           ' with condition when as :',
           when
         )
+        if (beforeNextAction) beforeNextAction()
         helpers?.next()
       }
     },
@@ -116,7 +123,16 @@ const GuidedTour: React.FC = () => {
   }, [activeProfile?.id])
 
   useEffect(() => {
-    userActionBasedNextHandler('.create-convo-btn', !openCreateConvoDialog)
+    userActionBasedNextHandler(
+      '.create-convo-btn',
+      !openCreateConvoDialog,
+      () => {
+        // remove active conversation so when user clicks on first conversation it changes state
+        // since moving to next step is based on state change of activeconversation
+        if (activeConversation != null)
+          dispatch(setActiveConversation(undefined))
+      }
+    )
   }, [openCreateConvoDialog])
 
   useEffect(() => {
@@ -126,6 +142,25 @@ const GuidedTour: React.FC = () => {
         activeSideBar === 'setting'
       )
   }, [activeSideBar])
+
+  useEffect(() => {
+    if (
+      ongoingMessage != null &&
+      ongoingMessage.length > 0 &&
+      ongoingMessage[0].status === 'sent'
+    ) {
+      console.log('Set timeout initiated')
+      setTimeout(function () {
+        console.log('Timeout time spanned')
+        userActionBasedNextHandler(
+          '.message-input-box',
+          ongoingMessage != null &&
+            ongoingMessage.length > 0 &&
+            ongoingMessage[ongoingMessage.length - 1].status === 'sent'
+        )
+      }, 1000)
+    }
+  }, [ongoingMessage])
 
   return (
     <Joyride

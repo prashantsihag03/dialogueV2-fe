@@ -10,6 +10,12 @@ export const containerStyles: SxProps<Theme> = {
     fontWeight: 'bold',
     backgroundColor: 'action.hover',
   },
+
+  '&:active': {
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    backgroundColor: 'action.hover',
+  },
 }
 
 export const subContainerStyles: SxProps<Theme> = {

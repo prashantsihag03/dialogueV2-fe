@@ -200,23 +200,18 @@ const TourSteps: Step[] = [
       <p>
         This is a message input box. <br />
         You can type and send text, audio files, and other supported files from
-        your local file system.
-      </p>
-    ),
-    disableBeacon: true,
-    placement: 'bottom',
-  },
-  {
-    target: '.message-input-box',
-    content: (
-      <p>
-        NOTE: <br />
-        Please feel free to send a feedback message to me straight from here.
+        your local file system. <br />
+        Please type something here and press enter to preceed further.
       </p>
     ),
     disableBeacon: true,
     placement: 'bottom',
     spotlightClicks: true,
+    styles: {
+      buttonNext: {
+        display: 'none',
+      },
+    },
   },
   {
     target: '.latest-message-container',
@@ -382,14 +377,24 @@ const TourSteps: Step[] = [
   },
   {
     target: '.main-menu-conversations-joyride',
-    content: <p>Click this to bring conversations list into the sidebar.</p>,
+    content: (
+      <p>
+        Clicking this will bring conversations list into the sidebar. Feel free
+        to give it a try.
+      </p>
+    ),
     disableBeacon: true,
     placement: 'bottom',
     spotlightClicks: true,
   },
   {
     target: '.main-menu-display-mode-joyride',
-    content: <p>Click this to toggle between dark and light mode.</p>,
+    content: (
+      <p>
+        Clicking this will toggle between dark and light mode. Feel free to give
+        it a try.
+      </p>
+    ),
     disableBeacon: true,
     placement: 'bottom',
     spotlightClicks: true,
@@ -398,7 +403,8 @@ const TourSteps: Step[] = [
     target: '.settings-joyride',
     content: (
       <p>
-        This opens settings sidebar. Please click on this to proceed further.
+        Clicking on this will bring settings into the sidebar. Please click on
+        this to proceed further.
       </p>
     ),
     disableBeacon: true,
@@ -418,7 +424,7 @@ const TourSteps: Step[] = [
     content: (
       <p>
         This is settings sidebar. You can change the application behaviour
-        regarding several aspects.
+        regarding several aspects from here.
       </p>
     ),
     disableBeacon: true,

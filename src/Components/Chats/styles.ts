@@ -39,6 +39,10 @@ export const actionIconStyles: SxProps<Theme> = {
     color: 'secondary.main',
     cursor: 'pointer',
   },
+  '&:active': {
+    color: 'secondary.main',
+    cursor: 'pointer',
+  },
 }
 
 export const bottomMenuStyles: SxProps<Theme> = {
