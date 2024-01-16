@@ -38,6 +38,16 @@ export interface IMessagePostBody extends IMessageData {
   localMessageId: string
 }
 
+export interface IAttachmentPostResult extends IMessageData {
+  fileName: string
+  attachmentId: string
+}
+
+export interface IAttachmentPostBody {
+  file: File
+  conversationId: string
+}
+
 export interface ConversationAttributes {
   isGroup: boolean
   conversationUserId: string
@@ -180,6 +190,20 @@ export const apiSlice = createApi({
         }
       },
     }),
+    sendAttachment: builder.mutation<
+      IAttachmentPostResult,
+      IAttachmentPostBody
+    >({
+      query: (body) => {
+        const formData = new FormData()
+        formData.append('img', body.file)
+        return {
+          url: `/conversations/${body.conversationId}/attachment`,
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
     searchUser: builder.query<ISearchUser[], string>({
       query: (userid: string) => `/user/search/${userid}`,
     }),
@@ -190,6 +214,7 @@ export const {
   useGetProfileQuery,
   useGetMessagesQuery,
   useSearchUserQuery,
+  useSendAttachmentMutation,
   useCreateConversationMutation,
   useGetMembersQuery,
   useSendMessageMutation,
