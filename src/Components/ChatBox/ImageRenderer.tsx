@@ -24,17 +24,27 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    const reader = new FileReader()
+    try {
+      const reader = new FileReader()
 
-    reader.onloadend = () => {
-      // Check if the result is a string
-      if (typeof reader.result === 'string') {
-        setImageUrl(reader.result)
+      reader.onloadend = () => {
+        // Check if the result is a string
+        if (typeof reader.result === 'string') {
+          setImageUrl(reader.result)
+        }
       }
-    }
 
-    // Read the content of the file as a data URL
-    reader.readAsDataURL(file)
+      if (file != null) {
+        // Read the content of the file as a data URL
+        reader.readAsDataURL(file)
+      }
+    } catch (e) {
+      console.error(
+        'Error encountered while loading image with file as : ',
+        file,
+        e
+      )
+    }
   }, [file])
 
   return (
