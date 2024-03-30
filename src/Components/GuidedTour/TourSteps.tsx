@@ -200,7 +200,9 @@ const TourSteps: Step[] = [
       <p>
         This is a message input box. <br />
         You can type and send text, audio files, and other supported files from
-        your local file system. <br />
+        your local file system. Attachments are only stored for 30 days after
+        which they will not be delete automatically to optimise cost.
+        <br />
         Please type something here and press enter to preceed further.
       </p>
     ),
