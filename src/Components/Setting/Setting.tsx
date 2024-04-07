@@ -3,6 +3,7 @@ import SwitchSetting from './SwitchSetting'
 import KeyboardIcon from '@mui/icons-material/Keyboard'
 import TourIcon from '@mui/icons-material/Tour'
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser'
+import ViewCompactAltIcon from '@mui/icons-material/ViewCompactAlt'
 import SideBar from '../Sidebar'
 import { getSideBarPreference } from '../../store/sidebar/selector'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -44,6 +45,12 @@ const Setting: React.FC = () => {
           settingKeyDisplayName="Open Existing Conversation"
           icon={<OpenInBrowserIcon fontSize="medium" />}
           note="When creating new conversations, if conversation already exists, open it. This only applies to one on one conversations."
+        />
+        <SwitchSetting
+          settingKey="compactConversationView"
+          settingKeyDisplayName="Use Compact Chat View"
+          icon={<ViewCompactAltIcon fontSize="medium" />}
+          note="Displays conversation with a compact view."
         />
       </List>
     </SideBar>

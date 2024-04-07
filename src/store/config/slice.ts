@@ -4,12 +4,14 @@ interface ConfigState {
   greet: boolean
   runGuidedTour: boolean
   showGuidedTourFinishedDialog: boolean
+  compactConversationView: boolean
 }
 
 const initialState: ConfigState = {
   greet: true,
   runGuidedTour: false,
   showGuidedTourFinishedDialog: false,
+  compactConversationView: false,
 }
 
 const configSlice = createSlice({
@@ -27,6 +29,9 @@ const configSlice = createSlice({
       action: PayloadAction<boolean>
     ) => {
       state.showGuidedTourFinishedDialog = action.payload
+    },
+    setCompactConversationView: (state, action: PayloadAction<boolean>) => {
+      state.compactConversationView = action.payload
     },
   },
 })

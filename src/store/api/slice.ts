@@ -62,6 +62,7 @@ export interface IUserSettings {
   enterSendsMessage: boolean
   greetMeEverytime: boolean
   openExistingConversation: boolean
+  compactConversationView: boolean
 }
 
 export type IUserSetting = {
