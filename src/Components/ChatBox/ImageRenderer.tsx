@@ -1,14 +1,11 @@
 import { Box, CircularProgress, Stack } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import DeleteIcon from '@mui/icons-material/Delete'
 
 interface ImageRendererProps {
   file: File
   width?: string
   height?: string
   marginRight?: string
-  showRemoveIcon?: boolean
-  onRemove?: () => void
   showBackLight?: boolean
 }
 
@@ -17,8 +14,6 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
   width,
   height,
   marginRight,
-  showRemoveIcon,
-  onRemove,
   showBackLight,
 }: ImageRendererProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -26,16 +21,13 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
   useEffect(() => {
     try {
       const reader = new FileReader()
-
       reader.onloadend = () => {
-        // Check if the result is a string
         if (typeof reader.result === 'string') {
           setImageUrl(reader.result)
         }
       }
 
       if (file != null) {
-        // Read the content of the file as a data URL
         reader.readAsDataURL(file)
       }
     } catch (e) {
@@ -86,30 +78,6 @@ const ImageRenderer: React.FC<ImageRendererProps> = ({
               ></Box>
             </Stack>
           ) : null}
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-            position="absolute"
-            top="0"
-            sx={{
-              backgroundColor: 'transparent',
-              zIndex: 2,
-            }}
-          >
-            {showRemoveIcon ? (
-              <DeleteIcon
-                sx={{
-                  fontSize: '2rem',
-                  backgroundColor: 'background.paper',
-                  borderRadius: '12px',
-                }}
-                onClick={onRemove ? onRemove : undefined}
-                titleAccess="Remove this attachment."
-              />
-            ) : null}
-          </Stack>
           <Stack
             direction="row"
             justifyContent="center"

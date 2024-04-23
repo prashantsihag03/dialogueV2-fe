@@ -29,7 +29,10 @@ import {
   setShowLatestMsgInView,
 } from '../../store/chats/slice'
 import Dropzone from 'react-dropzone'
-import { setAttachmentByConvoId } from '../../store/inputMessages/slice'
+import {
+  addAttachmentByConvoId,
+  setAttachmentByConvoId,
+} from '../../store/inputMessages/slice'
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
 import CallView from './CallView/CallView'
 import { getSideBarPreference } from '../../store/sidebar/selector'
@@ -41,6 +44,7 @@ export const ChatBox: React.FC = () => {
   const browser = useAppSelector(getSideBarPreference)
   const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
   const activeConversation = useAppSelector(getActiveConversation)
+  const [addingMoreAttach, setAddingMoreAttach] = useState<boolean>(false)
   const draggingFiles = useAppSelector(getDraggingFiles)
   const onGoingMessages = useAppSelector(
     getOngoingMessagesByConversationId(activeConversation?.conversationId || '')
@@ -141,12 +145,22 @@ export const ChatBox: React.FC = () => {
       >
         <Dropzone
           onDrop={(acceptedFiles) => {
-            appDispatch(
-              setAttachmentByConvoId({
-                convoId: activeConversation.conversationId,
-                attachments: acceptedFiles,
-              })
-            )
+            if (addingMoreAttach) {
+              appDispatch(
+                addAttachmentByConvoId({
+                  convoId: activeConversation.conversationId,
+                  attachments: acceptedFiles,
+                })
+              )
+              setAddingMoreAttach(false)
+            } else {
+              appDispatch(
+                setAttachmentByConvoId({
+                  convoId: activeConversation.conversationId,
+                  attachments: acceptedFiles,
+                })
+              )
+            }
             appDispatch(setDraggingFiles(false))
           }}
           onDragLeave={() => {
@@ -195,7 +209,13 @@ export const ChatBox: React.FC = () => {
             </Box>
           )}
         </Dropzone>
-        <AttachmentPreview conversationId={activeConversation.conversationId} />
+        <AttachmentPreview
+          conversationId={activeConversation.conversationId}
+          addAttachmentHandler={() => {
+            setAddingMoreAttach(true)
+            handleOpenFilePicker()
+          }}
+        />
         <CallView />
         <Box sx={messages}>
           {isFetching ? (

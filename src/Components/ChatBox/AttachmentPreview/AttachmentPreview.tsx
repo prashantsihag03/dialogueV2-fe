@@ -2,6 +2,8 @@ import { Stack, SxProps, Theme, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
+import DeleteIcon from '@mui/icons-material/Delete'
+import AddIcon from '@mui/icons-material/Add'
 import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
@@ -13,6 +15,7 @@ import ImageRenderer from '../ImageRenderer'
 
 interface AttachmentPreviewProps {
   conversationId: string
+  addAttachmentHandler: () => void
   title?: string
 }
 
@@ -25,6 +28,7 @@ const IconStyle: SxProps<Theme> = {
 
 const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   conversationId,
+  addAttachmentHandler,
 }: AttachmentPreviewProps) => {
   const dispatch = useAppDispatch()
   const [attachCarouselIndex, setAttachCarouselIndex] = useState<number>(0)
@@ -135,6 +139,27 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           right: '0%',
         }}
       >
+        <DeleteIcon
+          sx={{
+            fontSize: '2rem',
+            backgroundColor: 'transparent',
+            borderRadius: '12px',
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },
+          }}
+          onClick={() => {
+            const indexToRemove = attachCarouselIndex
+            goLeftOnCarousel()
+            dispatch(
+              removeAttachment({
+                convoId: conversationId,
+                indexToRemove: indexToRemove,
+              })
+            )
+          }}
+          titleAccess="Remove this attachment."
+        />
         <Typography
           variant="body1"
           sx={{
@@ -144,6 +169,18 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
         >
           {attachCarouselIndex + 1}/{attachments.length}
         </Typography>
+        <AddIcon
+          sx={{
+            fontSize: '2rem',
+            backgroundColor: 'transparent',
+            borderRadius: '12px',
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },
+          }}
+          onClick={addAttachmentHandler}
+          titleAccess="Remove this attachment."
+        />
       </Stack>
     </Stack>
   )
