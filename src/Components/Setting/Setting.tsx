@@ -31,26 +31,26 @@ const Setting: React.FC = () => {
         <SwitchSetting
           settingKey="enterSendsMessage"
           settingKeyDisplayName="Enter sends message"
-          note="Enter key will send the typed message."
+          note="Pressing Enter key will send the typed message"
           icon={<KeyboardIcon fontSize="medium" />}
         />
         <SwitchSetting
           settingKey="greetMeEverytime"
           settingKeyDisplayName="Greet me"
           icon={<TourIcon fontSize="medium" />}
-          note="Greetings will be offered next time site reloads."
+          note="Guided Tour dialog will be presented next time site reloads"
         />
         <SwitchSetting
           settingKey="openExistingConversation"
           settingKeyDisplayName="Open Existing Conversation"
           icon={<OpenInBrowserIcon fontSize="medium" />}
-          note="When creating new conversations, if conversation already exists, open it. This only applies to one on one conversations."
+          note="Open conversation if it already exists when searching"
         />
         <SwitchSetting
           settingKey="compactConversationView"
           settingKeyDisplayName="Use Compact Chat View"
           icon={<ViewCompactAltIcon fontSize="medium" />}
-          note="Displays conversation with a compact view."
+          note="Displays conversation with a compact view"
         />
       </List>
     </SideBar>

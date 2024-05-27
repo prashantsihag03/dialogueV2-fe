@@ -14,6 +14,7 @@ import {
   IMessageData,
   useGetMessagesQuery,
   useGetProfileQuery,
+  useGetUserSettingsQuery,
 } from '../../store/api/slice'
 import { Stack } from '@mui/system'
 import cleanTimeUTCInstant from '../../utils/date-time-utils'
@@ -36,11 +37,15 @@ import {
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
 import CallView from './CallView/CallView'
 import { getSideBarPreference } from '../../store/sidebar/selector'
+import isTrue from '../../utils/common-utils'
 
 export const ChatBox: React.FC = () => {
   const appDispatch = useAppDispatch()
   const dropzoneRef = useRef<HTMLInputElement | null>(null)
   const { data: loggedProfileData } = useGetProfileQuery(undefined)
+  const { data: compactConversationView } = useGetUserSettingsQuery(
+    'compactConversationView'
+  )
   const browser = useAppSelector(getSideBarPreference)
   const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
   const activeConversation = useAppSelector(getActiveConversation)
@@ -232,6 +237,7 @@ export const ChatBox: React.FC = () => {
           {data &&
           loggedProfileData &&
           onGoingMessages &&
+          compactConversationView &&
           onGoingMessages.length > 0
             ? onGoingMessages.map((msg, index) => {
                 if (onGoingMessages.length - 1 === index) {
@@ -244,7 +250,11 @@ export const ChatBox: React.FC = () => {
                           msg.localMessageId ? true : false
                         }
                         msgId={msg.messageId}
-                        showProfilePic={browser === 'mobile' ? false : true}
+                        showProfilePic={
+                          !isTrue(
+                            compactConversationView.compactConversationView
+                          )
+                        }
                         id="latest"
                         name={msg.senderId}
                         fileContent={msg.fileContent}
@@ -272,7 +282,9 @@ export const ChatBox: React.FC = () => {
                     autoDownloadAttachment={msg.localMessageId ? true : false}
                     msgId={msg.messageId}
                     fileContent={msg.fileContent}
-                    showProfilePic={browser === 'mobile' ? false : true}
+                    showProfilePic={
+                      !isTrue(compactConversationView.compactConversationView)
+                    }
                     name={msg.senderId}
                     timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
                     conversationId={activeConversation.conversationId}

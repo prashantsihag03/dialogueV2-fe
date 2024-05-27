@@ -89,9 +89,25 @@ export const ChatQuickView: React.FC<ChatQuickViewProps> = ({
       className={className ?? undefined}
       sx={{
         ...containerStyles,
+        '&:hover': {
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          backgroundColor:
+            activeConversation?.conversationId === conversationId
+              ? 'secondary.light'
+              : 'action.hover',
+        },
+        '&:active': {
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          backgroundColor:
+            activeConversation?.conversationId === conversationId
+              ? 'secondary.light'
+              : 'action.hover',
+        },
         backgroundColor:
           activeConversation?.conversationId === conversationId
-            ? 'action.hover'
+            ? 'secondary.light'
             : undefined,
       }}
       onClick={() => {
