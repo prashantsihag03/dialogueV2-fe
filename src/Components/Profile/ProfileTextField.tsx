@@ -18,6 +18,7 @@ interface ProfileTextFieldProps {
   inputTextAlign?: 'left' | 'center' | 'right'
   showLabel?: 'onEdit' | 'always'
   multiline?: boolean
+  bgColor?: string
 }
 
 const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
@@ -33,6 +34,7 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
   showLabel,
   id,
   multiline,
+  bgColor = 'transparent',
 }: ProfileTextFieldProps) => {
   const browser = useAppSelector(getSideBarPreference)
   return (
@@ -51,6 +53,9 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
               : browser === 'mobile'
               ? '0.7rem'
               : '0.8rem',
+            '&:hover': {
+              backgroundColor: bgColor,
+            },
           },
         } as Partial<FilledInputProps>
       }

@@ -72,6 +72,12 @@ export const Profile: React.FC = () => {
   }
 
   useEffect(() => {
+    return () => {
+      appDispatch(setEditingMyProfile(false))
+    }
+  }, [])
+
+  useEffect(() => {
     if (clearConvoResult.isSuccess) {
       const convoId = getConversationId()
       if (convoId != null) {
@@ -184,6 +190,7 @@ export const Profile: React.FC = () => {
                   setNewBioValue(event.target.value)
                 }}
                 textFieldVariant={isEditEnabled ? 'outlined' : 'filled'}
+                bgColor="#ffffff17"
               />
               {activeProfileUser?.isLoggedInUser ? (
                 <>
@@ -196,6 +203,7 @@ export const Profile: React.FC = () => {
                       setNewEmailValue(event.target.value)
                     }}
                     textFieldVariant={isEditEnabled ? 'outlined' : 'filled'}
+                    bgColor="#ffffff17"
                   />
                 </>
               ) : null}

@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Divider, Typography } from '@mui/material'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import { Header } from './Header/Header'
 import { messages, noConversationContainerStyle } from './styles'
 import MessageInputBox from './MessageInputBox'
@@ -127,19 +127,11 @@ export const ChatBox: React.FC = () => {
         appDispatch(setDraggingFiles(true))
       }}
     >
-      <Stack
-        direction="column"
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Header
-          userId={activeConversation.profileId}
-          fullName={activeConversation.conversationName}
-          online={true}
-        />
-        <Divider sx={{ width: '100%', color: 'primary.main' }} />
-      </Stack>
+      <Header
+        userId={activeConversation.profileId}
+        fullName={activeConversation.conversationName}
+        online={true}
+      />
       <Stack
         direction="column"
         width="100%"
