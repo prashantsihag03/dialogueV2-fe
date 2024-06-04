@@ -190,7 +190,6 @@ export const Profile: React.FC = () => {
                   setNewBioValue(event.target.value)
                 }}
                 textFieldVariant={isEditEnabled ? 'outlined' : 'filled'}
-                bgColor="#ffffff17"
               />
               {activeProfileUser?.isLoggedInUser ? (
                 <>
@@ -203,7 +202,6 @@ export const Profile: React.FC = () => {
                       setNewEmailValue(event.target.value)
                     }}
                     textFieldVariant={isEditEnabled ? 'outlined' : 'filled'}
-                    bgColor="#ffffff17"
                   />
                 </>
               ) : null}

@@ -147,7 +147,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
         <Typography variant="subtitle1">Last online {lastOnline}</Typography>
       ) : null}
       <Typography className="profile-userid" variant="subtitle1">
-        userid: {userId}
+        <b>userid:</b> {userId}
       </Typography>
     </Stack>
   )

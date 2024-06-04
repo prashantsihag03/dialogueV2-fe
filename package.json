@@ -18,7 +18,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "npm install && npm run build-storybook",
-    "devBuild": "npm run build && sh ./scripts/copyBuildFilesToBackend.sh"
+    "devBuild": "npm run build && sh ./scripts/copyBuildFilesToBackend.sh",
+    "dev": "npm run devBuild && sh ./scripts/run.sh"
   },
   "keywords": [],
   "author": "Prashant Sihag",

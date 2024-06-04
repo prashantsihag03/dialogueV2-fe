@@ -1,4 +1,4 @@
-import { Badge, Box, MenuItem, TextField } from '@mui/material'
+import { Badge, Box, MenuItem, Stack, TextField } from '@mui/material'
 import { v4 as uuidv4 } from 'uuid'
 import NorthIcon from '@mui/icons-material/North'
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded'
@@ -208,28 +208,30 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         variant="standard"
       >
-        <NorthIcon
-          fontSize="large"
-          sx={{
-            ...iconStyles,
-            color: 'white',
-            backgroundColor: 'secondary.light',
-            '&:hover': {
+        <Stack sx={iconStyles}>
+          <NorthIcon
+            fontSize="large"
+            sx={{
               color: 'white',
               backgroundColor: 'secondary.light',
-            },
-            '&:active': {
-              color: 'white',
-              backgroundColor: 'secondary.light',
-            },
-          }}
-          titleAccess="send message"
-          onClick={
-            (message.length < 1 && attachments.length < 1) || data?.id == null
-              ? undefined
-              : sendBtnClickHandler
-          }
-        />
+              borderRadius: '7px',
+              '&:hover': {
+                color: 'white',
+                backgroundColor: 'secondary.light',
+              },
+              '&:active': {
+                color: 'white',
+                backgroundColor: 'secondary.light',
+              },
+            }}
+            titleAccess="send message"
+            onClick={
+              (message.length < 1 && attachments.length < 1) || data?.id == null
+                ? undefined
+                : sendBtnClickHandler
+            }
+          />
+        </Stack>
       </Badge>
     </Box>
   )

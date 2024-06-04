@@ -53,9 +53,6 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
               : browser === 'mobile'
               ? '0.7rem'
               : '0.8rem',
-            '&:hover': {
-              backgroundColor: bgColor,
-            },
           },
         } as Partial<FilledInputProps>
       }
@@ -90,6 +87,13 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
         marginTop: '0.5em',
         '& .MuiFilledInput-root': {
           borderRadius: '7px',
+          backgroundColor: 'transparent',
+          '&:hover': {
+            backgroundColor: bgColor,
+          },
+          '&:focus': {
+            backgroundColor: bgColor,
+          },
         },
       }}
     />
