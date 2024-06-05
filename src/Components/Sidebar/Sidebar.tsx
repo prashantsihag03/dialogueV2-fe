@@ -39,7 +39,9 @@ export const SideBar: React.FC<SidebarProps> = ({
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ backgroundColor: browser === 'mobile' ? '#2b6bff1f' : undefined }}
+        sx={{
+          backgroundColor: browser === 'mobile' ? 'sidebar.main' : undefined,
+        }}
       >
         <Stack
           flexDirection="row"

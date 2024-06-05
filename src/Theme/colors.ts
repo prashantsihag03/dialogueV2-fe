@@ -56,3 +56,8 @@ export const icon = {
   light: '#575757',
   dark: '#e1e1e1',
 }
+
+export const sidebarColor = {
+  light: '#7a9ef9',
+  dark: '#1d263d',
+}

@@ -72,7 +72,9 @@ export const Header: React.FC<IActiveChatHeader> = ({
       width="100%"
       justifyContent="center"
       alignItems="center"
-      sx={{ backgroundColor: browser === 'mobile' ? '#2b6bff1f' : undefined }}
+      sx={{
+        backgroundColor: browser === 'mobile' ? 'sidebar.main' : undefined,
+      }}
     >
       <Box sx={containerStyle}>
         <Box sx={profileContainer} borderRadius={1}>

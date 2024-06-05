@@ -24,8 +24,15 @@ const useCreateTheme = () => {
 
   const theme = React.useMemo(
     () => createTheme(getDesignTokens(displayMode, isMobile)),
-    [displayMode]
+    [displayMode, isMobile]
   )
+
+  React.useEffect(() => {
+    console.log('Updating meta theme color')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme.palette.sidebar.main)
+  }, [theme])
 
   return {
     theme,
