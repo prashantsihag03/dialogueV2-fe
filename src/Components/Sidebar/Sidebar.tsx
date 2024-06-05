@@ -2,6 +2,7 @@ import { Stack, Typography } from '@mui/material'
 import { useAppSelector } from '../../store/hooks'
 import { getSideBarPreference } from '../../store/sidebar/selector'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
+import { useEffect } from 'react'
 
 interface SidebarProps {
   title: string
@@ -23,6 +24,25 @@ export const SideBar: React.FC<SidebarProps> = ({
   className,
 }: SidebarProps) => {
   const browser = useAppSelector(getSideBarPreference)
+
+  useEffect(() => {
+    if (onBack == null) return
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault()
+      if (onBack) {
+        onBack()
+      }
+      // Push a new state to prevent the user from leaving the app
+      window.history.pushState(null, '', window.location.pathname)
+    }
+
+    window.history.pushState(null, '', window.location.pathname)
+    window.addEventListener('popstate', handlePopState)
+    return () => {
+      if (onBack == null) return
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [onBack])
 
   return (
     <Stack
@@ -67,7 +87,7 @@ export const SideBar: React.FC<SidebarProps> = ({
         direction="column"
         justifyContent="flex-start"
         alignItems="center"
-        padding={'3% 4%'}
+        padding={'0 4%'}
       >
         {children}
       </Stack>

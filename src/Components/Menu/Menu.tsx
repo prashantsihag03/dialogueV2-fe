@@ -3,7 +3,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import MenuIcon from '@mui/icons-material/Menu'
 import ForumIcon from '@mui/icons-material/Forum'
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
+// import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import { containerStyles, iconContainerStyles } from './styles'
@@ -81,11 +81,11 @@ export const Menu: React.FC<IMenu> = ({
               </Grow>
             )}
           </Box>
-          <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
+          {/* <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
             <Box sx={iconContainerStyles}>
               <NotificationsOutlinedIcon titleAccess="Notifications" />
             </Box>
-          </Grow>
+          </Grow> */}
           <Grow appear in mountOnEnter unmountOnExit timeout={1000}>
             <Box sx={iconContainerStyles}>
               <TuneOutlinedIcon

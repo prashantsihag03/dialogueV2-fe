@@ -70,15 +70,21 @@ const MessageImage: React.FC<MessageImageProps> = ({
       direction="row"
       justifyContent="center"
       alignItems="center"
-      width={browser === 'mobile' ? '10rem' : '10rem'}
+      width={browser === 'mobile' ? '8rem' : '10rem'}
       paddingBottom={bottomPadding}
     >
       {attachmentData == null && file != null && fileContent == null ? (
-        <Stack width={'10rem'} height={'10rem'} sx={{ position: 'relative' }}>
+        <Stack
+          width={'10rem'}
+          height={'10rem'}
+          sx={{ position: 'relative' }}
+          justifyContent="center"
+          alignItems="center"
+        >
           <ImageOutlinedIcon
             sx={{
-              width: '100%',
-              height: '100%',
+              width: '70%',
+              height: '70%',
               opacity: '0.1',
             }}
           />

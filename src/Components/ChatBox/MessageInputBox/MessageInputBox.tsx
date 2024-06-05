@@ -1,14 +1,15 @@
-import { Badge, Box, MenuItem, Stack, TextField } from '@mui/material'
+import { Badge, Box, Stack, TextField } from '@mui/material'
 import { v4 as uuidv4 } from 'uuid'
 import NorthIcon from '@mui/icons-material/North'
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded'
-import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined'
+// import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined'
 import { iconStyles, messageBox, messageOptions } from './styles'
 import { EmojiClickData } from 'emoji-picker-react'
 import { useState } from 'react'
 import {
   useGetProfileQuery,
   useGetUserSettingsQuery,
+  // useSendAttachmentMutation,
 } from '../../../store/api/slice'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import {
@@ -18,8 +19,8 @@ import {
 // import CustomEmojiPicker from './CustomEmojiPicker'
 import { setShowLatestMsgInView } from '../../../store/chats/slice'
 import isTrue from '../../../utils/common-utils'
-import { getSideBarPreference } from '../../../store/sidebar/selector'
-import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
+// import { getSideBarPreference } from '../../../store/sidebar/selector'
+// import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
 import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
 import { setAttachmentByConvoId } from '../../../store/inputMessages/slice'
 
@@ -36,11 +37,12 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
   receiver,
 }: MessageInputBoxProps) => {
   const appDispatch = useAppDispatch()
-  const browser = useAppSelector(getSideBarPreference)
+  // const browser = useAppSelector(getSideBarPreference)
   const attachments = useAppSelector(
     getInputMessageAttachmentsByConvoId(conversationId)
   )
   const { data: settingsData } = useGetUserSettingsQuery('enterSendsMessage')
+  // const { sendAttachHttp, data: attachHttpResp } = useSendAttachmentMutation()
   const { data } = useGetProfileQuery(undefined)
   const [message, setMessage] = useState<string>('')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -124,7 +126,7 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
           InputProps={{ disableUnderline: true, sx: { fontSize: '1rem' } }}
           sx={{ marginLeft: '0.5rem' }}
         />
-        {browser === 'mobile' ? (
+        {/* {browser === 'mobile' ? (
           attachments.length > 0 ? (
             <Badge
               badgeContent={attachments.length}
@@ -172,34 +174,34 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
             </VerticalDotMenu>
           )
         ) : (
-          <>
-            <MicNoneOutlinedIcon
+          <> */}
+        {/* <MicNoneOutlinedIcon
               sx={iconStyles}
               titleAccess="record audio message"
+            /> */}
+        {attachments.length > 0 ? (
+          <Badge
+            badgeContent={attachments.length}
+            overlap="circular"
+            color={'secondary'}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            variant="standard"
+          >
+            <AttachFileRoundedIcon
+              sx={iconStyles}
+              titleAccess="attach file/files"
+              onClick={onAttachClick}
             />
-            {attachments.length > 0 ? (
-              <Badge
-                badgeContent={attachments.length}
-                overlap="circular"
-                color={'secondary'}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                variant="standard"
-              >
-                <AttachFileRoundedIcon
-                  sx={iconStyles}
-                  titleAccess="attach file/files"
-                  onClick={onAttachClick}
-                />
-              </Badge>
-            ) : (
-              <AttachFileRoundedIcon
-                sx={iconStyles}
-                titleAccess="attach file/files"
-                onClick={onAttachClick}
-              />
-            )}
-          </>
+          </Badge>
+        ) : (
+          <AttachFileRoundedIcon
+            sx={iconStyles}
+            titleAccess="attach file/files"
+            onClick={onAttachClick}
+          />
         )}
+        {/* </>
+        )} */}
       </Box>
       <Badge
         badgeContent={attachments.length}

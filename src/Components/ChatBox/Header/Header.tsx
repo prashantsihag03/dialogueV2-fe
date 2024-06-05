@@ -1,5 +1,5 @@
-import { Box, Divider, MenuItem, Stack, Typography } from '@mui/material'
-import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined'
+import { Box, Divider, Stack, Typography } from '@mui/material'
+// import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined'
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined'
 import {
@@ -14,9 +14,10 @@ import { setActiveSideBar } from '../../../store/sidebar/slice'
 import { setActiveProfileUserId } from '../../../store/profile/slice'
 import { useGetProfileQuery } from '../../../store/api/slice'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
-import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
+// import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { setActiveConversation } from '../../../store/chats/slice'
+import { useCallback, useEffect } from 'react'
 
 export interface IActiveChatHeader {
   userId: string
@@ -66,6 +67,28 @@ export const Header: React.FC<IActiveChatHeader> = ({
       .catch()
   }
 
+  const goBackInMobile = useCallback(() => {
+    appDispatch(setActiveConversation(undefined))
+    appDispatch(setActiveSideBar('chats'))
+  }, [appDispatch])
+
+  useEffect(() => {
+    if (browser === 'web') return
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault()
+      goBackInMobile()
+      // Push a new state to prevent the user from leaving the app
+      window.history.pushState(null, '', window.location.pathname)
+    }
+
+    window.history.pushState(null, '', window.location.pathname)
+    window.addEventListener('popstate', handlePopState)
+    return () => {
+      if (browser === 'mobile')
+        window.removeEventListener('popstate', handlePopState)
+    }
+  }, [goBackInMobile, browser])
+
   return (
     <Stack
       direction="column"
@@ -87,14 +110,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
             {browser === 'mobile' ? (
               <ArrowBackIosIcon
                 sx={{ marginRight: '0.5rem' }}
-                onClick={
-                  browser === 'mobile'
-                    ? () => {
-                        appDispatch(setActiveConversation(undefined))
-                        appDispatch(setActiveSideBar('chats'))
-                      }
-                    : undefined
-                }
+                onClick={browser === 'mobile' ? goBackInMobile : undefined}
               />
             ) : null}
 
@@ -149,48 +165,30 @@ export const Header: React.FC<IActiveChatHeader> = ({
           </Stack>
         </Box>
         <Box sx={optionContainer} className="conversation-box-header-options">
-          {browser === 'mobile' ? (
-            <>
-              <VerticalDotMenu>
-                <MenuItem>Shared Media</MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    callOptionClickHandler()
-                  }}
-                >
-                  Audio Call
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    callOptionClickHandler()
-                  }}
-                >
-                  Video Call
-                </MenuItem>
-              </VerticalDotMenu>
-            </>
+          <CallOutlinedIcon
+            sx={iconStyles}
+            titleAccess="audio call"
+            className="conversation-box-conversation-audio-call-icon"
+            onClick={callOptionClickHandler}
+          />
+          <VideoCallOutlinedIcon
+            sx={iconStyles}
+            titleAccess="video call"
+            className="conversation-box-conversation-video-call-icon"
+            onClick={callOptionClickHandler}
+          />
+          {/* {browser === 'mobile' ? (
+            <VerticalDotMenu>
+              <MenuItem title="Media Files">Shared Media</MenuItem>
+            </VerticalDotMenu>
           ) : (
-            <>
-              <PermMediaOutlinedIcon
-                sx={iconStyles}
-                fontSize="small"
-                titleAccess="Media files"
-                className="conversation-box-conversation-media-icon"
-              />
-              <CallOutlinedIcon
-                sx={iconStyles}
-                titleAccess="audio call"
-                className="conversation-box-conversation-audio-call-icon"
-                onClick={callOptionClickHandler}
-              />
-              <VideoCallOutlinedIcon
-                sx={iconStyles}
-                titleAccess="video call"
-                className="conversation-box-conversation-video-call-icon"
-                onClick={callOptionClickHandler}
-              />
-            </>
-          )}
+            <PermMediaOutlinedIcon
+              sx={iconStyles}
+              fontSize="small"
+              titleAccess="Media Files"
+              className="conversation-box-conversation-media-icon"
+            />
+          )} */}
         </Box>
       </Box>
       <Divider sx={{ width: '100%', color: 'primary.main' }} />
