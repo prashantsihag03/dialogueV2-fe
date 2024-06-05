@@ -31,15 +31,15 @@ export const SideBar: React.FC<SidebarProps> = ({
       direction="column"
       justifyContent="flex-start"
       alignItems="center"
-      padding="4%"
       className={`sidebar ${className ?? ''}`}
     >
       <Stack
         width="100%"
-        margin="0.5rem"
+        padding="6% 4% 0.5rem"
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
+        sx={{ backgroundColor: browser === 'mobile' ? '#2b6bff1f' : undefined }}
       >
         <Stack
           flexDirection="row"
@@ -59,7 +59,16 @@ export const SideBar: React.FC<SidebarProps> = ({
           {headerActions}
         </Stack>
       </Stack>
-      {children}
+      <Stack
+        width="100%"
+        height="100%"
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="center"
+        padding={'3% 4%'}
+      >
+        {children}
+      </Stack>
       <Stack
         width="100%"
         paddingTop="0.3rem"
