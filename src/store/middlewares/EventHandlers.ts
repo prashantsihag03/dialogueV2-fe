@@ -9,6 +9,7 @@ import {
   updateConversationLastMessage,
 } from '../chats/slice'
 import { setCall } from '../rtc/slice'
+import { MSG_RECEIVED, playSoundAlert } from '../../utils/audio-utils'
 
 export const config = {
   iceServers: [{ urls: 'stun:stun.stunprotocol.org' }],
@@ -112,13 +113,13 @@ const assignSocketEventHandlers = (
       state.chats.activeConversation?.conversationId === data.conversationId
     ) {
       // // play new message music
-      console.log('Play active convo new msg audio!')
       dispatch(setShowLatestMsgInView(true))
     } else {
       // Show notification since the convo is not active
       // But should we show notification ? coz the conversation's last msg will get updated,
       // and technically should come up top
     }
+    playSoundAlert(MSG_RECEIVED)
   })
 }
 

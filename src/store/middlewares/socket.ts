@@ -7,6 +7,7 @@ import { updateOngoingMessageStatusToSent } from '../onGoingMessages/slice'
 import { updateConversationLastMessage } from '../chats/slice'
 import assignSocketEventHandlers from './EventHandlers'
 import { setCall } from '../rtc/slice'
+import { MSG_SENT, playSoundAlert } from '../../utils/audio-utils'
 
 export const socketMiddleware =
   (io: Socket<DefaultEventsMap, DefaultEventsMap>): Middleware =>
@@ -55,6 +56,7 @@ export const socketMiddleware =
                 lastMessageSenderId: ack.data.senderId,
               })
             )
+            playSoundAlert(MSG_SENT)
           }
         })
         break
