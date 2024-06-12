@@ -12,7 +12,10 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { setActiveSideBar } from '../../../store/sidebar/slice'
 import { setActiveProfileUserId } from '../../../store/profile/slice'
-import { useGetProfileQuery } from '../../../store/api/slice'
+import {
+  useGetProfileQuery,
+  useGetUserLastSeenQuery,
+} from '../../../store/api/slice'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
 // import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
@@ -22,17 +25,17 @@ import { useCallback, useEffect } from 'react'
 export interface IActiveChatHeader {
   userId: string
   fullName: string
-  online: boolean
 }
 
 export const Header: React.FC<IActiveChatHeader> = ({
   userId,
   fullName,
-  online,
 }: IActiveChatHeader) => {
   const appDispatch = useAppDispatch()
   const browser = useAppSelector(getSideBarPreference)
   const { data: otherUserData } = useGetProfileQuery(userId)
+  const { data: otherUserLastSeenData, refetch } =
+    useGetUserLastSeenQuery(userId)
 
   const getConversationPicture = (): string | undefined => {
     if (otherUserData?.profileImg != null)
@@ -67,10 +70,29 @@ export const Header: React.FC<IActiveChatHeader> = ({
       .catch()
   }
 
+  const isOtherUserOnline = useCallback(() => {
+    if (otherUserLastSeenData?.ISO == null) return false
+    const UTCDate = new Date(otherUserLastSeenData?.ISO)
+    const currentDate = new Date()
+
+    const diffInMilliSec = Math.abs(UTCDate.getTime() - currentDate.getTime())
+
+    if (diffInMilliSec / (1000 * 60) < 2) return true
+    return false
+  }, [otherUserLastSeenData?.ISO])
+
   const goBackInMobile = useCallback(() => {
     appDispatch(setActiveConversation(undefined))
     appDispatch(setActiveSideBar('chats'))
   }, [appDispatch])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch()
+    }, 120 * 1000) // 120 seconds = 2 minutes
+
+    return () => clearInterval(interval)
+  }, [refetch])
 
   useEffect(() => {
     if (browser === 'web') return
@@ -156,10 +178,10 @@ export const Header: React.FC<IActiveChatHeader> = ({
                 variant="subtitle1"
                 fontWeight="bold"
                 sx={{
-                  color: online ? 'success.main' : 'gray',
+                  color: isOtherUserOnline() ? 'success.main' : 'gray',
                 }}
               >
-                {online ? 'Online' : 'Offline'}
+                {isOtherUserOnline() ? 'Online' : 'Offline'}
               </Typography>
             </Box>
           </Stack>

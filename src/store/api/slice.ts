@@ -84,6 +84,10 @@ export interface GetMsgAttachmentQueryParams {
   attachmentId: string
 }
 
+export interface UserLastSeenResponse {
+  ISO: string
+}
+
 // Define our single API slice object
 export const apiSlice = createApi({
   // The cache reducer expects to be added at `state.api` (already default - this is optional)
@@ -97,6 +101,12 @@ export const apiSlice = createApi({
         console.log('generating query')
         return `/conversations/${params.conversationId}/messages/${params.messageId}/attachment/${params.attachmentId}`
       },
+    }),
+    getUserLastSeen: builder.query<UserLastSeenResponse, string>({
+      query: (userid: string) => {
+        return `/user/${userid}/lastSeen`
+      },
+      keepUnusedDataFor: 60,
     }),
     createConversation: builder.mutation<void, ConversationAttributes>({
       query: (body) => ({
@@ -225,4 +235,5 @@ export const {
   useGetUserSettingsQuery,
   useUpdateUserSettingMutation,
   useGetMessageAttachmentQuery,
+  useGetUserLastSeenQuery,
 } = apiSlice

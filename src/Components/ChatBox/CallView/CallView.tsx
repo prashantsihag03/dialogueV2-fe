@@ -44,7 +44,7 @@ const CallView: React.FC = () => {
         <button
           style={{
             position: 'absolute',
-            top: '1rem',
+            bottom: '1rem',
             left: '1rem',
             zIndex: call !== 'idle' ? 102 : -100,
           }}
