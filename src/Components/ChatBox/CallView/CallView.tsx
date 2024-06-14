@@ -1,9 +1,14 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import { Stack } from '@mui/material'
 import { useAppSelector } from '../../../store/hooks'
 import { inCall } from '../../../store/rtc/selector'
+import VolumeUpIcon from '@mui/icons-material/VolumeUp'
+import VolumeOffIcon from '@mui/icons-material/VolumeOff'
+import { useState } from 'react'
 
 const CallView: React.FC = () => {
   const call = useAppSelector(inCall)
+  const [micOn, setMicOn] = useState<boolean>(true)
 
   return (
     <Stack
@@ -12,8 +17,9 @@ const CallView: React.FC = () => {
       alignItems="center"
       width="100%"
       height={'100%'}
-      position="absolute"
+      position="fixed"
       bottom="0%"
+      left="0%"
       zIndex={call !== 'idle' ? 100 : -100}
       sx={{
         backgroundColor: 'background.default',
@@ -34,32 +40,60 @@ const CallView: React.FC = () => {
         <video
           id="remoteVideo"
           autoPlay
-          muted
+          muted={micOn}
           style={{
             width: '100%',
             borderRadius: '1rem',
             zIndex: call !== 'idle' ? 100 : -100,
           }}
         ></video>
-        <button
-          style={{
-            position: 'absolute',
-            bottom: '1rem',
-            left: '1rem',
-            zIndex: call !== 'idle' ? 102 : -100,
-          }}
-          onClick={() => {
-            const remoteVideo = document.getElementById(
-              'remoteVideo'
-            ) as HTMLVideoElement | null
-            if (remoteVideo != null) {
-              const currentMute = remoteVideo.muted
-              remoteVideo.muted = !currentMute
-            }
-          }}
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          position={'absolute'}
+          bottom={'2rem'}
+          left={'2rem'}
+          padding={'0.5rem'}
+          sx={{ backgroundColor: 'text.primary' }}
+          borderRadius={'50%'}
+          zIndex={call !== 'idle' ? 102 : -100}
         >
-          mute/Unmute
-        </button>
+          {micOn ? (
+            <VolumeOffIcon
+              fontSize="large"
+              sx={{
+                color: 'background.default',
+              }}
+              onClick={() => {
+                const remoteVideo = document.getElementById(
+                  'remoteVideo'
+                ) as HTMLVideoElement | null
+                if (remoteVideo != null) {
+                  const currentMute = remoteVideo.muted
+                  remoteVideo.muted = !currentMute
+                  setMicOn(remoteVideo.muted)
+                }
+              }}
+            />
+          ) : (
+            <VolumeUpIcon
+              fontSize="large"
+              sx={{
+                color: 'background.default',
+              }}
+              onClick={() => {
+                const remoteVideo = document.getElementById(
+                  'remoteVideo'
+                ) as HTMLVideoElement | null
+                if (remoteVideo != null) {
+                  const currentMute = remoteVideo.muted
+                  remoteVideo.muted = !currentMute
+                  setMicOn(remoteVideo.muted)
+                }
+              }}
+            />
+          )}
+        </Stack>
       </Stack>
       <Stack
         direction="row"
