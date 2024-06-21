@@ -12,6 +12,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material'
+import { SnackbarProvider } from 'notistack'
 import { useEffect, useState } from 'react'
 import useCreateTheme from '../../hooks/useDisplayMode'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -20,6 +21,7 @@ import MainSection from '../MainSection'
 import { containerStyles } from './styles'
 import { getUserConversations } from '../../store/chats/thunk'
 import { getMyProfile } from '../../store/profile/thunk'
+
 import {
   getGreet,
   getRunGuidedTour,
@@ -38,6 +40,8 @@ import {
 import isTrue from '../../utils/common-utils'
 import { setSideBarPreference } from '../../store/sidebar/slice'
 import StatusIndicator from '../Commons/StatusIndicator'
+import { removeReceivingCall } from '../../store/rtc/slice'
+import CallPopUp from '../CallPopUp/CallPopUp'
 
 export const App = () => {
   const dispatch = useAppDispatch()
@@ -76,6 +80,28 @@ export const App = () => {
   return (
     <CssBaseline>
       <ThemeProvider theme={theme}>
+        <SnackbarProvider
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          onClose={(e, reason, key) => {
+            if (
+              reason === 'timeout' &&
+              key?.toString().includes('receivingCall')
+            ) {
+              if (key == null) return
+              dispatch(removeReceivingCall(key))
+              dispatch({
+                type: 'socket/reject',
+                payload: {
+                  userToAnswer: key.toString().split('receivingCall-')[1],
+                },
+              })
+            }
+          }}
+          Components={{
+            callPopUp: CallPopUp,
+          }}
+          maxSnack={10}
+        />
         <Box
           sx={{
             ...containerStyles,

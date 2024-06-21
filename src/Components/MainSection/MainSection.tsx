@@ -14,6 +14,7 @@ import Setting from '../Setting'
 import { MenuSideBar } from '../Menu/MenuSidebar'
 import { getActiveConversation } from '../../store/chats/selector'
 import { setShowSideDrawer } from '../../store/sidebar/slice'
+import CallView from '../ChatBox/CallView/CallView'
 
 export const MainSection: React.FC = () => {
   const AppDispatch = useAppDispatch()
@@ -55,6 +56,7 @@ export const MainSection: React.FC = () => {
       height={sideBarPreference === 'mobile' ? '100%' : '90%'}
       sx={{ backgroundColor: 'transparent' }}
     >
+      <CallView />
       {showChatBox() ? (
         <Box
           sx={{

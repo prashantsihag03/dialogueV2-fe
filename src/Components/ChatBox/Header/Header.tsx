@@ -1,5 +1,4 @@
 import { Box, Divider, Stack, Typography } from '@mui/material'
-// import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined'
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined'
 import {
@@ -17,10 +16,10 @@ import {
   useGetUserLastSeenQuery,
 } from '../../../store/api/slice'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
-// import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { setActiveConversation } from '../../../store/chats/slice'
 import { useCallback, useEffect } from 'react'
+import { setCall } from '../../../store/rtc/slice'
 
 export interface IActiveChatHeader {
   userId: string
@@ -44,10 +43,19 @@ export const Header: React.FC<IActiveChatHeader> = ({
   }
 
   const callOptionClickHandler = () => {
+    if (otherUserData?.id == null) return
+
     navigator.mediaDevices
       .getUserMedia({
-        video: true,
-        audio: true,
+        video: {
+          facingMode: 'user',
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
       })
       .then((mediaStream) => {
         const video = document.getElementById(
@@ -59,11 +67,24 @@ export const Header: React.FC<IActiveChatHeader> = ({
           video.srcObject = mediaStream
         }
         video.play()
+        // show call view
+        appDispatch(
+          setCall({
+            call: 'initiating',
+            userId: otherUserData?.id,
+          })
+        )
+        // create peer instance to hold connection in
         appDispatch({
-          type: 'rtc/createOffer',
+          type: 'rtc/receiverPeer',
+          payload: { userIdToConnect: otherUserData?.id, stream: mediaStream },
+        })
+
+        // send call event
+        appDispatch({
+          type: 'socket/call',
           payload: {
-            stream: mediaStream,
-            userIdToConnect: otherUserData?.id,
+            userToCall: otherUserData?.id,
           },
         })
       })
@@ -199,18 +220,6 @@ export const Header: React.FC<IActiveChatHeader> = ({
             className="conversation-box-conversation-video-call-icon"
             onClick={callOptionClickHandler}
           />
-          {/* {browser === 'mobile' ? (
-            <VerticalDotMenu>
-              <MenuItem title="Media Files">Shared Media</MenuItem>
-            </VerticalDotMenu>
-          ) : (
-            <PermMediaOutlinedIcon
-              sx={iconStyles}
-              fontSize="small"
-              titleAccess="Media Files"
-              className="conversation-box-conversation-media-icon"
-            />
-          )} */}
         </Box>
       </Box>
       <Divider sx={{ width: '100%', color: 'primary.main' }} />

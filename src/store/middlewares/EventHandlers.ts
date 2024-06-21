@@ -8,8 +8,9 @@ import {
   setShowLatestMsgInView,
   updateConversationLastMessage,
 } from '../chats/slice'
-import { setCall } from '../rtc/slice'
+import { setCall, setReceivingCall } from '../rtc/slice'
 import { MSG_RECEIVED, playSoundAlert } from '../../utils/audio-utils'
+import { enqueueSnackbar } from 'notistack'
 
 export const config = {
   iceServers: [{ urls: 'stun:stun.stunprotocol.org' }],
@@ -29,40 +30,48 @@ const assignSocketEventHandlers = (
     dispatch(disconnected())
   })
 
-  io.on('incoming call', async (data: any) => {
+  io.on('offer signal', async (data: any) => {
     if (data.offer == null || data.callerUserId == null) {
       console.log('Offer received with invalid data ', data)
       return
     }
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then((mediaStream) => {
-        const video = document.getElementById(
-          'localVideo'
-        ) as HTMLVideoElement | null
-
-        if (video == null) return
-        if ('srcObject' in video) {
-          video.srcObject = mediaStream
-        }
-        video.play()
-        dispatch({
-          type: 'rtc/receivedOffer',
-          payload: {
-            userIdToConnect: data.callerUserId,
-            stream: mediaStream,
-            signalData: data.offer,
-          },
-        })
-        dispatch(setCall({ call: 'receiving', userId: data.callerUserId }))
-      })
-      .catch()
+    dispatch({
+      type: 'rtc/receivedOffer',
+      payload: {
+        userIdToConnect: data.callerUserId,
+        signalData: data.offer,
+      },
+    })
+    dispatch(setCall({ call: 'receiving', userId: data.callerUserId }))
   })
 
-  io.on('answering call', async (data: any) => {
+  io.on('call rejected', async (data: any) => {
+    if (data.from == null) {
+      console.log('call rejected event received with invalid data ', data)
+      return
+    }
+
+    if (getState().rtc.userId === data.from) {
+      dispatch(setCall({ call: 'idle', userId: null }))
+      dispatch({ type: 'rtc/endCall' })
+      enqueueSnackbar(`Call declined by ${data.from}`, {
+        variant: 'default',
+        autoHideDuration: 5000,
+      })
+    }
+  })
+
+  io.on('receiving call', async (data: any) => {
+    console.log('receiving receiving call event')
+
+    if (data.callerUserId == null) {
+      console.log('Invalid data!', data)
+      return
+    }
+    dispatch(setReceivingCall(data.callerUserId))
+  })
+
+  io.on('answer signal', async (data: any) => {
     if (data.answer == null || data.from == null) {
       console.log('Answer received with invalid data ', data)
       return

@@ -35,7 +35,6 @@ import {
   setAttachmentByConvoId,
 } from '../../store/inputMessages/slice'
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
-import CallView from './CallView/CallView'
 import { getSideBarPreference } from '../../store/sidebar/selector'
 import isTrue from '../../utils/common-utils'
 
@@ -212,7 +211,6 @@ export const ChatBox: React.FC = () => {
             handleOpenFilePicker()
           }}
         />
-        <CallView />
         <Box sx={messages}>
           {isFetching ? (
             <Stack
