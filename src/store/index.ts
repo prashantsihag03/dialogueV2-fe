@@ -4,7 +4,7 @@ import { chatsReducer } from './chats/slice'
 import { connectionReducer } from './connection/slice'
 import { sideBarReducer } from './sidebar/slice'
 import { profileReducer } from './profile/slice'
-import { socketMiddleware } from './middlewares/socket'
+import { socketMiddleware } from './middlewares/Socket/socket'
 import { io } from 'socket.io-client'
 import { onGoingMessagesReducer } from './onGoingMessages/slice'
 import { configReducer } from './config/slice'
@@ -32,7 +32,7 @@ const store = configureStore({
       .concat(rtkQueryErrorMiddleware)
       .concat(apiSlice.middleware)
       .concat(socketMiddleware(io('/', { autoConnect: false })))
-      .concat(webrtcMiddleware([])),
+      .concat(webrtcMiddleware({})),
 })
 
 export type RootState = ReturnType<typeof store.getState>

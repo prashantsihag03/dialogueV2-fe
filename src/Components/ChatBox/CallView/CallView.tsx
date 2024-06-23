@@ -6,6 +6,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import VolumeOffIcon from '@mui/icons-material/VolumeOff'
 import CallEndIcon from '@mui/icons-material/CallEnd'
 import { useState } from 'react'
+import { WebRTCActions } from '../../../store/middlewares/webrtc'
 
 const CallView: React.FC = () => {
   const call = useAppSelector(inCall)
@@ -111,7 +112,10 @@ const CallView: React.FC = () => {
               },
             }}
             onClick={() => {
-              dispatch({ type: 'rtc/endCall', payload: { callId: callId } })
+              dispatch({
+                type: WebRTCActions.endCall,
+                payload: { callId: callId },
+              })
               const localVideo = document.getElementById(
                 'localVideo'
               ) as HTMLVideoElement | null

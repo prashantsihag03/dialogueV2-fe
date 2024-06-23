@@ -23,6 +23,7 @@ import { removeReceivingCall } from '../../store/rtc/slice'
 import CallPopUp from '../CallPopUp/CallPopUp'
 import TourBeginDialog from '../GuidedTour/TourBeginDialog'
 import TourCompleteDialog from '../GuidedTour/TourCompleteDialog'
+import { SocketEmitEvents } from '../../store/middlewares/Socket/socket'
 
 export const App = () => {
   const dispatch = useAppDispatch()
@@ -44,9 +45,9 @@ export const App = () => {
   useEffect(() => {
     dispatch(getUserConversations())
     dispatch(getMyProfile())
-    dispatch({ type: 'socket/connect' })
+    dispatch({ type: SocketEmitEvents.connect })
     return () => {
-      dispatch({ type: 'socket/disconnect' })
+      dispatch({ type: SocketEmitEvents.disconnect })
     }
   }, [dispatch])
 
@@ -70,7 +71,7 @@ export const App = () => {
               if (key == null) return
               dispatch(removeReceivingCall(key))
               dispatch({
-                type: 'socket/reject',
+                type: SocketEmitEvents.rejectCall,
                 payload: {
                   userToAnswer: key.toString().split('receivingCall-')[1],
                 },

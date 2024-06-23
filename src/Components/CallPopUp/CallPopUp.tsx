@@ -5,6 +5,7 @@ import { useAppDispatch } from '../../store/hooks'
 import { removeReceivingCall } from '../../store/rtc/slice'
 import { OptionsObject, SnackbarKey } from 'notistack'
 import React from 'react'
+import { SocketEmitEvents } from '../../store/middlewares/Socket/socket'
 
 export interface CallPopUpProps extends OptionsObject<'callPopUp'> {
   callId: string
@@ -56,7 +57,7 @@ const CallPopUp = React.forwardRef<HTMLDivElement, CallPopUpProps>(
             onClick={() => {
               dispatch(removeReceivingCall(snackbarId))
               dispatch({
-                type: 'socket/reject',
+                type: SocketEmitEvents.rejectCall,
                 payload: {
                   userToAnswer: callId,
                 },
@@ -73,7 +74,7 @@ const CallPopUp = React.forwardRef<HTMLDivElement, CallPopUpProps>(
             onClick={() => {
               dispatch(removeReceivingCall(snackbarId))
               dispatch({
-                type: 'socket/accept',
+                type: SocketEmitEvents.acceptCall,
                 payload: {
                   userToAnswer: callId,
                 },

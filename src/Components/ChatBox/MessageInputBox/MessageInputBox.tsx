@@ -23,6 +23,7 @@ import isTrue from '../../../utils/common-utils'
 // import VerticalDotMenu from '../../VerticalDotMenu/VerticalDotMenu'
 import { getInputMessageAttachmentsByConvoId } from '../../../store/inputMessages/selector'
 import { setAttachmentByConvoId } from '../../../store/inputMessages/slice'
+import { SocketEmitEvents } from '../../../store/middlewares/Socket/socket'
 
 interface MessageInputBoxProps {
   onAttachClick: () => void
@@ -75,7 +76,7 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
     setMessage('')
     appDispatch(addOngoingMessage(localMessage))
     appDispatch({
-      type: 'socket/message',
+      type: SocketEmitEvents.message,
       payload: {
         text: localMessage.message,
         receiver: receiver,

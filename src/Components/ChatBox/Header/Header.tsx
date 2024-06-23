@@ -20,6 +20,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { setActiveConversation } from '../../../store/chats/slice'
 import { useCallback, useEffect } from 'react'
 import { setCall } from '../../../store/rtc/slice'
+import { SocketEmitEvents } from '../../../store/middlewares/Socket/socket'
+import { WebRTCActions } from '../../../store/middlewares/webrtc'
 
 export interface IActiveChatHeader {
   userId: string
@@ -70,19 +72,19 @@ export const Header: React.FC<IActiveChatHeader> = ({
         // show call view
         appDispatch(
           setCall({
-            call: 'initiating',
+            call: 'calling',
             userId: otherUserData?.id,
           })
         )
         // create peer instance to hold connection in
         appDispatch({
-          type: 'rtc/receiverPeer',
+          type: WebRTCActions.createReceiverPeer,
           payload: { userIdToConnect: otherUserData?.id, stream: mediaStream },
         })
 
         // send call event
         appDispatch({
-          type: 'socket/call',
+          type: SocketEmitEvents.call,
           payload: {
             userToCall: otherUserData?.id,
           },

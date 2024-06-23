@@ -1,12 +1,22 @@
 import { Middleware } from '@reduxjs/toolkit'
 import SimplePeer from 'simple-peer'
 import { setCall } from '../rtc/slice'
+import { SocketEmitEvents } from './Socket/socket'
 
 declare const window: any
 
 interface PeerConnection {
   conn: SimplePeer.Instance
   userIdToConnect: string
+}
+
+export enum WebRTCActions {
+  createReceiverPeer = 'rtc/receiverPeer',
+  createOffer = 'rtc/createOffer',
+  receivedOffer = 'rtc/receivedOffer',
+  receivedAnswer = 'rtc/receivedAnswer',
+  endCall = 'rtc/endCall',
+  mute = 'rtc/mute',
 }
 
 export const webrtcMiddleware =
@@ -19,7 +29,7 @@ export const webrtcMiddleware =
     const { type, payload } = action
 
     switch (type) {
-      case 'rtc/receiverPeer':
+      case WebRTCActions.createReceiverPeer:
         peerConnections[payload.userIdToConnect] = {
           userIdToConnect: payload.userIdToConnect,
           conn: new window.SimplePeer({
@@ -59,7 +69,7 @@ export const webrtcMiddleware =
 
         peerConnections[payload.userIdToConnect].conn.on('end', () => {
           dispatch({
-            type: 'rtc/endCall',
+            type: WebRTCActions.endCall,
           })
         })
 
@@ -68,7 +78,7 @@ export const webrtcMiddleware =
           (data: any) => {
             console.log('Sending answer signal')
             dispatch({
-              type: 'socket/answer',
+              type: SocketEmitEvents.answer,
               payload: {
                 userToAnswer:
                   peerConnections[payload.userIdToConnect].userIdToConnect,
@@ -80,7 +90,7 @@ export const webrtcMiddleware =
 
         break
 
-      case 'rtc/createOffer':
+      case WebRTCActions.createOffer:
         const newConn1: PeerConnection = {
           userIdToConnect: payload.userIdToConnect,
           conn: new window.SimplePeer({
@@ -91,7 +101,7 @@ export const webrtcMiddleware =
         newConn1.conn.on('signal', (data: any) => {
           console.log('Sending offer signal data')
           dispatch({
-            type: 'socket/signal',
+            type: SocketEmitEvents.signal,
             payload: {
               userToCall: newConn1.userIdToConnect,
               offer: data,
@@ -120,14 +130,14 @@ export const webrtcMiddleware =
         })
         newConn1.conn.on('end', () => {
           dispatch({
-            type: 'rtc/endCall',
+            type: WebRTCActions.endCall,
           })
         })
 
         peerConnections[newConn1.userIdToConnect] = newConn1
         break
 
-      case 'rtc/receivedOffer':
+      case WebRTCActions.receivedOffer:
         if (peerConnections[payload.userIdToConnect] == null) {
           console.log('Received offer from unexpected user')
           break
@@ -136,7 +146,7 @@ export const webrtcMiddleware =
         peerConnections[payload.userIdToConnect].conn.signal(payload.signalData)
         break
 
-      case 'rtc/receivedAnswer':
+      case WebRTCActions.receivedAnswer:
         const userIdOfAnswer = payload.userId
         if (peerConnections[userIdOfAnswer] == null) {
           console.log('Received answer signal data from an unexpected user')
@@ -146,7 +156,7 @@ export const webrtcMiddleware =
         peerConnections[userIdOfAnswer].conn.signal(payload.signalData)
         break
 
-      case 'rtc/endCall':
+      case WebRTCActions.endCall:
         dispatch(
           setCall({
             call: 'idle',
@@ -190,7 +200,7 @@ export const webrtcMiddleware =
 
         break
 
-      case 'rtc/mute':
+      case WebRTCActions.mute:
         const callIdToMute = payload.callId
         if (peerConnections[callIdToMute] == null) {
           console.log(

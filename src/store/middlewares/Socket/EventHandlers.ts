@@ -1,42 +1,53 @@
 import { AnyAction, Dispatch } from '@reduxjs/toolkit'
 import { DefaultEventsMap } from '@socket.io/component-emitter'
 import { Socket } from 'socket.io-client'
-import { connected, disconnected } from '../connection/slice'
-import { RootState } from '..'
-import { addOngoingMessage } from '../onGoingMessages/slice'
+import { connected, disconnected } from '../../connection/slice'
+import { RootState } from '../..'
+import { addOngoingMessage } from '../../onGoingMessages/slice'
 import {
   setShowLatestMsgInView,
   updateConversationLastMessage,
-} from '../chats/slice'
-import { setCall, setReceivingCall } from '../rtc/slice'
-import { MSG_RECEIVED, playSoundAlert } from '../../utils/audio-utils'
+} from '../../chats/slice'
+import { setCall, setReceivingCall } from '../../rtc/slice'
+import { MSG_RECEIVED, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
+import { WebRTCActions } from '../webrtc'
 
 export const config = {
   iceServers: [{ urls: 'stun:stun.stunprotocol.org' }],
 }
 
+export enum SocketReceivingEvents {
+  connect = 'connect',
+  disconnect = 'disconnect',
+  offerSignal = 'offer signal',
+  callRejected = 'call rejected',
+  receivingCall = 'receiving call',
+  answerSignal = 'answer signal',
+  message = 'message',
+}
+
 const assignSocketEventHandlers = (
   io: Socket<DefaultEventsMap, DefaultEventsMap>,
   dispatch: Dispatch<AnyAction>,
-  getState: () => any
+  getState: () => RootState
 ) => {
   io.connect()
-  io.on('connect', () => {
+  io.on(SocketReceivingEvents.connect, () => {
     dispatch(connected())
   })
 
-  io.on('disconnect', () => {
+  io.on(SocketReceivingEvents.disconnect, () => {
     dispatch(disconnected())
   })
 
-  io.on('offer signal', async (data: any) => {
+  io.on(SocketReceivingEvents.offerSignal, async (data: any) => {
     if (data.offer == null || data.callerUserId == null) {
       console.log('Offer received with invalid data ', data)
       return
     }
     dispatch({
-      type: 'rtc/receivedOffer',
+      type: WebRTCActions.receivedOffer,
       payload: {
         userIdToConnect: data.callerUserId,
         signalData: data.offer,
@@ -45,7 +56,7 @@ const assignSocketEventHandlers = (
     dispatch(setCall({ call: 'receiving', userId: data.callerUserId }))
   })
 
-  io.on('call rejected', async (data: any) => {
+  io.on(SocketReceivingEvents.callRejected, async (data: any) => {
     if (data.from == null) {
       console.log('call rejected event received with invalid data ', data)
       return
@@ -53,7 +64,7 @@ const assignSocketEventHandlers = (
 
     if (getState().rtc.userId === data.from) {
       dispatch(setCall({ call: 'idle', userId: null }))
-      dispatch({ type: 'rtc/endCall' })
+      dispatch({ type: WebRTCActions.endCall })
       enqueueSnackbar(`Call declined by ${data.from}`, {
         variant: 'default',
         autoHideDuration: 5000,
@@ -61,7 +72,7 @@ const assignSocketEventHandlers = (
     }
   })
 
-  io.on('receiving call', async (data: any) => {
+  io.on(SocketReceivingEvents.receivingCall, async (data: any) => {
     console.log('receiving receiving call event')
 
     if (data.callerUserId == null) {
@@ -71,18 +82,18 @@ const assignSocketEventHandlers = (
     dispatch(setReceivingCall(data.callerUserId))
   })
 
-  io.on('answer signal', async (data: any) => {
+  io.on(SocketReceivingEvents.answerSignal, async (data: any) => {
     if (data.answer == null || data.from == null) {
       console.log('Answer received with invalid data ', data)
       return
     }
     dispatch({
-      type: 'rtc/receivedAnswer',
+      type: WebRTCActions.receivedAnswer,
       payload: { userId: data.from, signalData: data.answer },
     })
   })
 
-  io.on('message', (data) => {
+  io.on(SocketReceivingEvents.message, (data) => {
     const state: RootState = getState()
     if (data.conversationId == null) {
       console.error('ConversationId missing in received message event')
@@ -121,12 +132,7 @@ const assignSocketEventHandlers = (
       state.chats.activeConversation?.conversationId != null &&
       state.chats.activeConversation?.conversationId === data.conversationId
     ) {
-      // // play new message music
       dispatch(setShowLatestMsgInView(true))
-    } else {
-      // Show notification since the convo is not active
-      // But should we show notification ? coz the conversation's last msg will get updated,
-      // and technically should come up top
     }
     playSoundAlert(MSG_RECEIVED)
   })

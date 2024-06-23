@@ -3,12 +3,24 @@
 import { DefaultEventsMap } from '@socket.io/component-emitter'
 import { Socket } from 'socket.io-client'
 import { Middleware } from '@reduxjs/toolkit'
-import { updateOngoingMessageStatusToSent } from '../onGoingMessages/slice'
-import { updateConversationLastMessage } from '../chats/slice'
+import { updateOngoingMessageStatusToSent } from '../../onGoingMessages/slice'
+import { updateConversationLastMessage } from '../../chats/slice'
 import assignSocketEventHandlers from './EventHandlers'
-import { setCall } from '../rtc/slice'
-import { MSG_SENT, playSoundAlert } from '../../utils/audio-utils'
+import { setCall } from '../../rtc/slice'
+import { MSG_SENT, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
+import { WebRTCActions } from '../webrtc'
+
+export enum SocketEmitEvents {
+  connect = 'socket/connect',
+  disconnect = 'socket/disconnect',
+  message = 'socket/message',
+  call = 'socket/call',
+  rejectCall = 'socket/reject',
+  acceptCall = 'socket/accept',
+  signal = 'socket/signal',
+  answer = 'socket/answer',
+}
 
 export const socketMiddleware =
   (io: Socket<DefaultEventsMap, DefaultEventsMap>): Middleware =>
@@ -18,11 +30,11 @@ export const socketMiddleware =
     const { type, payload } = action
 
     switch (type) {
-      case 'socket/connect':
+      case SocketEmitEvents.connect:
         assignSocketEventHandlers(io, dispatch, getState)
         break
 
-      case 'socket/message':
+      case SocketEmitEvents.message:
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         io.emit('message', payload, (ack: any) => {
           if (
@@ -62,8 +74,7 @@ export const socketMiddleware =
         })
         break
 
-      case 'socket/call':
-        console.log('calling')
+      case SocketEmitEvents.call:
         io.emit('call', payload, (ack: any) => {
           console.log('call event acknowledged with status: ', ack?.status)
           if (ack?.status != null && ack?.status === 'failed') {
@@ -81,10 +92,11 @@ export const socketMiddleware =
         })
         break
 
-      case 'socket/reject':
+      case SocketEmitEvents.rejectCall:
         io.emit('reject call', payload, (ack: any) => {
           console.log('call rejection event acknowledged!')
         })
+        dispatch({ type: WebRTCActions.endCall })
         dispatch(
           setCall({
             call: 'idle',
@@ -93,10 +105,10 @@ export const socketMiddleware =
         )
         break
 
-      case 'socket/accept':
+      case SocketEmitEvents.acceptCall:
         dispatch(
           setCall({
-            call: 'initiating',
+            call: 'calling',
             userId: payload.userToAnswer,
           })
         )
@@ -120,9 +132,8 @@ export const socketMiddleware =
               video.srcObject = mediaStream
             }
             video.play()
-            console.log('Dispatching rtc/createOffer')
             dispatch({
-              type: 'rtc/createOffer',
+              type: WebRTCActions.createOffer,
               payload: {
                 stream: mediaStream,
                 userIdToConnect: payload?.userToAnswer,
@@ -132,17 +143,17 @@ export const socketMiddleware =
           .catch()
         break
 
-      case 'socket/signal':
+      case SocketEmitEvents.signal:
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         io.emit('signal', payload, (ack: any) => {})
         break
 
-      case 'socket/answer':
+      case SocketEmitEvents.answer:
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         io.emit('answer', payload, (ack: any) => {})
         break
 
-      case 'socket/disconnect':
+      case SocketEmitEvents.disconnect:
         io.disconnect()
         break
 
