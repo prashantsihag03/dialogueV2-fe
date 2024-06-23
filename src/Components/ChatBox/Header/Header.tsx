@@ -61,7 +61,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
       })
       .then((mediaStream) => {
         const video = document.getElementById(
-          'localVideo'
+          'you-video'
         ) as HTMLVideoElement | null
 
         if (video == null) return

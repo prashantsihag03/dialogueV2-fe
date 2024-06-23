@@ -55,7 +55,7 @@ export const webrtcMiddleware =
           (stream: MediaProvider | null) => {
             // got remote video stream, now let's show it in a video tag
             const video = document.getElementById(
-              'remoteVideo'
+              `${payload.userIdToConnect}-video`
             ) as HTMLVideoElement | null
 
             if (video == null) return
@@ -118,7 +118,7 @@ export const webrtcMiddleware =
         newConn1.conn.on('stream', (stream: MediaProvider | null) => {
           // got remote video stream, now let's show it in a video tag
           const video = document.getElementById(
-            'remoteVideo'
+            `${newConn1.userIdToConnect}-video`
           ) as HTMLVideoElement | null
 
           if (video == null) return
@@ -169,35 +169,21 @@ export const webrtcMiddleware =
         })
         peerConnections = {}
 
-        const video = document.getElementById(
-          'remoteVideo'
-        ) as HTMLVideoElement | null
+        const videoElements = document.getElementsByClassName(`callVideo`)
 
-        if (video == null) return
-        if (
-          'srcObject' in video &&
-          video.srcObject != null &&
-          video.srcObject instanceof MediaStream
-        ) {
-          video.pause()
-          video.srcObject.getTracks().forEach((track) => track.stop())
-          video.srcObject = null
+        for (let i = 0; i < videoElements.length; i++) {
+          const videoEle = videoElements[i]
+          if (
+            'srcObject' in videoEle &&
+            videoEle.srcObject != null &&
+            videoEle.srcObject instanceof MediaStream &&
+            videoEle instanceof HTMLVideoElement
+          ) {
+            videoEle.pause()
+            videoEle.srcObject.getTracks().forEach((track) => track.stop())
+            videoEle.srcObject = null
+          }
         }
-        const localVideo = document.getElementById(
-          'localVideo'
-        ) as HTMLVideoElement | null
-
-        if (localVideo == null) return
-        if (
-          'srcObject' in localVideo &&
-          localVideo.srcObject != null &&
-          localVideo.srcObject instanceof MediaStream
-        ) {
-          localVideo.pause()
-          localVideo.srcObject.getTracks().forEach((track) => track.stop())
-          localVideo.srcObject = null
-        }
-
         break
 
       case WebRTCActions.mute:

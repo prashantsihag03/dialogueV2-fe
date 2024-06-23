@@ -108,7 +108,7 @@ export const socketMiddleware =
       case SocketEmitEvents.acceptCall:
         dispatch(
           setCall({
-            call: 'calling',
+            call: 'in-call',
             userId: payload.userToAnswer,
           })
         )
@@ -124,7 +124,7 @@ export const socketMiddleware =
           })
           .then((mediaStream) => {
             const video = document.getElementById(
-              'localVideo'
+              'you-video'
             ) as HTMLVideoElement | null
 
             if (video == null) return

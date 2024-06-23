@@ -6,7 +6,7 @@ interface ReceivingCalls {
   [callerUserId: SnackbarKey]: string
 }
 
-export type Call = 'initiating' | 'receiving' | 'idle' | 'in-call'
+export type Call = 'calling' | 'receiving' | 'idle' | 'in-call'
 
 interface ICall {
   call: Call
