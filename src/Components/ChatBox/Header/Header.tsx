@@ -19,9 +19,14 @@ import { getSideBarPreference } from '../../../store/sidebar/selector'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { setActiveConversation } from '../../../store/chats/slice'
 import { useCallback, useEffect } from 'react'
-import { setCall } from '../../../store/rtc/slice'
+import { setCall, setMultipleCameraMode } from '../../../store/rtc/slice'
 import { SocketEmitEvents } from '../../../store/middlewares/Socket/socket'
 import { WebRTCActions } from '../../../store/middlewares/webrtc'
+import {
+  muteAudio,
+  muteVideo,
+  suppressNoise,
+} from '../../../store/rtc/selector'
 
 export interface IActiveChatHeader {
   userId: string
@@ -35,6 +40,9 @@ export const Header: React.FC<IActiveChatHeader> = ({
   const appDispatch = useAppDispatch()
   const browser = useAppSelector(getSideBarPreference)
   const { data: otherUserData } = useGetProfileQuery(userId)
+  const isNoiseSuppressed = useAppSelector(suppressNoise)
+  const isAudioMuted = useAppSelector(muteAudio)
+  const isVideoMuted = useAppSelector(muteVideo)
   const { data: otherUserLastSeenData, refetch } =
     useGetUserLastSeenQuery(userId)
 
@@ -52,11 +60,11 @@ export const Header: React.FC<IActiveChatHeader> = ({
         video: {
           facingMode: 'user',
           echoCancellation: true,
-          noiseSuppression: true,
+          noiseSuppression: isNoiseSuppressed,
         },
         audio: {
           echoCancellation: true,
-          noiseSuppression: true,
+          noiseSuppression: isNoiseSuppressed,
         },
       })
       .then((mediaStream) => {
@@ -68,6 +76,19 @@ export const Header: React.FC<IActiveChatHeader> = ({
         if ('srcObject' in video) {
           video.srcObject = mediaStream
         }
+
+        if (isVideoMuted) {
+          mediaStream
+            .getVideoTracks()
+            .forEach((track) => (track.enabled = !isVideoMuted))
+        }
+
+        if (isAudioMuted) {
+          mediaStream
+            .getAudioTracks()
+            .forEach((track) => (track.enabled = !isAudioMuted))
+        }
+
         video.play()
         // show call view
         appDispatch(
@@ -76,6 +97,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
             userId: otherUserData?.id,
           })
         )
+
         // create peer instance to hold connection in
         appDispatch({
           type: WebRTCActions.createReceiverPeer,
@@ -88,6 +110,18 @@ export const Header: React.FC<IActiveChatHeader> = ({
           payload: {
             userToCall: otherUserData?.id,
           },
+        })
+
+        mediaStream.getVideoTracks().forEach((track) => {
+          if (track.kind === 'video') {
+            const availableFacingMode = track.getCapabilities().facingMode
+            if (
+              availableFacingMode?.includes('user') &&
+              availableFacingMode?.includes('environment')
+            ) {
+              appDispatch(setMultipleCameraMode(true))
+            }
+          }
         })
       })
       .catch()

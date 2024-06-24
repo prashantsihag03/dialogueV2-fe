@@ -15,6 +15,10 @@ interface ICall {
 
 interface RtcState extends ICall {
   receivingCalls: ReceivingCalls
+  suppressNoise: boolean
+  muteAudio: boolean
+  muteVideo: boolean
+  multipleCameraMode: boolean
 }
 
 const defaultIce = null
@@ -23,6 +27,10 @@ const initialState: RtcState = {
   receivingCalls: {},
   call: 'idle',
   userId: null,
+  muteAudio: false,
+  muteVideo: false,
+  suppressNoise: true,
+  multipleCameraMode: false,
 }
 
 const rtcSlice = createSlice({
@@ -51,9 +59,29 @@ const rtcSlice = createSlice({
         action.payload.toString().split('receivingCall-')[1]
       ]
     },
+    setMuteAudio: (state, action: PayloadAction<boolean>) => {
+      state.muteAudio = action.payload
+    },
+    setMuteVideo: (state, action: PayloadAction<boolean>) => {
+      state.muteVideo = action.payload
+    },
+    setSuppressNoise: (state, action: PayloadAction<boolean>) => {
+      state.suppressNoise = action.payload
+    },
+    setMultipleCameraMode: (state, action: PayloadAction<boolean>) => {
+      state.multipleCameraMode = action.payload
+    },
   },
 })
 
-export const { setCall, setReceivingCall, removeReceivingCall } =
-  rtcSlice.actions
+export const {
+  setCall,
+  setReceivingCall,
+  removeReceivingCall,
+  setMuteAudio,
+  setMuteVideo,
+  setSuppressNoise,
+  setMultipleCameraMode,
+} = rtcSlice.actions
+
 export const rtcReducer = rtcSlice.reducer

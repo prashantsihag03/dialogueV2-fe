@@ -73,8 +73,6 @@ const assignSocketEventHandlers = (
   })
 
   io.on(SocketReceivingEvents.receivingCall, async (data: any) => {
-    console.log('receiving receiving call event')
-
     if (data.callerUserId == null) {
       console.log('Invalid data!', data)
       return

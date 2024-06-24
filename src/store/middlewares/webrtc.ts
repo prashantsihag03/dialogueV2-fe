@@ -1,6 +1,11 @@
 import { Middleware } from '@reduxjs/toolkit'
 import SimplePeer from 'simple-peer'
-import { setCall } from '../rtc/slice'
+import {
+  setCall,
+  setMuteAudio,
+  setMuteVideo,
+  setSuppressNoise,
+} from '../rtc/slice'
 import { SocketEmitEvents } from './Socket/socket'
 
 declare const window: any
@@ -16,7 +21,10 @@ export enum WebRTCActions {
   receivedOffer = 'rtc/receivedOffer',
   receivedAnswer = 'rtc/receivedAnswer',
   endCall = 'rtc/endCall',
-  mute = 'rtc/mute',
+  muteAudio = 'rtc/muteAudio',
+  muteVideo = 'rtc/muteVideo',
+  suppressNoise = 'rtc/suppressNoise',
+  changeCamera = 'rtc/changeCamera',
 }
 
 export const webrtcMiddleware =
@@ -186,16 +194,92 @@ export const webrtcMiddleware =
         }
         break
 
-      case WebRTCActions.mute:
-        const callIdToMute = payload.callId
-        if (peerConnections[callIdToMute] == null) {
+      case WebRTCActions.muteAudio:
+        const { callId: callIdToMuteAudio, mute: muteAudio } = payload
+        if (peerConnections[callIdToMuteAudio] == null) {
           console.log(
             'Call Id provided to mute is not available in connections!'
           )
           break
         }
 
-        // peerConnections[callIdToMute].conn.streams
+        peerConnections[callIdToMuteAudio].conn.streams.forEach((stream) => {
+          stream.getAudioTracks().forEach((track) => {
+            if (track.kind === 'audio') {
+              track.enabled = !muteAudio
+            }
+          })
+        })
+        dispatch(setMuteAudio(muteAudio))
+        break
+
+      case WebRTCActions.muteVideo:
+        const { callId: callIdToMuteVideo, mute: muteVideo } = payload
+        if (peerConnections[callIdToMuteVideo] == null) {
+          console.log(
+            'Call Id provided to mute is not available in connections!'
+          )
+          break
+        }
+
+        peerConnections[callIdToMuteVideo].conn.streams.forEach((stream) => {
+          stream.getVideoTracks().forEach((track) => {
+            if (track.kind === 'video') {
+              track.enabled = !muteVideo
+            }
+          })
+        })
+        dispatch(setMuteVideo(muteVideo))
+        break
+
+      case WebRTCActions.suppressNoise:
+        const { callId: callIdToSuppressNoise, suppress } = payload
+        if (peerConnections[callIdToSuppressNoise] == null) {
+          console.log(
+            'Call Id provided to mute is not available in connections!'
+          )
+          break
+        }
+
+        peerConnections[callIdToSuppressNoise].conn.streams.forEach(
+          (stream) => {
+            stream.getVideoTracks().forEach((track) => {
+              if (track.kind === 'video') {
+                track.applyConstraints({ noiseSuppression: suppress })
+              }
+            })
+            stream.getAudioTracks().forEach((track) => {
+              if (track.kind === 'video') {
+                track.applyConstraints({ noiseSuppression: suppress })
+              }
+            })
+          }
+        )
+        dispatch(setSuppressNoise(suppress))
+        break
+
+      case WebRTCActions.changeCamera:
+        const { callId: callIdToChangeCamera } = payload
+        if (peerConnections[callIdToChangeCamera] == null) {
+          console.log(
+            'Call Id provided to change camera is not available in connections!'
+          )
+          break
+        }
+
+        peerConnections[callIdToChangeCamera].conn.streams.forEach((stream) => {
+          stream.getVideoTracks().forEach((track) => {
+            if (track.kind === 'video') {
+              if (track.getConstraints().facingMode === 'user') {
+                track.applyConstraints({ facingMode: 'environment' })
+              } else {
+                track.applyConstraints({
+                  facingMode: 'user',
+                })
+              }
+            }
+          })
+        })
         break
 
       default:

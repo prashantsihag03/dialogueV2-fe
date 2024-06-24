@@ -6,10 +6,11 @@ import { Middleware } from '@reduxjs/toolkit'
 import { updateOngoingMessageStatusToSent } from '../../onGoingMessages/slice'
 import { updateConversationLastMessage } from '../../chats/slice'
 import assignSocketEventHandlers from './EventHandlers'
-import { setCall } from '../../rtc/slice'
+import { setCall, setMultipleCameraMode } from '../../rtc/slice'
 import { MSG_SENT, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
 import { WebRTCActions } from '../webrtc'
+import { RootState } from '../..'
 
 export enum SocketEmitEvents {
   connect = 'socket/connect',
@@ -24,7 +25,7 @@ export enum SocketEmitEvents {
 
 export const socketMiddleware =
   (io: Socket<DefaultEventsMap, DefaultEventsMap>): Middleware =>
-  ({ dispatch, getState }) =>
+  ({ dispatch, getState }: { dispatch: any; getState: () => RootState }) =>
   (next) =>
   (action) => {
     const { type, payload } = action
@@ -131,6 +132,19 @@ export const socketMiddleware =
             if ('srcObject' in video) {
               video.srcObject = mediaStream
             }
+
+            if (getState().rtc.muteVideo) {
+              mediaStream
+                .getVideoTracks()
+                .forEach((track) => (track.enabled = false))
+            }
+
+            if (getState().rtc.muteAudio) {
+              mediaStream
+                .getAudioTracks()
+                .forEach((track) => (track.enabled = false))
+            }
+
             video.play()
             dispatch({
               type: WebRTCActions.createOffer,
@@ -138,6 +152,18 @@ export const socketMiddleware =
                 stream: mediaStream,
                 userIdToConnect: payload?.userToAnswer,
               },
+            })
+
+            mediaStream.getVideoTracks().forEach((track) => {
+              if (track.kind === 'video') {
+                const availableFacingMode = track.getCapabilities().facingMode
+                if (
+                  availableFacingMode?.includes('user') &&
+                  availableFacingMode?.includes('environment')
+                ) {
+                  dispatch(setMultipleCameraMode(true))
+                }
+              }
             })
           })
           .catch()

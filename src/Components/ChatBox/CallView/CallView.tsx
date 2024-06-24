@@ -1,22 +1,35 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import { Stack, Typography } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
-import { inCall, inCallId } from '../../../store/rtc/selector'
-import VolumeUpIcon from '@mui/icons-material/VolumeUp'
-import VolumeOffIcon from '@mui/icons-material/VolumeOff'
+import {
+  inCall,
+  inCallId,
+  multipleCameraMode,
+  muteAudio,
+  muteVideo,
+  suppressNoise,
+} from '../../../store/rtc/selector'
+import MicOffIcon from '@mui/icons-material/MicOff'
+import MicIcon from '@mui/icons-material/Mic'
+import VideocamIcon from '@mui/icons-material/Videocam'
+import VideocamOffIcon from '@mui/icons-material/VideocamOff'
+import FlipCameraIosIcon from '@mui/icons-material/FlipCameraIos'
+import NoiseAwareIcon from '@mui/icons-material/NoiseAware'
+import NoiseControlOffIcon from '@mui/icons-material/NoiseControlOff'
 import CallEndIcon from '@mui/icons-material/CallEnd'
-import { useState } from 'react'
 import { WebRTCActions } from '../../../store/middlewares/webrtc'
 import CallUserBlock from '../../CallUserBlock/CallUserBlock'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
 
 const CallView: React.FC = () => {
   const browser = useAppSelector(getSideBarPreference)
-
   const call = useAppSelector(inCall)
   const callId = useAppSelector(inCallId)
   const dispatch = useAppDispatch()
-  const [micOn, setMicOn] = useState<boolean>(true)
+  const micOn = useAppSelector(muteAudio)
+  const cameraOn = useAppSelector(muteVideo)
+  const hasMultipleCameraMode = useAppSelector(multipleCameraMode)
+  const isNoiseSuppressed = useAppSelector(suppressNoise)
 
   return (
     <Stack
@@ -97,45 +110,124 @@ const CallView: React.FC = () => {
         borderRadius={1}
         zIndex={call !== 'idle' ? 102 : -100}
       >
-        {micOn ? (
-          <VolumeOffIcon
+        {isNoiseSuppressed ? (
+          <NoiseControlOffIcon
             fontSize="large"
             sx={{
               color: 'background.default',
               margin: '0.5rem',
             }}
+            titleAccess={'Noise suppression is enabled. Click to disable it.'}
             onClick={() => {
-              const remoteVideo = document.getElementById(
-                `${callId}-video`
-              ) as HTMLVideoElement | null
-              if (remoteVideo != null) {
-                const currentMute = remoteVideo.muted
-                remoteVideo.muted = !currentMute
-                setMicOn(remoteVideo.muted)
-              }
+              dispatch({
+                type: WebRTCActions.suppressNoise,
+                payload: { callId: callId, suppress: false },
+              })
             }}
           />
         ) : (
-          <VolumeUpIcon
+          <NoiseAwareIcon
             fontSize="large"
             sx={{
               color: 'background.default',
               margin: '0.5rem',
             }}
+            titleAccess={'Noise suppression is disable. Click to enable it.'}
             onClick={() => {
-              const remoteVideo = document.getElementById(
-                `${callId}-video`
-              ) as HTMLVideoElement | null
-              if (remoteVideo != null) {
-                const currentMute = remoteVideo.muted
-                remoteVideo.muted = !currentMute
-                setMicOn(remoteVideo.muted)
-              }
+              dispatch({
+                type: WebRTCActions.suppressNoise,
+                payload: { callId: callId, suppress: true },
+              })
             }}
           />
         )}
+
+        {!micOn ? (
+          <MicIcon
+            fontSize="large"
+            titleAccess={'Microphone is on. Click to turn it off.'}
+            sx={{
+              color: 'background.default',
+              margin: '0.5rem',
+            }}
+            onClick={() => {
+              dispatch({
+                type: WebRTCActions.muteAudio,
+                payload: { callId: callId, mute: true },
+              })
+            }}
+          />
+        ) : (
+          <MicOffIcon
+            fontSize="large"
+            titleAccess={'Microphone is off. Click to turn it on.'}
+            sx={{
+              color: 'background.default',
+              margin: '0.5rem',
+            }}
+            onClick={() => {
+              dispatch({
+                type: WebRTCActions.muteAudio,
+                payload: { callId: callId, mute: false },
+              })
+            }}
+          />
+        )}
+
+        {hasMultipleCameraMode ? (
+          <FlipCameraIosIcon
+            fontSize="large"
+            titleAccess={
+              'Click to toggle camera mode between rear and front facing.'
+            }
+            sx={{
+              color: 'background.default',
+              margin: '0.5rem',
+            }}
+            onClick={() => {
+              dispatch({
+                type: WebRTCActions.changeCamera,
+                payload: { callId: callId },
+              })
+            }}
+          />
+        ) : null}
+
+        {!cameraOn ? (
+          <VideocamIcon
+            fontSize="large"
+            titleAccess={'Camera is off. Click to turn it on.'}
+            sx={{
+              color: 'background.default',
+              margin: '0.5rem',
+            }}
+            onClick={() => {
+              dispatch({
+                type: WebRTCActions.muteVideo,
+                payload: { callId: callId, mute: true },
+              })
+            }}
+          />
+        ) : (
+          <VideocamOffIcon
+            fontSize="large"
+            titleAccess={'Camera is on. Click to turn it off.'}
+            sx={{
+              color: 'background.default',
+              margin: '0.5rem',
+            }}
+            onClick={() => {
+              dispatch({
+                type: WebRTCActions.muteVideo,
+                payload: { callId: callId, mute: false },
+              })
+            }}
+          />
+        )}
+
         <CallEndIcon
           fontSize="large"
+          titleAccess={'Click to end the call.'}
           sx={{
             color: 'primary.dark',
             backgroundColor: 'error.main',
