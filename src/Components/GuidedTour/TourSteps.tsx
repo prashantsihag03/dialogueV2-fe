@@ -187,9 +187,7 @@ const TourSteps: Step[] = [
   {
     target: '.conversation-box-header-options',
     content: (
-      <p>
-        You can manage media files, create a audio-only or video call from here.
-      </p>
+      <p>You can manage media files and create a video call from here.</p>
     ),
     disableBeacon: true,
     placement: 'bottom',
@@ -200,8 +198,7 @@ const TourSteps: Step[] = [
       <p>
         This is a message input box. <br />
         You can type and send text, audio files, and other supported files from
-        your local file system. Attachments are only stored for 30 days after
-        which they will not be delete automatically to optimise cost.
+        your local file system.
         <br />
         Please type something here and press enter to preceed further.
       </p>

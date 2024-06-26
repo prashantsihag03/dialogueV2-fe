@@ -51,4 +51,5 @@ export const optionContainer: SxProps<Theme> = {
 
 export const iconStyles: SxProps<Theme> = {
   marginLeft: '1.2rem',
+  fontSize: '2.5rem',
 }

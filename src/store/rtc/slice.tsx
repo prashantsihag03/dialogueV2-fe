@@ -2,11 +2,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { closeSnackbar, enqueueSnackbar, SnackbarKey } from 'notistack'
 
+export const RINGING_TIME = 30000 // 30 seconds
+
 interface ReceivingCalls {
   [callerUserId: SnackbarKey]: string
 }
 
-export type Call = 'calling' | 'receiving' | 'idle' | 'in-call'
+export type Call = 'connecting' | 'ringing' | 'receiving' | 'idle' | 'engaged'
 
 interface ICall {
   call: Call
@@ -45,7 +47,7 @@ const rtcSlice = createSlice({
       console.log('Adding new call to receivingCall list')
       const snackbarId = enqueueSnackbar({
         key: `receivingCall-${action.payload}`,
-        autoHideDuration: 15000,
+        autoHideDuration: RINGING_TIME + 3000,
         variant: 'callPopUp',
         callId: action.payload,
         snackbarId: `receivingCall-${action.payload}`,

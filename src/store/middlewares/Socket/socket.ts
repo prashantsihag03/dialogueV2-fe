@@ -6,7 +6,7 @@ import { Middleware } from '@reduxjs/toolkit'
 import { updateOngoingMessageStatusToSent } from '../../onGoingMessages/slice'
 import { updateConversationLastMessage } from '../../chats/slice'
 import assignSocketEventHandlers from './EventHandlers'
-import { setCall, setMultipleCameraMode } from '../../rtc/slice'
+import { RINGING_TIME, setCall, setMultipleCameraMode } from '../../rtc/slice'
 import { MSG_SENT, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
 import { WebRTCActions } from '../webrtc'
@@ -21,6 +21,7 @@ export enum SocketEmitEvents {
   acceptCall = 'socket/accept',
   signal = 'socket/signal',
   answer = 'socket/answer',
+  cancelCall = 'socket/cancelCall',
 }
 
 export const socketMiddleware =
@@ -79,18 +80,47 @@ export const socketMiddleware =
         io.emit('call', payload, (ack: any) => {
           console.log('call event acknowledged with status: ', ack?.status)
           if (ack?.status != null && ack?.status === 'failed') {
-            dispatch(
-              setCall({
-                call: 'idle',
-                userId: null,
-              })
-            )
+            dispatch({
+              type: WebRTCActions.endCall,
+            })
             enqueueSnackbar(`Call failed: ${ack?.message}`, {
               variant: 'error',
               autoHideDuration: 3000,
             })
           }
+          if (ack?.status != null && ack?.status === 'success') {
+            dispatch(
+              setCall({
+                call: 'ringing',
+                userId: payload.userToCall,
+              })
+            )
+          }
         })
+        setTimeout(() => {
+          if (
+            getState().rtc.call === 'ringing' &&
+            getState().rtc.userId === payload.userToCall
+          ) {
+            dispatch({
+              type: WebRTCActions.endCall,
+            })
+            enqueueSnackbar(`No answer from ${payload.userToCall}`, {
+              variant: 'info',
+              autoHideDuration: 3000,
+            })
+          }
+        }, RINGING_TIME)
+
+        break
+
+      case SocketEmitEvents.cancelCall:
+        io.emit(
+          'cancel call',
+          { userToCancelCallWith: payload.userToCancelCallWith },
+          (ack: any) => {}
+        )
+        dispatch({ type: WebRTCActions.endCall })
         break
 
       case SocketEmitEvents.rejectCall:
@@ -98,18 +128,12 @@ export const socketMiddleware =
           console.log('call rejection event acknowledged!')
         })
         dispatch({ type: WebRTCActions.endCall })
-        dispatch(
-          setCall({
-            call: 'idle',
-            userId: null,
-          })
-        )
         break
 
       case SocketEmitEvents.acceptCall:
         dispatch(
           setCall({
-            call: 'in-call',
+            call: 'engaged',
             userId: payload.userToAnswer,
           })
         )

@@ -20,6 +20,7 @@ import CallEndIcon from '@mui/icons-material/CallEnd'
 import { WebRTCActions } from '../../../store/middlewares/webrtc'
 import CallUserBlock from '../../CallUserBlock/CallUserBlock'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
+import { SocketEmitEvents } from '../../../store/middlewares/Socket/socket'
 
 const CallView: React.FC = () => {
   const browser = useAppSelector(getSideBarPreference)
@@ -46,7 +47,7 @@ const CallView: React.FC = () => {
         backgroundColor: 'background.default',
       }}
     >
-      {call === 'calling' ? (
+      {call === 'ringing' || call === 'connecting' ? (
         <Typography
           variant="body1"
           position="absolute"
@@ -57,11 +58,14 @@ const CallView: React.FC = () => {
             fontWeight: 'bold',
           }}
         >
-          ringing
+          {call}
         </Typography>
       ) : null}
 
-      {call !== 'idle' && call !== 'calling' && callId != null ? (
+      {call !== 'idle' &&
+      call !== 'ringing' &&
+      call !== 'connecting' &&
+      callId != null ? (
         <CallUserBlock
           text={call}
           borderColor="transparent"
@@ -77,11 +81,13 @@ const CallView: React.FC = () => {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        position={call != 'calling' ? 'absolute' : undefined}
-        height={call === 'calling' ? '100%' : '30%'}
-        width={call === 'calling' ? '100%' : '30%'}
-        bottom={call != 'calling' ? '1rem' : undefined}
-        right={call != 'calling' ? '1rem' : undefined}
+        position={
+          call != 'ringing' && call != 'connecting' ? 'absolute' : undefined
+        }
+        height={call === 'ringing' || call === 'connecting' ? '100%' : '30%'}
+        width={call === 'ringing' || call === 'connecting' ? '100%' : '30%'}
+        bottom={call != 'ringing' && call != 'connecting' ? '1rem' : undefined}
+        right={call != 'ringing' && call != 'connecting' ? '1rem' : undefined}
         zIndex={call !== 'idle' ? 101 : -100}
         sx={{
           backgroundColor: 'transparent',
@@ -95,7 +101,9 @@ const CallView: React.FC = () => {
           userId={'you'}
           defaultMute={true}
           width={'100%'}
-          height={call === 'calling' ? '100%' : undefined}
+          height={
+            call === 'ringing' || call === 'connecting' ? '100%' : undefined
+          }
         />
       </Stack>
 
@@ -239,6 +247,15 @@ const CallView: React.FC = () => {
             },
           }}
           onClick={() => {
+            if (
+              (call === 'ringing' || call === 'connecting') &&
+              callId != null
+            ) {
+              dispatch({
+                type: SocketEmitEvents.cancelCall,
+                payload: { userToCancelCallWith: callId },
+              })
+            }
             dispatch({
               type: WebRTCActions.endCall,
               payload: { callId: callId },

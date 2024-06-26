@@ -1,5 +1,4 @@
 import { Box, Divider, Stack, Typography } from '@mui/material'
-import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined'
 import {
   iconStyles,
@@ -93,7 +92,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
         // show call view
         appDispatch(
           setCall({
-            call: 'calling',
+            call: 'connecting',
             userId: otherUserData?.id,
           })
         )
@@ -244,12 +243,6 @@ export const Header: React.FC<IActiveChatHeader> = ({
           </Stack>
         </Box>
         <Box sx={optionContainer} className="conversation-box-header-options">
-          <CallOutlinedIcon
-            sx={iconStyles}
-            titleAccess="audio call"
-            className="conversation-box-conversation-audio-call-icon"
-            onClick={callOptionClickHandler}
-          />
           <VideoCallOutlinedIcon
             sx={iconStyles}
             titleAccess="video call"

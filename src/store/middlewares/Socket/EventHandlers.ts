@@ -8,7 +8,7 @@ import {
   setShowLatestMsgInView,
   updateConversationLastMessage,
 } from '../../chats/slice'
-import { setCall, setReceivingCall } from '../../rtc/slice'
+import { removeReceivingCall, setCall, setReceivingCall } from '../../rtc/slice'
 import { MSG_RECEIVED, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
 import { WebRTCActions } from '../webrtc'
@@ -25,6 +25,7 @@ export enum SocketReceivingEvents {
   receivingCall = 'receiving call',
   answerSignal = 'answer signal',
   message = 'message',
+  callCancelled = 'call cancelled',
 }
 
 const assignSocketEventHandlers = (
@@ -41,7 +42,19 @@ const assignSocketEventHandlers = (
     dispatch(disconnected())
   })
 
+  io.on(SocketReceivingEvents.callCancelled, async (data: any) => {
+    if (getState().rtc.receivingCalls[data.from] == null) {
+      console.log('Receiving call cancel event from unexpected caller id')
+      return
+    }
+    dispatch(removeReceivingCall(`receivingCall-${data.from}`))
+  })
+
   io.on(SocketReceivingEvents.offerSignal, async (data: any) => {
+    if (getState().rtc.call === 'idle') {
+      console.log('Receiving offer from potentially exhausted call attempt')
+      return
+    }
     if (data.offer == null || data.callerUserId == null) {
       console.log('Offer received with invalid data ', data)
       return
@@ -63,16 +76,16 @@ const assignSocketEventHandlers = (
     }
 
     if (getState().rtc.userId === data.from) {
-      dispatch(setCall({ call: 'idle', userId: null }))
       dispatch({ type: WebRTCActions.endCall })
       enqueueSnackbar(`Call declined by ${data.from}`, {
         variant: 'default',
-        autoHideDuration: 5000,
+        autoHideDuration: 3000,
       })
     }
   })
 
-  io.on(SocketReceivingEvents.receivingCall, async (data: any) => {
+  io.on(SocketReceivingEvents.receivingCall, async (data: any, ack: any) => {
+    ack()
     if (data.callerUserId == null) {
       console.log('Invalid data!', data)
       return
