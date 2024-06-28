@@ -30,11 +30,13 @@ import {
 export interface IActiveChatHeader {
   userId: string
   fullName: string
+  conversationId: string
 }
 
 export const Header: React.FC<IActiveChatHeader> = ({
   userId,
   fullName,
+  conversationId,
 }: IActiveChatHeader) => {
   const appDispatch = useAppDispatch()
   const browser = useAppSelector(getSideBarPreference)
@@ -108,6 +110,7 @@ export const Header: React.FC<IActiveChatHeader> = ({
           type: SocketEmitEvents.call,
           payload: {
             userToCall: otherUserData?.id,
+            conversationId: conversationId,
           },
         })
 

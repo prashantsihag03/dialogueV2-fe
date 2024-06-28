@@ -129,6 +129,7 @@ export const ChatBox: React.FC = () => {
       <Header
         userId={activeConversation.profileId}
         fullName={activeConversation.conversationName}
+        conversationId={activeConversation.conversationId}
       />
       <Stack
         direction="column"
