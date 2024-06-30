@@ -27,6 +27,21 @@ const inputMessagesSlice = createSlice({
         },
       }
     },
+    addAttachmentByConvoId: (
+      state,
+      action: PayloadAction<{ convoId: string; attachments: File[] }>
+    ) => {
+      return {
+        ...state,
+        [action.payload.convoId]: {
+          ...state[action.payload.convoId],
+          attachments: [
+            ...state[action.payload.convoId].attachments,
+            ...action.payload.attachments,
+          ],
+        },
+      }
+    },
     removeAllAttachments: (state, action: PayloadAction<string>) => {
       if (!state[action.payload]) {
         return
@@ -49,6 +64,7 @@ const inputMessagesSlice = createSlice({
 
 export const {
   setAttachmentByConvoId,
+  addAttachmentByConvoId,
   removeAllAttachments,
   removeAttachment,
 } = inputMessagesSlice.actions

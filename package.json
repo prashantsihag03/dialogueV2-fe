@@ -18,7 +18,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "npm install && npm run build-storybook",
-    "devBuild": "npm run build && sh ./scripts/copyBuildFilesToBackend.sh"
+    "devBuild": "npm run build && sh ./scripts/copyBuildFilesToBackend.sh",
+    "dev": "npm run devBuild && sh ./scripts/run.sh"
   },
   "keywords": [],
   "author": "Prashant Sihag",
@@ -33,6 +34,7 @@
     "@types/simple-peer": "^9.11.8",
     "axios": "^1.6.2",
     "emoji-picker-react": "^4.4.7",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",

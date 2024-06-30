@@ -4,13 +4,14 @@ import { chatsReducer } from './chats/slice'
 import { connectionReducer } from './connection/slice'
 import { sideBarReducer } from './sidebar/slice'
 import { profileReducer } from './profile/slice'
-import { socketMiddleware } from './middlewares/socket'
+import { socketMiddleware } from './middlewares/Socket/socket'
 import { io } from 'socket.io-client'
 import { onGoingMessagesReducer } from './onGoingMessages/slice'
 import { configReducer } from './config/slice'
 import { inputMessagesReducer } from './inputMessages/slice'
 import { rtcReducer } from './rtc/slice'
 import { webrtcMiddleware } from './middlewares/webrtc'
+import rtkQueryErrorMiddleware from './middlewares/rtkQueryErrorHandler'
 
 export const rootReducer = combineReducers({
   connection: connectionReducer,
@@ -28,11 +29,10 @@ const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
+      .concat(rtkQueryErrorMiddleware)
       .concat(apiSlice.middleware)
-      .concat(
-        socketMiddleware(io('http://localhost:3000/', { autoConnect: false }))
-      )
-      .concat(webrtcMiddleware([])),
+      .concat(socketMiddleware(io('/', { autoConnect: false })))
+      .concat(webrtcMiddleware({})),
 })
 
 export type RootState = ReturnType<typeof store.getState>

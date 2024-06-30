@@ -1,5 +1,7 @@
 import { FilledInputProps, TextField } from '@mui/material'
 import { ChangeEvent } from 'react'
+import { useAppSelector } from '../../store/hooks'
+import { getSideBarPreference } from '../../store/sidebar/selector'
 
 interface ProfileTextFieldProps {
   id?: string
@@ -16,6 +18,7 @@ interface ProfileTextFieldProps {
   inputTextAlign?: 'left' | 'center' | 'right'
   showLabel?: 'onEdit' | 'always'
   multiline?: boolean
+  bgColor?: string
 }
 
 const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
@@ -31,7 +34,9 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
   showLabel,
   id,
   multiline,
+  bgColor = 'transparent',
 }: ProfileTextFieldProps) => {
+  const browser = useAppSelector(getSideBarPreference)
   return (
     <TextField
       className={id ? `${id}-textfield` : undefined}
@@ -43,7 +48,11 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
         {
           disableUnderline: true,
           sx: {
-            fontSize: inputFontSize ?? '0.8rem',
+            fontSize: inputFontSize
+              ? inputFontSize
+              : browser === 'mobile'
+              ? '0.7rem'
+              : '0.8rem',
           },
         } as Partial<FilledInputProps>
       }
@@ -56,7 +65,7 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
       }}
       InputLabelProps={{
         style: {
-          fontSize: '0.9rem',
+          fontSize: browser === 'mobile' ? '0.8rem' : '0.9rem',
           color: '#838383',
         },
       }}
@@ -78,6 +87,13 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({
         marginTop: '0.5em',
         '& .MuiFilledInput-root': {
           borderRadius: '7px',
+          backgroundColor: 'transparent',
+          '&:hover': {
+            backgroundColor: bgColor,
+          },
+          '&:focus': {
+            backgroundColor: bgColor,
+          },
         },
       }}
     />

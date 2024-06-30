@@ -1,6 +1,5 @@
 import { Button, Stack } from '@mui/material'
-import { Box } from '@mui/system'
-import { containerStyles } from './styles'
+import { actionIconStyles } from './styles'
 import {
   UpdateProfileBody,
   useClearConversationMutation,
@@ -8,7 +7,6 @@ import {
   useGetProfileQuery,
   useUpdateMyProfileMutation,
 } from '../../store/api/slice'
-import { ProfileHeader } from './ProfileHeader'
 import { ProfileAvatar } from './ProfileAvatar'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
@@ -25,9 +23,16 @@ import { setActiveConversation } from '../../store/chats/slice'
 import { removeOngoingMessages } from '../../store/onGoingMessages/slice'
 import { getUserConversations } from '../../store/chats/thunk'
 import { setEditingMyProfile } from '../../store/profile/slice'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import CheckSharpIcon from '@mui/icons-material/CheckSharp'
+
+import SideBar from '../Sidebar'
+import { setActiveSideBar } from '../../store/sidebar/slice'
+import { getSideBarPreference } from '../../store/sidebar/selector'
 
 export const Profile: React.FC = () => {
   const appDispatch = useAppDispatch()
+  const browser = useAppSelector(getSideBarPreference)
   const conversations = useAppSelector(getConversations)
   const activeProfileUser = useAppSelector(getActiveProfileUser)
   const activeConversation = useAppSelector(getActiveConversation)
@@ -67,6 +72,12 @@ export const Profile: React.FC = () => {
   }
 
   useEffect(() => {
+    return () => {
+      appDispatch(setEditingMyProfile(false))
+    }
+  }, [])
+
+  useEffect(() => {
     if (clearConvoResult.isSuccess) {
       const convoId = getConversationId()
       if (convoId != null) {
@@ -96,31 +107,50 @@ export const Profile: React.FC = () => {
   }, [deleteConvoResult])
 
   return (
-    <Box sx={containerStyles} className="profile-sidebar">
-      <ProfileHeader
-        showEdit={Boolean(activeProfileUser?.isLoggedInUser)}
-        editing={isEditEnabled}
-        onEditClick={() => {
-          setNewBioValue(data?.bio || '')
-          setNewNameValue(data?.fullname || '')
-          setNewEmailValue(data?.email || '')
-          appDispatch(setEditingMyProfile(true))
-        }}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onConfirmClick={() => {
-          appDispatch(setEditingMyProfile(false))
-          const newUpdatedProfile: UpdateProfileBody = {
-            bio: newBioValue,
-            email: newEmailValue,
-            fullname: newNameValue,
-            id: '',
-          }
-          if (newProfileImg != null) {
-            newUpdatedProfile.profileImg = newProfileImg
-          }
-          updateMyProfile(newUpdatedProfile)
-        }}
-      />
+    <SideBar
+      title="Profile"
+      onBack={() => {
+        if (activeConversation != null && browser === 'mobile') {
+          appDispatch(setActiveSideBar('none'))
+          return
+        }
+        appDispatch(setActiveSideBar('chats'))
+      }}
+      headerActions={
+        Boolean(activeProfileUser?.isLoggedInUser) ? (
+          isEditEnabled ? (
+            <CheckSharpIcon
+              className="profile-save"
+              sx={actionIconStyles}
+              onClick={() => {
+                appDispatch(setEditingMyProfile(false))
+                const newUpdatedProfile: UpdateProfileBody = {
+                  bio: newBioValue,
+                  email: newEmailValue,
+                  fullname: newNameValue,
+                  id: '',
+                }
+                if (newProfileImg != null) {
+                  newUpdatedProfile.profileImg = newProfileImg
+                }
+                updateMyProfile(newUpdatedProfile)
+              }}
+            />
+          ) : (
+            <EditOutlinedIcon
+              className="profile-edit"
+              sx={actionIconStyles}
+              onClick={() => {
+                setNewBioValue(data?.bio || '')
+                setNewNameValue(data?.fullname || '')
+                setNewEmailValue(data?.email || '')
+                appDispatch(setEditingMyProfile(true))
+              }}
+            />
+          )
+        ) : undefined
+      }
+    >
       {!isFetching && isSuccess && data ? (
         <Stack
           direction="column"
@@ -177,61 +207,63 @@ export const Profile: React.FC = () => {
               ) : null}
             </Stack>
           </Stack>
-          {!activeProfileUser?.isLoggedInUser ? (
-            <Stack
-              direction="column"
-              alignItems="center"
-              width={'100%'}
-              className="other-profile-options"
-            >
-              <Button
-                variant="text"
-                color="primary"
-                disabled={getConversationId() == null ? true : false}
-                onClick={() => {
-                  const convoId = getConversationId()
-                  if (convoId == null) return
-                  clearConversation(convoId)
-                }}
+          {!isEditEnabled ? (
+            !activeProfileUser?.isLoggedInUser ? (
+              <Stack
+                direction="column"
+                alignItems="center"
+                width={'100%'}
+                className="other-profile-options"
               >
-                Clear Conversation
-              </Button>
-              <Button
-                variant="text"
-                color="primary"
-                disabled={getConversationId() == null ? true : false}
-                onClick={() => {
-                  const convoId = getConversationId()
-                  if (convoId == null) return
-                  deleteConversation(convoId)
-                }}
+                <Button
+                  variant="text"
+                  color="primary"
+                  disabled={getConversationId() == null ? true : false}
+                  onClick={() => {
+                    const convoId = getConversationId()
+                    if (convoId == null) return
+                    clearConversation(convoId)
+                  }}
+                >
+                  Clear Conversation
+                </Button>
+                <Button
+                  variant="text"
+                  color="primary"
+                  disabled={getConversationId() == null ? true : false}
+                  onClick={() => {
+                    const convoId = getConversationId()
+                    if (convoId == null) return
+                    deleteConversation(convoId)
+                  }}
+                >
+                  Delete Conversation
+                </Button>
+                <Button variant="text" color="error">
+                  Block {data.fullname}
+                </Button>
+                <Button variant="text" color="error">
+                  Report {data.fullname}
+                </Button>
+              </Stack>
+            ) : (
+              <Stack
+                direction="column"
+                alignItems="center"
+                width={'100%'}
+                className="other-profile-options"
               >
-                Delete Conversation
-              </Button>
-              <Button variant="text" color="error">
-                Block {data.fullname}
-              </Button>
-              <Button variant="text" color="error">
-                Report {data.fullname}
-              </Button>
-            </Stack>
-          ) : (
-            <Stack
-              direction="column"
-              alignItems="center"
-              width={'100%'}
-              className="other-profile-options"
-            >
-              <Button variant="text" color="primary" href="/logout">
-                Log out
-              </Button>
-              <Button variant="text" color="error">
-                Delete Account
-              </Button>
-            </Stack>
-          )}
+                <Button variant="text" color="primary" href="/logout">
+                  Log out
+                </Button>
+                <Button variant="text" color="error">
+                  Delete Account
+                </Button>
+              </Stack>
+            )
+          ) : null}
         </Stack>
       ) : null}
-    </Box>
+    </SideBar>
   )
 }

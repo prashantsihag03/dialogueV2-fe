@@ -1,12 +1,5 @@
 import ErrorIcon from '@mui/icons-material/Error'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import {
-  CircularProgress,
-  Stack,
-  Switch,
-  Tooltip,
-  Typography,
-} from '@mui/material'
+import { Skeleton, Stack, Switch, Typography } from '@mui/material'
 import {
   IUserSettings,
   useGetUserSettingsQuery,
@@ -40,7 +33,12 @@ const SwitchSetting: React.FC<SwitchSettingProps> = ({
         marginBottom: '1rem',
       }}
     >
-      <Stack component="li" direction="row" justifyContent={'space-between'}>
+      <Stack
+        component="li"
+        direction="row"
+        justifyContent={'space-between'}
+        alignItems={'center'}
+      >
         <Stack
           component="li"
           direction="row"
@@ -48,12 +46,21 @@ const SwitchSetting: React.FC<SwitchSettingProps> = ({
           alignItems="center"
         >
           {icon}
-          <Typography variant="body2">{settingKeyDisplayName}</Typography>
-          <Tooltip title={note ? note : null}>
-            <InfoOutlinedIcon sx={{ fontSize: '1.5rem' }} />
-          </Tooltip>
+          <Typography variant="body2">
+            {settingKeyDisplayName}
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{ padding: '0', lineHeight: 1 }}
+            >
+              {note ? note : null}
+              {result.isError ? 'Error updating setting!' : null}
+            </Typography>
+          </Typography>
         </Stack>
-        {isFetching ? <CircularProgress /> : null}
+        {isFetching ? (
+          <Skeleton variant="rounded" width={'2em'} height={'1em'} />
+        ) : null}
         {isError && !isFetching ? <ErrorIcon fontSize="medium" /> : null}
         {data && !isFetching ? (
           <Switch
@@ -73,13 +80,6 @@ const SwitchSetting: React.FC<SwitchSettingProps> = ({
           />
         ) : null}
       </Stack>
-      <Typography
-        variant="subtitle1"
-        component="div"
-        sx={{ paddingLeft: '1.5rem' }}
-      >
-        {result.isError ? 'Error updating setting!' : null}
-      </Typography>
     </Stack>
   )
 }

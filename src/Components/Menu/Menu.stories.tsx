@@ -1,6 +1,6 @@
 import { Box } from '@mui/system'
 import { ComponentMeta } from '@storybook/react'
-import useDisplayMode from '../../hooks/useDisplayMode'
+import useCreateTheme from '../../hooks/useDisplayMode'
 import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { Menu } from './Menu'
 
@@ -23,7 +23,7 @@ interface Args {
 }
 
 export const Main = (args: Args) => {
-  const { displayMode, toggleDisplayMode } = useDisplayMode()
+  const { displayMode, toggleDisplayMode } = useCreateTheme()
   return (
     <Box sx={{ width: `${args.width}px`, margin: 'auto' }}>
       <Menu displayMode={displayMode} toggleDisplayMode={toggleDisplayMode} />

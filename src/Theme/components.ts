@@ -33,11 +33,21 @@ export const getComponentsTheme = (
           props: { variant: 'outlined' },
           style: {
             textTransform: 'none',
-            padding: '0.4rem 1rem',
-            fontSize: '1.1rem',
+            padding: '0.2em 1em',
+            fontSize: '1rem',
             ['@media only screen and (max-width: 600px)']: {
-              fontSize: '1rem',
-              padding: '0.6rem 0.8rem',
+              fontSize: '0.9rem',
+            },
+          },
+        },
+        {
+          props: { variant: 'contained' },
+          style: {
+            textTransform: 'none',
+            padding: '0.2em 1em',
+            fontSize: '1rem',
+            ['@media only screen and (max-width: 600px)']: {
+              fontSize: '0.9rem',
             },
           },
         },
@@ -51,8 +61,11 @@ export const getComponentsTheme = (
             '&:hover': {
               background: 'none',
             },
+            '&:active': {
+              background: 'none',
+            },
             ['@media only screen and (max-width: 600px)']: {
-              fontSize: '1rem',
+              fontSize: '0.9rem',
               padding: '0.6rem 0.8rem',
             },
           },

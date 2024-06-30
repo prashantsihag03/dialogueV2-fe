@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Divider, Typography } from '@mui/material'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import { Header } from './Header/Header'
 import { messages, noConversationContainerStyle } from './styles'
 import MessageInputBox from './MessageInputBox'
@@ -14,6 +14,7 @@ import {
   IMessageData,
   useGetMessagesQuery,
   useGetProfileQuery,
+  useGetUserSettingsQuery,
 } from '../../store/api/slice'
 import { Stack } from '@mui/system'
 import cleanTimeUTCInstant from '../../utils/date-time-utils'
@@ -29,16 +30,25 @@ import {
   setShowLatestMsgInView,
 } from '../../store/chats/slice'
 import Dropzone from 'react-dropzone'
-import { setAttachmentByConvoId } from '../../store/inputMessages/slice'
+import {
+  addAttachmentByConvoId,
+  setAttachmentByConvoId,
+} from '../../store/inputMessages/slice'
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview'
-import CallView from './CallView/CallView'
+import { getSideBarPreference } from '../../store/sidebar/selector'
+import isTrue from '../../utils/common-utils'
 
 export const ChatBox: React.FC = () => {
   const appDispatch = useAppDispatch()
   const dropzoneRef = useRef<HTMLInputElement | null>(null)
   const { data: loggedProfileData } = useGetProfileQuery(undefined)
+  const { data: compactConversationView } = useGetUserSettingsQuery(
+    'compactConversationView'
+  )
+  const browser = useAppSelector(getSideBarPreference)
   const showLatestMsgOnDataChange = useAppSelector(getShowLatestMsgInView)
   const activeConversation = useAppSelector(getActiveConversation)
+  const [addingMoreAttach, setAddingMoreAttach] = useState<boolean>(false)
   const draggingFiles = useAppSelector(getDraggingFiles)
   const onGoingMessages = useAppSelector(
     getOngoingMessagesByConversationId(activeConversation?.conversationId || '')
@@ -84,6 +94,7 @@ export const ChatBox: React.FC = () => {
             status: 'sent',
             localMessageId: '',
             file: msgApiResult.file,
+            type: msgApiResult.type,
           }
         }
       )
@@ -109,43 +120,44 @@ export const ChatBox: React.FC = () => {
       direction="column"
       justifyContent="space-between"
       alignItems="center"
-      padding="0.3rem"
+      padding={browser === 'mobile' ? '0rem' : '0.3rem'}
       width="100%"
       height="100%"
       onDragEnter={() => {
         appDispatch(setDraggingFiles(true))
       }}
     >
+      <Header
+        userId={activeConversation.profileId}
+        fullName={activeConversation.conversationName}
+        conversationId={activeConversation.conversationId}
+      />
       <Stack
         direction="column"
         width="100%"
-        height="10%"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Header
-          userId={activeConversation.profileId}
-          fullName={activeConversation.conversationName}
-          online={true}
-        />
-        <Divider color="primary" sx={{ width: '100%' }} />
-      </Stack>
-      <Stack
-        direction="column"
-        width="100%"
-        height="80%"
+        height={'75%'}
         justifyContent="center"
         alignItems="center"
         position="relative"
       >
         <Dropzone
           onDrop={(acceptedFiles) => {
-            appDispatch(
-              setAttachmentByConvoId({
-                convoId: activeConversation.conversationId,
-                attachments: acceptedFiles,
-              })
-            )
+            if (addingMoreAttach) {
+              appDispatch(
+                addAttachmentByConvoId({
+                  convoId: activeConversation.conversationId,
+                  attachments: acceptedFiles,
+                })
+              )
+              setAddingMoreAttach(false)
+            } else {
+              appDispatch(
+                setAttachmentByConvoId({
+                  convoId: activeConversation.conversationId,
+                  attachments: acceptedFiles,
+                })
+              )
+            }
             appDispatch(setDraggingFiles(false))
           }}
           onDragLeave={() => {
@@ -153,8 +165,8 @@ export const ChatBox: React.FC = () => {
           }}
           noClick={true}
           multiple={true}
-          // accept={{ 'image/jpeg': ['.jpeg'] }}
-          // maxSize={409600}
+          accept={{ 'image/jpeg': ['.jpeg'], 'image/png': ['.png'] }}
+          maxSize={8388608}
         >
           {({ getRootProps, getInputProps }) => (
             <Box
@@ -194,8 +206,13 @@ export const ChatBox: React.FC = () => {
             </Box>
           )}
         </Dropzone>
-        <AttachmentPreview conversationId={activeConversation.conversationId} />
-        <CallView />
+        <AttachmentPreview
+          conversationId={activeConversation.conversationId}
+          addAttachmentHandler={() => {
+            setAddingMoreAttach(true)
+            handleOpenFilePicker()
+          }}
+        />
         <Box sx={messages}>
           {isFetching ? (
             <Stack
@@ -211,6 +228,7 @@ export const ChatBox: React.FC = () => {
           {data &&
           loggedProfileData &&
           onGoingMessages &&
+          compactConversationView &&
           onGoingMessages.length > 0
             ? onGoingMessages.map((msg, index) => {
                 if (onGoingMessages.length - 1 === index) {
@@ -218,8 +236,19 @@ export const ChatBox: React.FC = () => {
                     <>
                       <Message
                         key={msg.messageId}
+                        conversationId={activeConversation.conversationId}
+                        autoDownloadAttachment={
+                          msg.localMessageId ? true : false
+                        }
+                        msgId={msg.messageId}
+                        showProfilePic={
+                          !isTrue(
+                            compactConversationView.compactConversationView
+                          )
+                        }
                         id="latest"
                         name={msg.senderId}
+                        fileContent={msg.fileContent}
                         timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
                         source={
                           msg.senderId === loggedProfileData.id
@@ -229,6 +258,7 @@ export const ChatBox: React.FC = () => {
                         text={msg.message}
                         status={msg.status}
                         file={msg.file}
+                        type={msg.type}
                       />
                       <div
                         ref={(node) => {
@@ -241,8 +271,15 @@ export const ChatBox: React.FC = () => {
                 return (
                   <Message
                     key={msg.messageId}
+                    autoDownloadAttachment={msg.localMessageId ? true : false}
+                    msgId={msg.messageId}
+                    fileContent={msg.fileContent}
+                    showProfilePic={
+                      !isTrue(compactConversationView.compactConversationView)
+                    }
                     name={msg.senderId}
                     timeStamp={cleanTimeUTCInstant(msg.timeStamp)}
+                    conversationId={activeConversation.conversationId}
                     source={
                       msg.senderId === loggedProfileData.id
                         ? 'outgoing'
@@ -250,6 +287,8 @@ export const ChatBox: React.FC = () => {
                     }
                     text={msg.message}
                     status={msg.status}
+                    file={msg.file}
+                    type={msg.type}
                   />
                 )
               })

@@ -13,9 +13,14 @@ export const error = {
   dark: '#c72525',
 }
 
+export const warning = {
+  light: '#ffd000e1',
+  dark: '#dab619e0',
+}
+
 export const success = {
   light: '#00a005',
-  dark: '#04ff00',
+  dark: '#26cb23df',
 }
 
 export const highlight = {
@@ -39,6 +44,11 @@ export const background = {
   },
 }
 
+export const sheet = {
+  light: '#ffffffdb',
+  dark: '#0003',
+}
+
 export const action = {
   active: '#FFF',
   hover: {
@@ -50,4 +60,9 @@ export const action = {
 export const icon = {
   light: '#575757',
   dark: '#e1e1e1',
+}
+
+export const sidebarColor = {
+  light: '#c0d0f7',
+  dark: '#2d323f',
 }

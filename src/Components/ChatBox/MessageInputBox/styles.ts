@@ -18,7 +18,7 @@ export const messageBox: SxProps<Theme> = {
   justifyContent: 'center',
   alignItems: 'center',
   backgroundColor: 'background.default',
-  borderRadius: '5vw',
+  borderRadius: '7px',
   color: 'text.primary',
 }
 

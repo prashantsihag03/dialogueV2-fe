@@ -36,6 +36,5 @@ export const Main = (args: Args) => {
 
 Main.args = {
   name: 'Steve Rogers',
-  online: true,
   width: 450,
 }

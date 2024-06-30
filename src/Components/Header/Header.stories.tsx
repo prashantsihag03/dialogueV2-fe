@@ -1,5 +1,5 @@
 import { ComponentMeta } from '@storybook/react'
-import useDisplayMode from '../../hooks/useDisplayMode'
+import useCreateTheme from '../../hooks/useDisplayMode'
 import { baseCustomDecorator } from '../../utils/storybook-utils'
 import { Header } from './Header'
 
@@ -18,7 +18,7 @@ export default {
 } as ComponentMeta<typeof Header>
 
 export const Main = () => {
-  const { displayMode, toggleDisplayMode } = useDisplayMode()
+  const { displayMode, toggleDisplayMode } = useCreateTheme()
   return (
     <Header displayMode={displayMode} toggleDisplayMode={toggleDisplayMode} />
   )

@@ -3,6 +3,8 @@ import { ChangeEvent, useRef, useState } from 'react'
 import ProfileTextField from './ProfileTextField'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import Dropzone from 'react-dropzone'
+import { useAppSelector } from '../../store/hooks'
+import { getSideBarPreference } from '../../store/sidebar/selector'
 
 interface IProfileAvatarProps {
   userId: string
@@ -28,6 +30,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
   onProfileImgChange,
 }: IProfileAvatarProps) => {
   const dropzoneRef = useRef<HTMLInputElement | null>(null)
+  const browser = useAppSelector(getSideBarPreference)
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
 
   const handleOpenFilePicker = () => {
@@ -111,9 +114,9 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
               alt={`${name}'s Profile Picture`}
               src={getProfileImgToRender()}
               sx={{
-                width: '12vw',
+                width: browser === 'mobile' ? '35vw' : '12vw',
                 maxWidth: '400px',
-                height: '12vw',
+                height: browser === 'mobile' ? '35vw' : '12vw',
               }}
             />
           </Stack>
@@ -126,7 +129,15 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
         inputTextAlign="center"
         fieldValue={edit ? newName : name}
         fieldSize={edit ? 'small' : 'medium'}
-        inputFontSize={edit ? '1rem' : '1.5rem'}
+        inputFontSize={
+          edit
+            ? browser === 'mobile'
+              ? '0.8rem'
+              : '1rem'
+            : browser === 'mobile'
+            ? '1.2rem'
+            : '1.5rem'
+        }
         labelText="Full name"
         mode={edit ? 'edit' : 'view'}
         onFieldValueChange={onNameChange}
@@ -136,7 +147,7 @@ export const ProfileAvatar: React.FC<IProfileAvatarProps> = ({
         <Typography variant="subtitle1">Last online {lastOnline}</Typography>
       ) : null}
       <Typography className="profile-userid" variant="subtitle1">
-        userid: {userId}
+        <b>userid:</b> {userId}
       </Typography>
     </Stack>
   )

@@ -92,12 +92,7 @@ const onGoingMessagesSlice = createSlice({
       }
 
       // messages for this conversationId already exists in state
-      const updatedMsgList = [...state[action.payload.conversationId]]
-      updatedMsgList[ongoingMessageIndex] = action.payload
-      return {
-        ...state,
-        [action.payload.conversationId]: updatedMsgList,
-      }
+      state[action.payload.conversationId][ongoingMessageIndex] = action.payload
     },
     updateOngoingMessageStatusToFailed: (
       state,
