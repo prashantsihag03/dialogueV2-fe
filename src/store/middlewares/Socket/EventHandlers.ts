@@ -105,12 +105,12 @@ const assignSocketEventHandlers = (
   })
 
   io.on(SocketReceivingEvents.message, (data) => {
-    const state: RootState = getState()
     if (data.conversationId == null) {
       console.error('ConversationId missing in received message event')
       return
     }
 
+    const state: RootState = getState()
     // if conversationId has onGoingMessages data
     if (state.onGoingMessages[data.conversationId] != null) {
       dispatch(
@@ -123,6 +123,7 @@ const assignSocketEventHandlers = (
           status: 'sent',
           localMessageId: data.localMessageId,
           file: data.file,
+          type: data.type,
         })
       )
     }
@@ -136,6 +137,7 @@ const assignSocketEventHandlers = (
             : data.message,
         lastMessageTime: data.timeStamp,
         lastMessageSenderId: data.senderId,
+        // add lastMessageType here to display video call icon in there
       })
     )
 

@@ -26,7 +26,7 @@ export const profileContainer: SxProps<Theme> = {
 }
 
 export const message: SxProps<Theme> = {
-  padding: '0.7rem',
+  padding: '0.4rem',
   maxWidth: '600px',
   letterSpacing: '0.7pt',
   backgroundColor: 'background.default',

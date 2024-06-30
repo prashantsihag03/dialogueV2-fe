@@ -12,6 +12,8 @@ export interface IProfileData {
   bio: string
 }
 
+export type MESSAGE_TYPE = 'message' | 'call'
+
 export interface IMessageData {
   messageId: string
   senderUserId: string
@@ -20,6 +22,7 @@ export interface IMessageData {
   text: string
   img?: File
   file?: string
+  type: MESSAGE_TYPE
 }
 
 export interface MessagePostResult {
@@ -31,14 +34,15 @@ export interface MessagePostResult {
   localMessageId: string
   file?: string
   fileContent?: File
+  type: MESSAGE_TYPE
 }
 
-export interface IMessagePostBody extends IMessageData {
+export interface IMessagePostBody extends Omit<IMessageData, 'type'> {
   conversationId: string
   localMessageId: string
 }
 
-export interface IAttachmentPostResult extends IMessageData {
+export interface IAttachmentPostResult extends Omit<IMessageData, 'type'> {
   fileName: string
   attachmentId: string
 }

@@ -1,9 +1,10 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import { secondary } from '../../Theme/colors'
 import { container, message, profileContainer, subContainer } from './styles'
 import { useGetProfileQuery } from '../../store/api/slice'
 import MessageImage from './MessageImage'
 import StatusIndicator from '../Commons/StatusIndicator'
+import VideocamIcon from '@mui/icons-material/Videocam'
 
 export interface IMessage {
   name: string
@@ -13,6 +14,7 @@ export interface IMessage {
   status: 'sent' | 'pending' | 'failed'
   id?: string
   file?: string
+  type?: 'message' | 'call'
 }
 
 export interface MessageProps extends IMessage {
@@ -49,8 +51,11 @@ export const Message: React.FC<MessageProps> = ({
   msgId,
   autoDownloadAttachment,
   conversationId,
+  type = 'message',
 }: MessageProps) => {
   const { data: profileData } = useGetProfileQuery(name)
+
+  console.log('type is:', type)
 
   return (
     <Box
@@ -115,7 +120,31 @@ export const Message: React.FC<MessageProps> = ({
                   bottomPadding={text && text.length > 0 ? '0.5rem' : undefined}
                 />
               ) : null}
-              {text}
+              {type === 'call' ? (
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  padding={'0rem 0.5rem'}
+                  borderRadius={0.5}
+                  sx={{
+                    backgroundColor:
+                      source === 'outgoing' ? 'sheet.dark' : 'sheet.main',
+                  }}
+                >
+                  <VideocamIcon
+                    fontSize="large"
+                    sx={{
+                      color:
+                        source === 'outgoing' ? 'primary.dark' : 'primary.main',
+                    }}
+                  />
+                  Video Call
+                </Stack>
+              ) : null}
+              {type === 'message' ? (
+                <Typography sx={{ margin: '0rem 0.5rem' }}>{text}</Typography>
+              ) : null}
             </>
           )}
         </Typography>

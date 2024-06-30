@@ -10,6 +10,7 @@ import {
   text,
   warning,
   sidebarColor,
+  sheet,
 } from './colors'
 import { DisplayMode } from './types'
 
@@ -30,6 +31,11 @@ declare module '@mui/material/styles' {
       light: string
       dark: string
     }
+    sheet: {
+      main: string
+      light: string
+      dark: string
+    }
   }
   interface PaletteOptions {
     focus: {
@@ -43,6 +49,11 @@ declare module '@mui/material/styles' {
       dark: string
     }
     sidebar: {
+      main: string
+      light: string
+      dark: string
+    }
+    sheet: {
       main: string
       light: string
       dark: string
@@ -107,6 +118,11 @@ export const getPaletteTheme = (mode: DisplayMode): PaletteOptions => {
       main: mode === 'light' ? sidebarColor.light : sidebarColor.dark,
       light: sidebarColor.light,
       dark: sidebarColor.dark,
+    },
+    sheet: {
+      main: mode === 'light' ? sheet.light : sheet.dark,
+      light: sheet.light,
+      dark: sheet.dark,
     },
   }
 }

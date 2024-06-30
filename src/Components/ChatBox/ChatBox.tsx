@@ -94,6 +94,7 @@ export const ChatBox: React.FC = () => {
             status: 'sent',
             localMessageId: '',
             file: msgApiResult.file,
+            type: msgApiResult.type,
           }
         }
       )
@@ -257,6 +258,7 @@ export const ChatBox: React.FC = () => {
                         text={msg.message}
                         status={msg.status}
                         file={msg.file}
+                        type={msg.type}
                       />
                       <div
                         ref={(node) => {
@@ -286,6 +288,7 @@ export const ChatBox: React.FC = () => {
                     text={msg.message}
                     status={msg.status}
                     file={msg.file}
+                    type={msg.type}
                   />
                 )
               })

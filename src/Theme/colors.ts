@@ -44,6 +44,11 @@ export const background = {
   },
 }
 
+export const sheet = {
+  light: '#ffffffdb',
+  dark: '#0003',
+}
+
 export const action = {
   active: '#FFF',
   hover: {
