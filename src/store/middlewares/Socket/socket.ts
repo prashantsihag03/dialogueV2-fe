@@ -55,6 +55,7 @@ export const socketMiddleware =
                 status: 'sent',
                 localMessageId: ack.data.localMessageId,
                 file: ack.data.file,
+                type: ack.data.type,
               })
             )
 
