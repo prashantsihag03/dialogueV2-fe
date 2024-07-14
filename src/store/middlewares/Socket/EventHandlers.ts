@@ -5,6 +5,7 @@ import { connected, disconnected } from '../../connection/slice'
 import { RootState } from '../..'
 import { addOngoingMessage } from '../../onGoingMessages/slice'
 import {
+  addConversation,
   setShowLatestMsgInView,
   updateConversationLastMessage,
 } from '../../chats/slice'
@@ -12,6 +13,7 @@ import { removeReceivingCall, setCall, setReceivingCall } from '../../rtc/slice'
 import { MSG_RECEIVED, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
 import { WebRTCActions } from '../webrtc'
+import { newConversationEventDataSchema } from './ReceivingEventDataSchema'
 
 export const config = {
   iceServers: [{ urls: 'stun:stun.stunprotocol.org' }],
@@ -26,6 +28,7 @@ export enum SocketReceivingEvents {
   answerSignal = 'answer signal',
   message = 'message',
   callCancelled = 'call cancelled',
+  newConversation = 'new conversation',
 }
 
 const assignSocketEventHandlers = (
@@ -104,6 +107,11 @@ const assignSocketEventHandlers = (
     })
   })
 
+  io.on(SocketReceivingEvents.newConversation, async (data: any) => {
+    const parsedData = newConversationEventDataSchema.parse(data)
+    dispatch(addConversation(parsedData))
+  })
+
   io.on(SocketReceivingEvents.message, (data) => {
     if (data.conversationId == null) {
       console.error('ConversationId missing in received message event')
@@ -119,7 +127,7 @@ const assignSocketEventHandlers = (
           message: data.message,
           messageId: data.messageId,
           senderId: data.senderId,
-          timeStamp: data.timeStamp,
+          timeStamp: data.msg_timeStamp,
           status: 'sent',
           localMessageId: data.localMessageId,
           file: data.file,
@@ -135,7 +143,7 @@ const assignSocketEventHandlers = (
           data.message == null || (data.message.length < 1 && data.file != null)
             ? '[attachment]'
             : data.message,
-        lastMessageTime: data.timeStamp,
+        lastMessageTime: data.msg_timeStamp,
         lastMessageSenderId: data.senderId,
         // add lastMessageType here to display video call icon in there
       })

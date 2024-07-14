@@ -152,6 +152,10 @@ const chatsSlice = createSlice({
     ) => {
       state.createConvoDialogTransitionEnded = action.payload
     },
+    addConversation: (state, action: PayloadAction<IChatQuickView>) => {
+      state.conversations.push(action.payload)
+      state.conversations = sortConvo(state.conversations, state.sort)
+    },
   },
   extraReducers(builder) {
     builder.addCase(getUserConversations.fulfilled, (state, { payload }) => {
@@ -186,5 +190,7 @@ export const {
   setActiveConversation,
   updateConversationLastMessage,
   setShowLatestMsgInView,
+  addConversation,
 } = chatsSlice.actions
+
 export const chatsReducer = chatsSlice.reducer
