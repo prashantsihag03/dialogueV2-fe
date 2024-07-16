@@ -90,9 +90,7 @@ export const App = () => {
               isMobile === true ? 'background.paper' : 'background.default',
           }}
         >
-          {isFetching ? (
-            <StatusIndicator status="loading" message="configuring" />
-          ) : null}
+          {isFetching ? <StatusIndicator status="loading" /> : null}
           {isError || data == null ? (
             <StatusIndicator
               status="error"

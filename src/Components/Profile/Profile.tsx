@@ -29,6 +29,7 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp'
 import SideBar from '../Sidebar'
 import { setActiveSideBar } from '../../store/sidebar/slice'
 import { getSideBarPreference } from '../../store/sidebar/selector'
+import StatusIndicator from '../Commons/StatusIndicator'
 
 export const Profile: React.FC = () => {
   const appDispatch = useAppDispatch()
@@ -151,6 +152,7 @@ export const Profile: React.FC = () => {
         ) : undefined
       }
     >
+      {isFetching ? <StatusIndicator iconSize="2rem" /> : null}
       {!isFetching && isSuccess && data ? (
         <Stack
           direction="column"
