@@ -1,10 +1,11 @@
 import { Box, CircularProgress, Typography } from '@mui/material'
 import { Header } from './Header/Header'
-import { messages, noConversationContainerStyle } from './styles'
+import { messages } from './styles'
 import MessageInputBox from './MessageInputBox'
 import Message from '../Message'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'
+import SmsIcon from '@mui/icons-material/Sms'
 import {
   getActiveConversation,
   getDraggingFiles,
@@ -298,11 +299,18 @@ export const ChatBox: React.FC = () => {
           loggedProfileData &&
           onGoingMessages &&
           onGoingMessages.length == 0 ? (
-            <Box sx={noConversationContainerStyle}>
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+              height="100%"
+              padding="0.3rem"
+            >
               <Typography variant="body2" fontSize="1em">
                 No messages to display.
               </Typography>
-            </Box>
+            </Stack>
           ) : null}
         </Box>
       </Stack>
@@ -315,10 +323,18 @@ export const ChatBox: React.FC = () => {
       </Box>
     </Stack>
   ) : (
-    <Box sx={noConversationContainerStyle}>
-      <Typography variant="body2" fontSize="1em">
+    <Stack
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      width="100%"
+      height="100%"
+      padding="0.3rem"
+    >
+      <SmsIcon sx={{ width: '2.5rem', height: '2rem' }} />
+      <Typography variant="body2" fontSize="1rem">
         Select a conversation to display it here
       </Typography>
-    </Box>
+    </Stack>
   )
 }

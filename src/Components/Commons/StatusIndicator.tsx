@@ -39,7 +39,7 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
       {getIconByStatus(
         status,
         loaderColor ? loaderColor : 'secondary',
-        iconSize ? iconSize : '4rem'
+        iconSize ? iconSize : '2rem'
       )}
       {message && message.length > 0 ? (
         <Typography variant="body1" marginTop={'0.5rem'}>
