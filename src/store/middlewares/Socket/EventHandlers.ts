@@ -9,7 +9,13 @@ import {
   setShowLatestMsgInView,
   updateConversationLastMessage,
 } from '../../chats/slice'
-import { removeReceivingCall, setCall, setReceivingCall } from '../../rtc/slice'
+import {
+  removeReceivingCall,
+  setCall,
+  setCallParticipantMutedAudio,
+  setCallParticipantMutedVideo,
+  setReceivingCall,
+} from '../../rtc/slice'
 import { MSG_RECEIVED, playSoundAlert } from '../../../utils/audio-utils'
 import { enqueueSnackbar } from 'notistack'
 import { WebRTCActions } from '../webrtc'
@@ -29,6 +35,8 @@ export enum SocketReceivingEvents {
   message = 'message',
   callCancelled = 'call cancelled',
   newConversation = 'new conversation',
+  mutedVideo = 'mutedVideo',
+  mutedAudio = 'mutedAudio',
 }
 
 const assignSocketEventHandlers = (
@@ -156,6 +164,30 @@ const assignSocketEventHandlers = (
       dispatch(setShowLatestMsgInView(true))
     }
     playSoundAlert(MSG_RECEIVED)
+  })
+
+  io.on(SocketReceivingEvents.mutedAudio, (data) => {
+    const { userId, mutedAudio } = data
+    console.log(userId + ' has muted its audio')
+    // this user has muted their audio in a call that you are assumed to be having with them.
+    // check if this user is part of your current call. return early otherwise.
+    // check if this user's streams and tracks truly has audio disabled. return early otherwise.
+    // Show muted Audio icon on this user's call stream container
+    dispatch(
+      setCallParticipantMutedAudio({ userId: userId, muteAudio: mutedAudio })
+    )
+  })
+
+  io.on(SocketReceivingEvents.mutedVideo, (data) => {
+    const { userId, mutedVideo } = data
+    console.log(userId + ' has muted its video')
+    // this user has muted their video in a call that you are assumed to be having with them.
+    // check if this user is part of your current call. return early otherwise.
+    // check if this user's streams and tracks truly has video disabled. return early otherwise.
+    // Show muted video icon on this user's call stream container
+    dispatch(
+      setCallParticipantMutedVideo({ userId: userId, muteVideo: mutedVideo })
+    )
   })
 }
 

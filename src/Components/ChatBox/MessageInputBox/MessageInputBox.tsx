@@ -71,6 +71,7 @@ export const MessageInputBox: React.FC<MessageInputBoxProps> = ({
       timeStamp: 0,
       localMessageId: uuidv4(),
       status: 'pending',
+      type: 'message',
     }
 
     setMessage('')

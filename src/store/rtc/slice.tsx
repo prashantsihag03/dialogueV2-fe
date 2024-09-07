@@ -15,15 +15,24 @@ interface ICall {
   userId: string | null
 }
 
+interface CallParticipantData {
+  mutedVideo: boolean
+  mutedAudio: boolean
+}
+
 interface RtcState extends ICall {
   receivingCalls: ReceivingCalls
   suppressNoise: boolean
+  /**This is logged in user's preference */
   muteAudio: boolean
+  /**This is logged in user's preference */
   muteVideo: boolean
   multipleCameraMode: boolean
+  /** This holds all user in the call including logged in user */
+  callParticipants: {
+    [userId: string]: CallParticipantData
+  }
 }
-
-const defaultIce = null
 
 const initialState: RtcState = {
   receivingCalls: {},
@@ -33,6 +42,7 @@ const initialState: RtcState = {
   muteVideo: false,
   suppressNoise: true,
   multipleCameraMode: false,
+  callParticipants: {},
 }
 
 const rtcSlice = createSlice({
@@ -44,7 +54,6 @@ const rtcSlice = createSlice({
       state.userId = action.payload.userId
     },
     setReceivingCall: (state, action: PayloadAction<string>) => {
-      console.log('Adding new call to receivingCall list')
       const snackbarId = enqueueSnackbar({
         key: `receivingCall-${action.payload}`,
         autoHideDuration: RINGING_TIME + 3000,
@@ -73,6 +82,44 @@ const rtcSlice = createSlice({
     setMultipleCameraMode: (state, action: PayloadAction<boolean>) => {
       state.multipleCameraMode = action.payload
     },
+    addCallParticipant: (
+      state,
+      action: PayloadAction<{ userId: string; data: CallParticipantData }>
+    ) => {
+      state.callParticipants[action.payload.userId] = action.payload.data
+    },
+    clearCallParticipant: (state, action: PayloadAction<void>) => {
+      state.callParticipants = {}
+    },
+    setCallParticipantMutedVideo: (
+      state,
+      action: PayloadAction<{ userId: string; muteVideo: boolean }>
+    ) => {
+      if (state.callParticipants[action.payload.userId] == null) {
+        console.log(
+          'Attempt to update call participant muted video failed as user missing from state',
+          action.payload.userId
+        )
+
+        return
+      }
+      state.callParticipants[action.payload.userId].mutedVideo =
+        action.payload.muteVideo
+    },
+    setCallParticipantMutedAudio: (
+      state,
+      action: PayloadAction<{ userId: string; muteAudio: boolean }>
+    ) => {
+      if (state.callParticipants[action.payload.userId] == null) {
+        console.log(
+          'Attempt to update call participant muted audio failed as user missing from state',
+          action.payload.userId
+        )
+        return
+      }
+      state.callParticipants[action.payload.userId].mutedAudio =
+        action.payload.muteAudio
+    },
   },
 })
 
@@ -84,6 +131,10 @@ export const {
   setMuteVideo,
   setSuppressNoise,
   setMultipleCameraMode,
+  setCallParticipantMutedVideo,
+  setCallParticipantMutedAudio,
+  addCallParticipant,
+  clearCallParticipant,
 } = rtcSlice.actions
 
 export const rtcReducer = rtcSlice.reducer

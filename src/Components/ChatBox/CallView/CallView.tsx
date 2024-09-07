@@ -21,6 +21,11 @@ import { WebRTCActions } from '../../../store/middlewares/webrtc'
 import CallUserBlock from '../../CallUserBlock/CallUserBlock'
 import { getSideBarPreference } from '../../../store/sidebar/selector'
 import { SocketEmitEvents } from '../../../store/middlewares/Socket/socket'
+import { getMyProfileData } from '../../../store/profile/selector'
+import {
+  setCallParticipantMutedAudio,
+  setCallParticipantMutedVideo,
+} from '../../../store/rtc/slice'
 
 const CallView: React.FC = () => {
   const browser = useAppSelector(getSideBarPreference)
@@ -31,9 +36,11 @@ const CallView: React.FC = () => {
   const cameraOn = useAppSelector(muteVideo)
   const hasMultipleCameraMode = useAppSelector(multipleCameraMode)
   const isNoiseSuppressed = useAppSelector(suppressNoise)
+  const myProfile = useAppSelector(getMyProfileData)
 
   return (
     <Stack
+      className="call view container"
       direction={browser === 'mobile' ? 'row' : 'column'}
       justifyContent="center"
       alignItems="center"
@@ -69,11 +76,11 @@ const CallView: React.FC = () => {
         <CallUserBlock
           text={call}
           borderColor="transparent"
+          type="other"
           userTagColor="green"
           userId={callId}
-          defaultMute={false}
-          width={browser === 'mobile' ? '100%' : `100%`}
-          height={browser === 'mobile' ? undefined : '100%'}
+          width={browser === 'mobile' ? '95%' : `95%`}
+          height={browser === 'mobile' ? undefined : '95%'}
         />
       ) : null}
 
@@ -98,11 +105,11 @@ const CallView: React.FC = () => {
           text={''}
           borderColor="transparent"
           userTagColor="steelblue"
-          userId={'you'}
-          defaultMute={true}
-          width={'100%'}
+          userId={myProfile.id}
+          type="loggedInUser"
+          width={call === 'ringing' || call === 'connecting' ? '95%' : '15rem'}
           height={
-            call === 'ringing' || call === 'connecting' ? '100%' : undefined
+            call === 'ringing' || call === 'connecting' ? '95%' : undefined
           }
         />
       </Stack>
@@ -163,6 +170,12 @@ const CallView: React.FC = () => {
                 type: WebRTCActions.muteAudio,
                 payload: { callId: callId, mute: true },
               })
+              dispatch(
+                setCallParticipantMutedAudio({
+                  userId: myProfile.id,
+                  muteAudio: true,
+                })
+              )
             }}
           />
         ) : (
@@ -178,6 +191,12 @@ const CallView: React.FC = () => {
                 type: WebRTCActions.muteAudio,
                 payload: { callId: callId, mute: false },
               })
+              dispatch(
+                setCallParticipantMutedAudio({
+                  userId: myProfile.id,
+                  muteAudio: false,
+                })
+              )
             }}
           />
         )}
@@ -214,6 +233,12 @@ const CallView: React.FC = () => {
                 type: WebRTCActions.muteVideo,
                 payload: { callId: callId, mute: true },
               })
+              dispatch(
+                setCallParticipantMutedVideo({
+                  userId: myProfile.id,
+                  muteVideo: true,
+                })
+              )
             }}
           />
         ) : (
@@ -229,6 +254,12 @@ const CallView: React.FC = () => {
                 type: WebRTCActions.muteVideo,
                 payload: { callId: callId, mute: false },
               })
+              dispatch(
+                setCallParticipantMutedVideo({
+                  userId: myProfile.id,
+                  muteVideo: false,
+                })
+              )
             }}
           />
         )}

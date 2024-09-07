@@ -70,10 +70,13 @@ export const Header: React.FC<IActiveChatHeader> = ({
       })
       .then((mediaStream) => {
         const video = document.getElementById(
-          'you-video'
+          `loggedInUser-video`
         ) as HTMLVideoElement | null
 
-        if (video == null) return
+        if (video == null) {
+          console.log('Video element couldnt be found')
+          return
+        }
         if ('srcObject' in video) {
           video.srcObject = mediaStream
         }
@@ -98,7 +101,6 @@ export const Header: React.FC<IActiveChatHeader> = ({
             userId: otherUserData?.id,
           })
         )
-
         // create peer instance to hold connection in
         appDispatch({
           type: WebRTCActions.createReceiverPeer,

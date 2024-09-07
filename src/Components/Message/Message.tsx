@@ -143,7 +143,15 @@ export const Message: React.FC<MessageProps> = ({
                 </Stack>
               ) : null}
               {type === 'message' ? (
-                <Typography sx={{ margin: '0rem 0.5rem' }}>{text}</Typography>
+                <Typography
+                  sx={{
+                    margin: '0rem 0.5rem',
+                    color:
+                      source === 'outgoing' ? 'white' : 'palette.text.primary',
+                  }}
+                >
+                  {text}
+                </Typography>
               ) : null}
             </>
           )}
