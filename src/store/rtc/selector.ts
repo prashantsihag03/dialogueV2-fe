@@ -14,3 +14,15 @@ export const muteVideo = (state: RootState) => state.rtc.muteVideo
 
 export const multipleCameraMode = (state: RootState) =>
   state.rtc.multipleCameraMode
+
+export const getCallParticipantMutedVideo =
+  (userId: string) => (state: RootState) =>
+    state.rtc.callParticipants[userId]
+      ? state.rtc.callParticipants[userId].mutedVideo
+      : false
+
+export const getCallParticipantMutedAudio =
+  (userId: string) => (state: RootState) =>
+    state.rtc.callParticipants[userId]
+      ? state.rtc.callParticipants[userId].mutedAudio
+      : false

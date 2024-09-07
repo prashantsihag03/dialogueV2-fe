@@ -1,12 +1,15 @@
-import { Middleware } from '@reduxjs/toolkit'
+import { AnyAction, Dispatch, Middleware } from '@reduxjs/toolkit'
 import SimplePeer from 'simple-peer'
 import {
+  addCallParticipant,
+  clearCallParticipant,
   setCall,
   setMuteAudio,
   setMuteVideo,
   setSuppressNoise,
 } from '../rtc/slice'
 import { SocketEmitEvents } from './Socket/socket'
+import { RootState } from '..'
 
 declare const window: any
 
@@ -31,7 +34,13 @@ export const webrtcMiddleware =
   (peerConnections: {
     [userIdToConnect: string]: PeerConnection
   }): Middleware =>
-  ({ dispatch }) =>
+  ({
+    dispatch,
+    getState,
+  }: {
+    dispatch: Dispatch<AnyAction>
+    getState: () => RootState
+  }) =>
   (next) =>
   (action) => {
     const { type, payload } = action
@@ -61,7 +70,6 @@ export const webrtcMiddleware =
         peerConnections[payload.userIdToConnect].conn.on(
           'stream',
           (stream: MediaProvider | null) => {
-            // got remote video stream, now let's show it in a video tag
             const video = document.getElementById(
               `${payload.userIdToConnect}-video`
             ) as HTMLVideoElement | null
@@ -71,6 +79,32 @@ export const webrtcMiddleware =
               video.srcObject = stream
             }
 
+            dispatch(
+              addCallParticipant({
+                userId: getState().profile.myProfile.data.id,
+                data: {
+                  mutedAudio: getState().rtc.muteAudio,
+                  mutedVideo: getState().rtc.muteVideo,
+                },
+              })
+            )
+            const streamAudioMuted = (stream as MediaStream)
+              .getAudioTracks()
+              .find((t) => t.enabled)?.enabled
+
+            const streamVideoMuted = (stream as MediaStream)
+              .getVideoTracks()
+              .find((t) => t.enabled)?.enabled
+
+            dispatch(
+              addCallParticipant({
+                userId: payload.userIdToConnect,
+                data: {
+                  mutedAudio: !streamAudioMuted || false,
+                  mutedVideo: !streamVideoMuted || false,
+                },
+              })
+            )
             video.play()
           }
         )
@@ -134,6 +168,34 @@ export const webrtcMiddleware =
             video.srcObject = stream
           }
 
+          dispatch(
+            addCallParticipant({
+              userId: getState().profile.myProfile.data.id,
+              data: {
+                mutedAudio: getState().rtc.muteAudio,
+                mutedVideo: getState().rtc.muteVideo,
+              },
+            })
+          )
+
+          const streamAudioMuted = (stream as MediaStream)
+            .getAudioTracks()
+            .find((t) => t.enabled)?.enabled
+
+          const streamVideoMuted = (stream as MediaStream)
+            .getVideoTracks()
+            .find((t) => t.enabled)?.enabled
+
+          dispatch(
+            addCallParticipant({
+              userId: newConn1.userIdToConnect,
+              data: {
+                mutedAudio: !streamAudioMuted || false,
+                mutedVideo: !streamVideoMuted || false,
+              },
+            })
+          )
+
           video.play()
         })
         newConn1.conn.on('end', () => {
@@ -165,6 +227,7 @@ export const webrtcMiddleware =
         break
 
       case WebRTCActions.endCall:
+        dispatch(clearCallParticipant())
         dispatch(
           setCall({
             call: 'idle',
@@ -211,6 +274,13 @@ export const webrtcMiddleware =
           })
         })
         dispatch(setMuteAudio(muteAudio))
+        dispatch({
+          type: SocketEmitEvents.mutedAudio,
+          payload: {
+            userId: callIdToMuteAudio,
+            mutedAudio: muteAudio,
+          },
+        })
         break
 
       case WebRTCActions.muteVideo:
@@ -230,6 +300,13 @@ export const webrtcMiddleware =
           })
         })
         dispatch(setMuteVideo(muteVideo))
+        dispatch({
+          type: SocketEmitEvents.mutedVideo,
+          payload: {
+            userId: callIdToMuteVideo,
+            mutedVideo: muteVideo,
+          },
+        })
         break
 
       case WebRTCActions.suppressNoise:

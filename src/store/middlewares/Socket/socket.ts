@@ -22,6 +22,8 @@ export enum SocketEmitEvents {
   signal = 'socket/signal',
   answer = 'socket/answer',
   cancelCall = 'socket/cancelCall',
+  mutedVideo = 'socket/mutedVideo',
+  mutedAudio = 'socket/mutedAudio',
 }
 
 export const socketMiddleware =
@@ -150,7 +152,7 @@ export const socketMiddleware =
           })
           .then((mediaStream) => {
             const video = document.getElementById(
-              'you-video'
+              'loggedInUser-video'
             ) as HTMLVideoElement | null
 
             if (video == null) return
@@ -206,6 +208,14 @@ export const socketMiddleware =
 
       case SocketEmitEvents.disconnect:
         io.disconnect()
+        break
+
+      case SocketEmitEvents.mutedVideo:
+        io.emit('mutedVideo', payload, (ack: any) => {})
+        break
+
+      case SocketEmitEvents.mutedAudio:
+        io.emit('mutedAudio', payload, (ack: any) => {})
         break
 
       default:
